@@ -1,12 +1,12 @@
 // @/components/Layout/index.js
 import React, { useState } from 'react'
 import Head from 'next/head'
-import Sidebar from './Sidebar';
+import Sidebar from './adminSidebar';
 import MenuBarMobile from './MenuBarMobile';
 
 export default function Layout({ pageTitle, children }) {
     // Concatenate page title (if exists) to site title
-    let titleConcat = "CryptPH";
+    let titleConcat = "CryptPH Admin";
     if (pageTitle) titleConcat = pageTitle + " | " + titleConcat;
 
     // Mobile sidebar visibility state

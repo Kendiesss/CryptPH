@@ -2,15 +2,14 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-
 import { SlHome } from 'react-icons/sl'
-import { FiBarChart, FiBook} from "react-icons/fi";
+import { FiBarChart, FiBook, FiDatabase  } from "react-icons/fi";
 import { MdOutlineNewspaper } from "react-icons/md";
+import { FiLogOut } from "react-icons/fi";
 import { FaExchangeAlt } from "react-icons/fa";
-
 import logo from '@/img/logo.png'
 
-export default function Sidebar() {
+export default function adminSidebar() {
     const router = useRouter();
     const [isHovered, setIsHovered] = useState(false);
 
@@ -58,9 +57,14 @@ export default function Sidebar() {
                 </div><br></br>
                 <div className="flex flex-col items-center gap-2">
                     <MenuItem
-                        name="Dashboard"
-                        route="/"
+                        name="Home"
+                        route="/admin-dashboard"
                         icon={<SlHome />}
+                    />
+                    <MenuItem
+                        name="Manage"
+                        route="/manageContents"
+                        icon={<FiDatabase />}
                     />
                     <MenuItem
                         name="Charts"
@@ -81,6 +85,11 @@ export default function Sidebar() {
                         name="Virtual Trading"
                         route="/virtual-trading"
                         icon={<FaExchangeAlt />}
+                    />
+                    <MenuItem
+                        name="Logout"
+                        route="/"
+                        icon={<FiLogOut />}
                     />
                 </div>
                 <div className="mt-auto p-4">

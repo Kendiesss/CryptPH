@@ -11,7 +11,7 @@ export default function Footer() {
         <div class="logo">
           <img src="${logo.src}" alt="Logo" />
                   <div class="text">
-          <h2>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, ed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</h2>
+          <h2>"your one-stop platform for mastering cryptocurrency trading with <b>cryptocurrency</b> data, <b>educational</b> content, and <b>accessible</b> tools."</h2>
           <h2></h2>
           <p>&copy; 2024 CryptPH. All Rights Reserved.</p>
         </div>
@@ -36,7 +36,7 @@ export default function Footer() {
     style.textContent = `
 
 body {
-          font-family: Arial, sans-serif;
+          font-family: Sora, sans-serif;
           margin: 0;
           background-color: #0B162B;
           color: #fff;
