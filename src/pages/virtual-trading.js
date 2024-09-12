@@ -1,7 +1,7 @@
 import React from 'react'
 import DummyPage from '@/components/pages/vtrading'
 import Footer from './Footer';
-import Header from './Header';
+import Header from './Header2';
 
 export default function VirtualTrading() {
     return (
