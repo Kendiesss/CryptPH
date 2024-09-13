@@ -5,8 +5,49 @@ import { IoMdTrendingDown } from "react-icons/io";
 import gradient1 from '@/img/gradient-1.png';
 import React, {useState } from 'react';
 
+const Card = ({ children }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <div
+            style={{
+                ...styles.card,
+                ...(isHovered ? styles.cardHover : {})
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {children}
+        </div>
+    );
+};
+
+const CoinCard = ({ children }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <div
+            style={{
+                ...styles.CoinCard,
+                ...(isHovered ? styles.CoinCardHover : {})
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {children}
+        </div>
+    );
+};
+
 
 export default function DummyPage({ title }) {
+
+    const [isHovered1, setIsHovered1] = useState(false);
+    const [isHovered2, setIsHovered2] = useState(false);
+    const [isHovered3, setIsHovered3] = useState(false);
+    const [isHovered4, setIsHovered4] = useState(false); //For Entry Button
+    const [isHovered5, setIsHovered5] = useState(false); //For Exit Button
+
     return (
         <Layout
             pageTitle={title}
@@ -23,14 +64,40 @@ export default function DummyPage({ title }) {
                                 <h1 style={styles.header2}>$100,000.00</h1>
                             </div>
                             <div style={styles.buttonGroup}>
-                                <button style={styles.button1}>My Portfolio</button>
-                                <button style={styles.button1}>Records</button>
-                                <button style={styles.button1}>Order History</button>
+                                <button
+                                style={{
+                                    ...styles.button1,
+                                    ...(isHovered1 ? styles.button1Hover : {}),
+                                }}
+                                onMouseEnter={() => setIsHovered1(true)}
+                                onMouseLeave={() => setIsHovered1(false)}
+                                
+                                >My Portfolio</button>
+
+                                <button
+                                style={{
+                                    ...styles.button1,
+                                    ...(isHovered2 ? styles.button1Hover : {}),
+                                }}
+                                onMouseEnter={() => setIsHovered2(true)}
+                                onMouseLeave={() => setIsHovered2(false)}
+                                
+                                >Records</button>
+
+                                <button
+                                style={{
+                                    ...styles.button1,
+                                    ...(isHovered3 ? styles.button1Hover : {}),
+                                }}
+                                onMouseEnter={() => setIsHovered3(true)}
+                                onMouseLeave={() => setIsHovered3(false)}
+                                
+                                >Order History</button>
                             </div>
                         </div>
                         <div style={styles.cardContainer}>
 
-                            <div style={styles.card}>
+                            <Card>
                                 <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
                                 <span style={styles.smallcard}>Long</span>
                                 <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
@@ -50,9 +117,9 @@ export default function DummyPage({ title }) {
                                     <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
                                     <h1 style={styles.header1}>% Profit</h1>
                                 </div>
-                            </div>
+                            </Card>
 
-                            <div style={styles.card}>
+                            <Card>
                                 <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
                                 <span style={styles.smallcard}>Long</span>
                                 <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
@@ -72,9 +139,9 @@ export default function DummyPage({ title }) {
                                     <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
                                     <h1 style={styles.header1}>% Profit</h1>
                                 </div>
-                            </div>
+                            </Card>
 
-                            <div style={styles.card}>
+                            <Card>
                                 <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
                                 <span style={styles.smallcard}>Long</span>
                                 <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
@@ -94,7 +161,7 @@ export default function DummyPage({ title }) {
                                     <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
                                     <h1 style={styles.header1}>% Profit</h1>
                                 </div>
-                            </div>
+                            </Card>
 
                         </div>
                     </div>
@@ -127,13 +194,26 @@ export default function DummyPage({ title }) {
                             </div>
 
                             <div style={styles.cardButtonGroup}>
-                                <button style={styles.Button2}>Entry</button>
-                                <button style={styles.Button3}>Exit</button>
+                                <button style={{
+                                    ...styles.Button2,
+                                    ...(isHovered4 ? styles.Button2Hover : {}),
+                                }}
+                                onMouseEnter={() => setIsHovered4(true)}
+                                onMouseLeave={() => setIsHovered4(false)}>Entry</button>
+
+
+                                 <button style={{
+                                    ...styles.Button3,
+                                    ...(isHovered5 ? styles.Button3Hover : {}),
+                                }}
+                                onMouseEnter={() => setIsHovered5(true)}
+                                onMouseLeave={() => setIsHovered5(false)}>Exit</button>
+
                             </div>
 
                             <div style={styles.coinCardContainer}>
 
-                                <div style={styles.coinCard}>
+                                <CoinCard>
                                     <div style={styles.innerCoinCard}> 
                                         <h1 style={styles.header5}>Coin</h1> 
                                         <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
@@ -142,9 +222,9 @@ export default function DummyPage({ title }) {
                                     <h1 style={styles.header5}>0.000001</h1>
                                         <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
                                     </div>
-                                </div>
+                                </CoinCard>
 
-                                <div style={styles.coinCard}>
+                                <CoinCard>
                                     <div style={styles.innerCoinCard}> 
                                         <h1 style={styles.header5}>Coin</h1> 
                                         <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
@@ -153,9 +233,9 @@ export default function DummyPage({ title }) {
                                     <h1 style={styles.header5}>0.000001</h1>
                                         <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
                                     </div>
-                                </div>
+                                </CoinCard>
 
-                                <div style={styles.coinCard}>
+                                <CoinCard>
                                     <div style={styles.innerCoinCard}> 
                                         <h1 style={styles.header5}>Coin</h1> 
                                         <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
@@ -164,7 +244,7 @@ export default function DummyPage({ title }) {
                                     <h1 style={styles.header5}>0.000001</h1>
                                         <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
                                     </div>
-                                </div>
+                                </CoinCard>
 
                             </div>
                         </div>
@@ -277,6 +357,14 @@ const styles = {
                         border: '2px solid white',
                         borderRadius: '30px',
                         margin: '5px',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
+                    },
+
+                    button1Hover: {
+                        boxShadow: '0 0 15px 5px rgba(255, 255, 255, 0.8)', 
+                        backgroundColor: 'white',
+                        color: '#0B162B',
+                        transform: 'scale(1.05)',
                     },
 
             cardContainer:{
@@ -293,7 +381,13 @@ const styles = {
                     borderRadius: '20px',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    margin: '5px'
+                    margin: '5px',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                },
+
+                cardHover: {
+                    boxShadow: '0 0 15px rgba(255, 255, 255, 0.8)', 
+                    transform: 'scale(1.05)', 
                 },
 
                     header3:{
@@ -467,6 +561,12 @@ const styles = {
                         fontSize: '16px',
                         fontWeight: '600',
                         color: 'white',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
+                    },
+
+                    Button2Hover: {
+                        boxShadow: '0 0 15px 5px rgba(255, 255, 255, 0.8)', 
+                        transform: 'scale(1.05)',
                     },
 
                     Button3: {
@@ -483,6 +583,12 @@ const styles = {
                         fontSize: '16px',
                         fontWeight: '600',
                         color: 'white',
+                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                    },
+
+                    Button3Hover: {
+                        boxShadow: '0 0 15px 5px rgba(255, 255, 255, 0.8)', 
+                        transform: 'scale(1.05)',
                     },
             
             coinCardContainer:{
@@ -492,7 +598,7 @@ const styles = {
                 marginTop: '1rem',
             },
 
-                coinCard:{
+                CoinCard:{
                     display:'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -501,6 +607,12 @@ const styles = {
                     border: '2px solid white',
                     borderRadius: '20px',
                     marginBottom: '1rem',
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                },
+
+                CoinCardHover: {
+                    boxShadow: '0 0 15px rgba(255, 255, 255, 0.8)', 
+                    transform: 'scale(1.05)', 
                 },
 
                 innerCoinCard:{
