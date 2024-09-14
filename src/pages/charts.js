@@ -1,7 +1,7 @@
 import React from 'react'
 import DummyPage from '@/components/pages/charts'
 import Footer from './Footer';
-import Header from './Header2';
+import Header from './Header';
 
 export default function Charts() {
     return (
