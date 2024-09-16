@@ -1,8 +1,8 @@
 // @/pages/index.js
 import React from 'react';
-import DummyPage from '@/components/DummyPage';
+import DummyPage from '@/components/pages/profile';
 import Footer from './Footer';
-import Header from './Header';
+import Header from './Header2';
 
 export default function Profile() {
   return (

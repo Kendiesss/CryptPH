@@ -120,7 +120,7 @@ export default function DummyPage({ title }) {
                                 </div>
 
                                 <div style={styles.faqCards}>
-                                    <h1 style={styles.faqHeader}>How to use CryptPH's Virtual Trading Simulation?</h1>
+                                    <h1 style={styles.faqHeader}>How to use CryptPH's Virtual Trading Game?</h1>
                                     <p style={styles.p2}>Lorem ipsum odor amet, consectetuer adipiscing elit. Commodo at penatibus dictumst adipiscing orci ridiculus nunc. Cursus vulputate fringilla in elit aliquet condimentum. Primis ligula penatibus platea; placerat enim feugiat accumsan accumsan. Arcu ultrices in nisi odio lorem habitasse tincidunt at. Lobortis volutpat vehicula volutpat sodales pellentesque ad adipiscing vulputate.</p>
                                 </div>
 
