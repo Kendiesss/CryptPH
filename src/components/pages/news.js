@@ -101,6 +101,30 @@ export default function DummyPage({ title }) {
                                 </div>  
                         </div>
 
+                        <div style={styles.newsCardSmall}>
+                            <img src={pholder.src} style={styles.image2}></img>
+                                <div style={styles.headlineGrp}>
+                                    <h1 style={styles.headlineSmall}>News Headline</h1>
+                                    <h1 style={styles.datePublished}><span style={styles.iconWrapper}><FaClock style={styles.icon2}/></span>9/23/2024</h1>
+                                </div>  
+                        </div>
+
+                        <div style={styles.newsCardSmall}>
+                            <img src={pholder.src} style={styles.image2}></img>
+                                <div style={styles.headlineGrp}>
+                                    <h1 style={styles.headlineSmall}>News Headline</h1>
+                                    <h1 style={styles.datePublished}><span style={styles.iconWrapper}><FaClock style={styles.icon2}/></span>9/23/2024</h1>
+                                </div>  
+                        </div>
+
+                        <div style={styles.newsCardSmall}>
+                            <img src={pholder.src} style={styles.image2}></img>
+                                <div style={styles.headlineGrp}>
+                                    <h1 style={styles.headlineSmall}>News Headline</h1>
+                                    <h1 style={styles.datePublished}><span style={styles.iconWrapper}><FaClock style={styles.icon2}/></span>9/23/2024</h1>
+                                </div>  
+                        </div>
+
                     </div>
                         
 
@@ -123,12 +147,12 @@ const styles={
     upperPanel:{
         display: 'flex',
         flexDirection: 'row',
-        width: '1450px',
+        width: '1400px',
 
     },
 
     carouselWrapper: {
-        width: '1450px', // Same width as the news card
+        width: '1400px', // Same width as the news card
         height: '600px', // Same height as the news card
         overflow: 'hidden', // Ensures no extra spacing outside the carousel
         borderRadius: '20px', // Match the border radius to news card
@@ -141,7 +165,7 @@ const styles={
         alignItems: 'right',
         position: 'relative',
         height: '600px', // Set the height of the newsCard
-        width: '1450px',  // Set the width of the newsCard
+        width: '1400px',  // Set the width of the newsCard
         borderRadius: '20px',
         overflow: 'hidden',
     },
@@ -164,7 +188,7 @@ const styles={
             flexDirection: 'row',
             backgroundColor: 'rgba(0, 0, 0, 0.5)', 
             height: '200px',
-            width: '1450px',
+            width: '1400px',
             justifyContent: 'space-between',
             alignItems: 'center',
             textAlign: 'center',
@@ -204,7 +228,7 @@ const styles={
             },
 
     lowerPanel:{
-        width: '1450px',
+        width: '1400px',
         marginTop: '5rem',
         display: 'flex',
         flexDirection: 'column',

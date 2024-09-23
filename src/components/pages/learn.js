@@ -70,7 +70,7 @@ export default function HeroPage() {
 
                     <div style={styles.coursesContainer}>
                         <div style={styles.coursesHeader}>
-                            <h1 style={styles.sectionTitle}>Popular Courses</h1>
+                            <h1 style={styles.sectionTitle}>Popular Articles</h1>
                             <h1 style={styles.sectionText}>See all <span style={styles.arrow}>→</span></h1>
                         </div>
 
