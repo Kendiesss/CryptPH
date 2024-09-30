@@ -1,16 +1,18 @@
-// @/components/DummyPage.js
 import Head from 'next/head';
 import Layout from '../Layout';
 import pholder from '@/img/placeholder-learn.png';
 import learn from '@/img/learn.png';
-import { FaArrowRight } from "react-icons/fa";
 import { FaPlay } from "react-icons/fa";
-import gradient1 from '@/img/gradient-1.png'
-import gradient2 from '@/img/gradient-2half.png'
-import React, {useState } from 'react';
+import gradient1 from '@/img/gradient-1.png';
+import gradient2 from '@/img/gradient-2half.png';
+import React, { useState, useEffect } from 'react';
 
-const Card = ({ children }) => {
+const Card = ({ image, title, description }) => {
     const [isHovered, setIsHovered] = useState(false);
+
+    const stripHtmlTags = (str) => {
+        return str.replace(/<\/?[^>]+(>|$)/g, ""); // This will remove any HTML tags
+    };
 
     return (
         <div
@@ -21,39 +23,41 @@ const Card = ({ children }) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {children}
+            <div style={styles.cardLeft}>
+                <img src={image || pholder.src} style={styles.courseImage} alt="Course" />
+            </div>
+            <div style={styles.cardRight}>
+                <h1 style={styles.cardTitle}>{title}</h1>
+                <p style={styles.cardDesc}>{stripHtmlTags(description)}</p>
+                <button style={styles.cardButton}>
+                    Learn<FaPlay style={styles.playIcon} />
+                </button>
+            </div>
         </div>
     );
 };
 
-
-
 export default function HeroPage() {
+    const [newsItems, setNewsItems] = useState([]);
 
-    const handleRegister = () => {
-        console.log('Register button clicked');
-        window.location.href = '/learn';
-      };
-      const [isHovered, setIsHovered] = useState(false);
+    // Fetch the news items from the API
+    useEffect(() => {
+        const fetchNews = async () => {
+            try {
+                const response = await fetch('/api/news/fetch?category=Education');
+                const data = await response.json();
+                setNewsItems(data); // Assuming data is an array of news items
+            } catch (error) {
+                console.error("Error fetching news items:", error);
+            }
+        };
 
-      const glowStyle = {
-        color: '#fff', // Base text color
-        fontSize: '5rem',
-        fontWeight: 'bold',
-        position: 'relative',
-        transition: 'text-shadow 0.3s ease-in-out',
-        textShadow: isHovered 
-        ? '0 0 1px white, 0 0 10px white, 0 0 15px white' // Reduced glow effect
-        : 'none',
-    };
-
-    
-    
+        fetchNews();
+    }, []);
 
     return (
         <Layout pageTitle="Learn">
-            <Head>
-            </Head>
+            <Head></Head>
             <div style={styles.pageContainer}>
                 <div style={styles.mainContainer}>
                     <div style={styles.heroContainer}>
@@ -75,94 +79,22 @@ export default function HeroPage() {
                         </div>
 
                         <div style={styles.cardGrid}>
-                        <Card>
-                            <div style={styles.cardLeft}>
-                                <img src={pholder.src} style={styles.courseImage}></img>
-                            </div>
-                            <div style={styles.cardRight}>
-                                <h1 style={styles.cardTitle}>Course Title</h1>
-                                <p style={styles.cardDesc}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                </p>
-                                <button style={styles.cardButton}>Learn<FaPlay style={styles.playIcon}/></button>
-                            </div>
-                        </Card>
-
-                        <Card>
-                            <div style={styles.cardLeft}>
-                                <img src={pholder.src} style={styles.courseImage}></img>
-                            </div>
-                            <div style={styles.cardRight}>
-                                <h1 style={styles.cardTitle}>Course Title</h1>
-                                <p style={styles.cardDesc}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                </p>
-                                <button style={styles.cardButton}>Learn<FaPlay style={styles.playIcon}/></button>
-                            </div>
-                        </Card>
-
-                        <Card>
-                            <div style={styles.cardLeft}>
-                                <img src={pholder.src} style={styles.courseImage}></img>
-                            </div>
-                            <div style={styles.cardRight}>
-                                <h1 style={styles.cardTitle}>Course Title</h1>
-                                <p style={styles.cardDesc}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                </p>
-                                <button style={styles.cardButton}>Learn<FaPlay style={styles.playIcon}/></button>
-                            </div>
-                        </Card>
-
-                        <Card>
-                            <div style={styles.cardLeft}>
-                                <img src={pholder.src} style={styles.courseImage}></img>
-                            </div>
-                            <div style={styles.cardRight}>
-                                <h1 style={styles.cardTitle}>Course Title</h1>
-                                <p style={styles.cardDesc}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                </p>
-                                <button style={styles.cardButton}>Learn<FaPlay style={styles.playIcon}/></button>
-                            </div>
-                        </Card>
-
-                        <Card>
-                            <div style={styles.cardLeft}>
-                                <img src={pholder.src} style={styles.courseImage}></img>
-                            </div>
-                            <div style={styles.cardRight}>
-                                <h1 style={styles.cardTitle}>Course Title</h1>
-                                <p style={styles.cardDesc}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                </p>
-                                <button style={styles.cardButton}>Learn<FaPlay style={styles.playIcon}/></button>
-                            </div>
-                        </Card>
-
-
-                        <Card>
-                            <div style={styles.cardLeft}>
-                                <img src={pholder.src} style={styles.courseImage}></img>
-                            </div>
-                            <div style={styles.cardRight}>
-                                <h1 style={styles.cardTitle}>Course Title</h1>
-                                <p style={styles.cardDesc}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                </p>
-                                <button style={styles.cardButton}>Learn<FaPlay style={styles.playIcon}/></button>
-                            </div>
-                        </Card>
-
-
-                        
-
-                        
+                            {/* Dynamically render the news items */}
+                            {newsItems.length > 0 ? (
+                                newsItems.map((newsItem, index) => (
+                                    <Card
+                                        key={index}
+                                        image={newsItem.image} // Assuming you have a base64 image stored
+                                        title={newsItem.title}
+                                        description={newsItem.description}
+                                    />
+                                ))
+                            ) : (
+                                <p>No news available</p>
+                            )}
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </Layout>
     );
@@ -344,12 +276,13 @@ const styles = {
     },
     courseImage: {
         width: '100%',        // Ensures the image takes up the full width of its container
-        height: '100%',       // Maintains the image's aspect ratio
-        objectFit: 'cover',   // Ensures the image covers the container without stretching
-        maxWidth: '200px',    // Sets a maximum width for the image inside the card
-        maxHeight: '200px',   // Sets a maximum height for the image inside the card
-        borderRadius: '20px', // Optional: Adds rounded corners to the image
-
+        height: '100%',       // Ensures the image maintains its aspect ratio
+        objectFit: 'cover',   // Prevents stretching the image, ensuring it covers the container
+        minWidth: '200px',    // Sets the minimum width to 200px
+        minHeight: '200px',   // Sets the minimum height to 200px
+        maxWidth: '300px',    // Sets a max width, can be adjusted based on your design
+        maxHeight: '300px',   // Sets a max height to keep the aspect ratio intact
+        borderRadius: '20px', // Adds rounded corners
     },
     
     contentContainer: {
