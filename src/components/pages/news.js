@@ -5,6 +5,7 @@ import { FaClock } from "react-icons/fa";
 import React, { useEffect, useState } from 'react'; // Import useEffect and useState
 import Layout from '../Layout';
 import { Carousel } from 'react-responsive-carousel';
+import Link from 'next/link';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
 
 // Card component for individual news items
@@ -66,16 +67,21 @@ export default function DummyPage({ title }) {
                         </Carousel>
                     </div>
                 </div>
-
                 <div style={styles.lowerPanel}>
                     <div style={styles.headerGrp}>
                         <h1 style={styles.title}>More News</h1>
-                        <button style={styles.seeAll}>See All</button>
+                        <Link href="/news" passHref>
+                            <button style={styles.seeAll}>See All</button>
+                        </Link>
                     </div>
                     <div style={styles.cardContainer}>
                         {/* Map over the fetched news items to create Card components */}
-                        {newsItems.map((item, index) => (
-                            <Card key={index} image={item.image || pholder.src} title={item.title} date={item.date} />
+                        {newsItems.map((item) => (
+                            <Link key={item._id} href={`/news/${item._id}`} passHref>
+                                <div style={styles.cardWrapper}>
+                                    <Card image={item.image || pholder.src} title={item.title} date={item.date} />
+                                </div>
+                            </Link>
                         ))}
                     </div>
                 </div>

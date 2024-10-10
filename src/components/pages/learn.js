@@ -6,12 +6,17 @@ import { FaPlay } from "react-icons/fa";
 import gradient1 from '@/img/gradient-1.png';
 import gradient2 from '@/img/gradient-2half.png';
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+
 
 const Card = ({ image, title, description }) => {
     const [isHovered, setIsHovered] = useState(false);
 
-    const stripHtmlTags = (str) => {
-        return str.replace(/<\/?[^>]+(>|$)/g, ""); // This will remove any HTML tags
+    // Function to strip HTML tags and truncate the text to 75 characters
+    const stripHtmlAndTruncate = (str, length = 200) => {
+        const cleanString = str.replace(/<\/?[^>]+(>|$)/g, ""); // Removes HTML tags
+        if (cleanString.length <= length) return cleanString;
+        return cleanString.substring(0, length) + "..."; // Truncates and adds ellipsis
     };
 
     return (
@@ -28,7 +33,7 @@ const Card = ({ image, title, description }) => {
             </div>
             <div style={styles.cardRight}>
                 <h1 style={styles.cardTitle}>{title}</h1>
-                <p style={styles.cardDesc}>{stripHtmlTags(description)}</p>
+                <p style={styles.cardDesc}>{stripHtmlAndTruncate(description)}</p>
                 <button style={styles.cardButton}>
                     Learn<FaPlay style={styles.playIcon} />
                 </button>
@@ -81,13 +86,16 @@ export default function HeroPage() {
                         <div style={styles.cardGrid}>
                             {/* Dynamically render the news items */}
                             {newsItems.length > 0 ? (
-                                newsItems.map((newsItem, index) => (
-                                    <Card
-                                        key={index}
-                                        image={newsItem.image} // Assuming you have a base64 image stored
-                                        title={newsItem.title}
-                                        description={newsItem.description}
-                                    />
+                                newsItems.map((newsItem) => (
+                                    <Link key={newsItem._id} href={`/educational/${newsItem._id}`} passHref>
+                                        <div style={styles.cardWrapper}>
+                                            <Card
+                                                image={newsItem.image} // Assuming you have a base64 image stored
+                                                title={newsItem.title}
+                                                description={newsItem.description}
+                                            />
+                                        </div>
+                                    </Link>
                                 ))
                             ) : (
                                 <p>No news available</p>

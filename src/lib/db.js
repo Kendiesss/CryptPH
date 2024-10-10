@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const MONGODB_URL = process.env.MONGO_URL;
-console.log('MongoDB URL:', MONGODB_URL); // Check if the URL is printed correctly
+console.log('MongoDB URL:', MONGODB_URL);
 
 if (!MONGODB_URL) {
     

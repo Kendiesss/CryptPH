@@ -92,6 +92,7 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: '#0B162B',
+        height: '600px',
         width: '300px',
         borderRadius: '20px',
         marginTop: '20px',
@@ -129,8 +130,8 @@ const styles = {
     cardInfo:{
         justifyContent: 'center',
         fontFamily: 'Sora',
-        fontWeight: '700',
-        fontSize: '22px',
+        fontWeight: '200',
+        fontSize: '18px',
         color: 'white',
     },
     cardHover: {

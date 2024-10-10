@@ -1,31 +1,87 @@
-
 import Head from 'next/head';
 import pholder from '@/img/placeholder-learn.png';
 import { FaShare } from "react-icons/fa";
-import React from 'react'
-import Layout from '../Layout'
-import { FaClock } from "react-icons/fa";
-import { FaCalendarDay } from "react-icons/fa";
+import React, { useEffect, useState } from 'react';
+import Layout from '@/components/Layout';
+import { FaClock, FaCalendarDay } from "react-icons/fa";
+import { useRouter } from 'next/router'; 
+import Link from 'next/link';
+import Footer from '@/pages/Footer';
+import Header from '@/pages/Header2';
 
+function stripHtmlTags(str) {
+    if (!str) return '';
+    return str.replace(/<\/?[^>]+(>|$)/g, "");
+}
 
+export default function NewsDetailPage() {
+    const router = useRouter();
+    const { id } = router.query; 
+    const [newsItem, setNewsItem] = useState(null); 
+    const [newsItems, setNewsItems] = useState([]); 
+    const [loading, setLoading] = useState(true); 
+    const [error, setError] = useState(null); 
 
+    useEffect(() => {
+        const fetchNewsItem = async () => {
+            if (id) {
+                try {
+                    const response = await fetch(`/api/news/${id}`); 
+                    if (!response.ok) throw new Error('Failed to fetch news item');
+                    const data = await response.json();
+                    setNewsItem(data); 
+                } catch (error) {
+                    console.error("Error fetching news item:", error);
+                    setError(error.message);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
 
-export default function DummyPage({ title }) {
+        fetchNewsItem();
+    }, [id]); 
+
+    useEffect(() => {
+        const fetchNews = async () => {
+            try {
+                const response = await fetch('/api/news/fetch?category=Education');
+                const data = await response.json();
+                
+                // Filter out the current news item from the fetched news items
+                const filteredNewsItems = data.filter(news => news._id !== id); // Ensure you're comparing _id
+                setNewsItems(filteredNewsItems); 
+            } catch (error) {
+                console.error("Error fetching news:", error);
+            }
+        };
+    
+        fetchNews();
+    }, [id]); // Include id in the dependency array
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+
+    if (error) {
+        return <p>Error: {error}</p>;
+    }
+
+    if (!newsItem) {
+        return <p>No news item found.</p>;
+    }
+
     return (
-        <Layout
-            pageTitle={title}
-        >
-           
+        <Layout pageTitle={newsItem.title}>
             <div style={styles.pageContainer}>
-
                 <div style={styles.newsPanel}>
                     <div style={styles.upperPanel}>
                         <div style={styles.newsCard}>
                             <div style={styles.detailsGrp}>
-                                <div style={{ ...styles.imageBackground, backgroundImage: `url(${pholder.src})` }}></div>
-                                <h1 style={styles.headlineLarge}>News Headline</h1>
+                                <div style={{ ...styles.imageBackground, backgroundImage: `url(${newsItem.image || pholder.src})` }}></div>
+                                <h1 style={styles.headlineLarge}>{newsItem.title}</h1>
                                 <div style={styles.button1}>
-                                    September 23, 2024
+                                    {new Date(newsItem.date).toLocaleDateString()}
                                     <span style={styles.iconWrapper}>
                                         <FaCalendarDay style={styles.icon} />
                                     </span>
@@ -36,84 +92,60 @@ export default function DummyPage({ title }) {
 
                     <div style={styles.midPanel}>
                         <div style={styles.midUpperGrp}>
-                            <h1 style={styles.authors}>By: CryptPH Admin</h1>
+                            <h1 style={styles.authors}>By: {newsItem.author || 'Unknown Author'}</h1>
                         </div>
 
-                        <p style={styles.newsBody}>Lorem ipsum odor amet, consectetuer adipiscing elit. Risus tempor nisl vestibulum erat lacinia cubilia massa. Curabitur nisl nec molestie magnis, dapibus finibus diam dolor. Sociosqu curabitur pellentesque duis class efficitur ligula ornare. Quam maximus luctus maecenas ridiculus mus ipsum curabitur. <br /><br /> Himenaeos sociosqu scelerisque adipiscing justo in. Integer dapibus placerat facilisis eleifend nunc litora cubilia.
-                        Inceptos adipiscing eget porttitor inceptos pellentesque fusce lectus. Elementum ultrices taciti fames faucibus nam? Lobortis urna suscipit sit; integer sociosqu erat pretium. Duis tristique penatibus class efficitur luctus. Dis massa tincidunt fringilla posuere vivamus. Sollicitudin mus et ut malesuada ultricies tempus. <br/> <br /> Massa at litora tristique facilisis; ipsum suspendisse eu penatibus.
-                        Pulvinar dolor orci pellentesque at metus ad imperdiet. Quam fringilla leo auctor neque justo. Nam mi montes senectus massa eros dictumst. Ex nec laoreet luctus diam est. Himenaeos fames tempor nec gravida; pulvinar nullam. Sem ullamcorper ac vestibulum donec sociosqu tempor! Mattis vivamus duis natoque; magna aenean habitasse eu. Quisque neque eros inceptos gravida ultricies.
-                        <br></br><br></br>
-                        Conubia habitasse mauris sodales eleifend, tellus suscipit hac placerat. Risus vehicula lobortis ultricies facilisi orci pulvinar? Egestas habitasse vulputate euismod nostra habitasse nisl aliquet ornare. Etiam euismod mattis porttitor taciti dolor. Massa proin ipsum placerat vel enim. Sed sapien iaculis dolor; libero netus dictum? Ultrices luctus accumsan curae orci purus ornare inceptos laoreet. Elementum platea non elit magnis efficitur praesent laoreet ridiculus.
-                        </p>
+                        <div 
+                            style={styles.newsBody} 
+                            dangerouslySetInnerHTML={{ __html: newsItem.description || 'Lorem ipsum...' }} 
+                        />
                     </div>
 
                     <div style={styles.lowerPanel}>
                         <div style={styles.button2}>
-                                    Share
-                                    <span style={styles.iconWrapper}>
-                                        <FaShare style={styles.icon} />
-                                    </span>
+                            Share
+                            <span style={styles.iconWrapper}>
+                                <FaShare style={styles.icon} />
+                            </span>
                         </div>
                     </div>
                 </div>
 
-                <div style={styles.rightPanel}>
-
+                                <div style={styles.rightPanel}>
                     <div style={styles.innerCard}>
-                        <h1 style={styles.title}>More News</h1>
-
-                        <div style={styles.newsCardSmall}>
-                            <div style={styles.overlay}></div> Overlay with semi-transparency
-                            <div style={styles.content}>
-                                <h1 style={styles.title2}>News Headline...</h1>
-                                {/* Other content can go here */}
-                            </div>
-                        </div>
-
-                        <div style={styles.newsCardSmall}>
-                            <div style={styles.overlay}></div> {/* Overlay with semi-transparency */}
-                            <div style={styles.content}>
-                                <h1 style={styles.title2}>News Headline...</h1>
-                                {/* Other content can go here */}
-                            </div>
-                        </div>
-
-                        <div style={styles.newsCardSmall}>
-                            <div style={styles.overlay}></div> {/* Overlay with semi-transparency */}
-                            <div style={styles.content}>
-                                <h1 style={styles.title2}>News Headline...</h1>
-                                {/* Other content can go here */}
-                            </div>
-                        </div>
-
-                        <div style={styles.newsCardSmall}>
-                            <div style={styles.overlay}></div> {/* Overlay with semi-transparency */}
-                            <div style={styles.content}>
-                                <h1 style={styles.title2}>News Headline...</h1>
-                                {/* Other content can go here */}
-                            </div>
-                        </div>
-
+                        <h1 style={styles.title}>Learn More</h1>
+                        {newsItems
+                            .filter(news => news.category === "Education") // Filter by category
+                            .map(news => (
+                                <div 
+                                    style={{
+                                        ...styles.newsCardSmall, 
+                                        backgroundImage: `url(${news.image || pholder.src})`
+                                    }} 
+                                    key={news._id}
+                                >
+                                    <Link href={`/educational/${news._id}`} passHref>
+                                        <div style={styles.overlay}></div>
+                                    </Link>
+                                    <div style={styles.content}>
+                                        <h1 style={styles.title2}>{news.title}</h1>
+                                    </div>
+                                </div>
+                            ))
+                        }
                         <div style={styles.viewAllButton}>
                             View All
                         </div>
                     </div>
                 </div>
-                
-
-                
-                
-                    
-                        
-
-
             </div>
         </Layout>
-    )
-}
+    );
+};
 
-const styles={
 
+
+const styles = {
     pageContainer:{
         display: 'flex',
         flexDirection: 'row',
@@ -357,4 +389,5 @@ const styles={
             width: '100%', // Full width of the innerCard
             transition: 'background-color 0.3s',
         },
-}
+
+};

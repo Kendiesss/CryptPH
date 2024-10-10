@@ -13,6 +13,7 @@ import gradientModal from '@/img/gradient-modal.png'
 import logo from '@/img/logo.png'
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 
@@ -560,9 +561,17 @@ export default function HeroPage() {
                     {newsData.length > 0 ? (
                         newsData.map((newsItem) => (
                         <Card key={newsItem._id}>
-                            <img src={newsItem.image} alt={newsItem.title} style={styles.cardImage} />   
+                                <Link href={newsItem.category === "Education" ? `/educational/${newsItem._id}` : `/news/${newsItem._id}`} legacyBehavior>
+                                <a>
+                                    <img src={newsItem.image} alt={newsItem.title} style={styles.cardImage} />
+                                </a>
+                            </Link>   
                             <h1 style={styles.cardName}>{newsItem.title}</h1>
-                            <p style={styles.cardInfo}>{stripHtmlTags(newsItem.description)}</p>
+                            
+                            <p style={styles.cardInfo}>
+                                {stripHtmlTags(newsItem.description).substring(0, 50)}...
+                            </p>
+    
                             <div style={styles.categoryGroup}>
                                 <p style={styles.cardHeader}>Category</p>
                                 <p style={styles.cardInfo}>{newsItem.category}</p>
@@ -574,7 +583,7 @@ export default function HeroPage() {
                             <div style={styles.categoryGroup}>
                                 <p style={styles.cardHeader}>Authors</p>
                                 <p style={styles.cardInfo}>{newsItem.author}</p>
-                                </div>
+                            </div>
                             <div style={styles.iconGroup}>
                                 <button onClick={() => handleEditClick(newsItem)}><FaRegEdit style={styles.cardIcon} /></button>
                                 <button><FaRegTrashAlt style={styles.cardIcon} onClick={() => handleDeleteClick(newsItem._id)} /></button>
@@ -595,8 +604,8 @@ export default function HeroPage() {
                     onSave={handleSave}
                 />
                 <AddModal show={isAddModalOpen} onClose={handleAddCloseModal} />
-
+    
             </div>
         </Layout>
-    );
+    );    
 }
