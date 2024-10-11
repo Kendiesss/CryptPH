@@ -1,13 +1,12 @@
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Layout from '../Layout';
 import { FaBitcoin } from "react-icons/fa";
 import { IoMdTrendingDown } from "react-icons/io";
 import gradient1 from '@/img/gradient-1.png';
-import React, {useState } from 'react';
 
 const Card = ({ children }) => {
     const [isHovered, setIsHovered] = useState(false);
-
     return (
         <div
             style={{
@@ -22,42 +21,81 @@ const Card = ({ children }) => {
     );
 };
 
-const CoinCard = ({ children }) => {
-    const [isHovered, setIsHovered] = useState(false);
-
-    return (
-        <div
-            style={{
-                ...styles.CoinCard,
-                ...(isHovered ? styles.CoinCardHover : {})
-            }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
-            {children}
-        </div>
-    );
-};
-
-
 export default function DummyPage({ title }) {
-
     const [isHovered1, setIsHovered1] = useState(false);
     const [isHovered2, setIsHovered2] = useState(false);
     const [isHovered3, setIsHovered3] = useState(false);
-    const [isHovered4, setIsHovered4] = useState(false); //For Entry Button
-    const [isHovered5, setIsHovered5] = useState(false); //For Exit Button
+    const [isHovered4, setIsHovered4] = useState(false); // Entry Button
+    const [isHovered5, setIsHovered5] = useState(false); // Exit Button
+
+    useEffect(() => {
+        // Dynamically load the TradingView widget script
+        const script = document.createElement('script');
+        script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js";
+        script.async = true;
+        script.innerHTML = JSON.stringify(  {
+            "colorTheme": "dark",
+            "dateRange": "12M",
+            "showChart": true,
+            "locale": "en",
+            "largeChartUrl": "",
+            "isTransparent": false,
+            "showSymbolLogo": true,
+            "showFloatingTooltip": false,
+            "width": "400",
+            "height": "350",
+            "plotLineColorGrowing": "rgba(41, 98, 255, 1)",
+            "plotLineColorFalling": "rgba(41, 98, 255, 1)",
+            "gridLineColor": "rgba(42, 46, 57, 0)",
+            "scaleFontColor": "rgba(209, 212, 220, 1)",
+            "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
+            "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
+            "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
+            "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
+            "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
+            "tabs": [
+              {
+                "title": "GCrypto",
+                "symbols": [
+                  {
+                    "s": "BINANCE:BTCUSDT"
+                  },
+                  {
+                    "s": "OANDA:XAUUSD"
+                  }
+                ]
+              },
+              {
+                "title": "Maya",
+                "symbols": [
+                  {
+                    "s": "AMEX:SPY"
+                  },
+                  {
+                    "s": "NASDAQ:NVDA"
+                  }
+                ]
+              },
+              {
+                "title": "CoinsPH",
+                "symbols": [
+                  {
+                    "s": "NSE:NIFTY"
+                  }
+                ]
+              }
+            ]
+          });
+        document.getElementById('tradingview-widget-container').appendChild(script);
+    }, []);
 
     return (
-        <Layout
-            pageTitle={title}
-        >
-           
-           <div style={styles.pageContainer}>
-           <div style={styles.gradient1}></div>
+        <Layout pageTitle={title}>
+            <div style={styles.pageContainer}>
+                <div style={styles.gradient1}></div>
                 <div style={styles.topContainer}>
-                    <div style={styles.leftPanel}>
-                            <h1 style={styles.titleHeader}>Virtual Trading</h1>
+                <div style={styles.leftPanel}>
+                <h1 style={styles.titleHeader}>Virtual Trading</h1>
                         <div style={styles.topGroup}>
                             <div style={styles.dummyCashContainer}>
                                 <h1 style={styles.header1}>Available Dummy Cash</h1>
@@ -93,79 +131,77 @@ export default function DummyPage({ title }) {
                                 onMouseLeave={() => setIsHovered3(false)}
                                 
                                 >Order History</button>
-                            </div>
+                            </div></div>
+                            <div style={styles.cardContainer}>
+
+                            <Card>
+                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
+                                <span style={styles.smallcard}>Long</span>
+                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
+                                <div style={styles.priceGroup}>
+                                    <h1 style={styles.header2}>0.0</h1>
+                                    <h1 style={styles.header1}>Average Price</h1>
+                                </div>
+                                <div style={styles.priceGroup}>
+                                    <h1 style={styles.header2}>0.0</h1>
+                                    <h1 style={styles.header1}>Total Cost</h1>
+                                </div>
+                                <div style={styles.profitGroup}>
+                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                    <h1 style={styles.header1}>Total Cost</h1>
+                                </div>
+                                <div style={styles.profitGroup}>
+                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                    <h1 style={styles.header1}>% Profit</h1>
+                                </div>
+                            </Card>
+
+                            <Card>
+                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
+                                <span style={styles.smallcard}>Long</span>
+                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
+                                <div style={styles.priceGroup}>
+                                    <h1 style={styles.header2}>0.0</h1>
+                                    <h1 style={styles.header1}>Average Price</h1>
+                                </div>
+                                <div style={styles.priceGroup}>
+                                    <h1 style={styles.header2}>0.0</h1>
+                                    <h1 style={styles.header1}>Total Cost</h1>
+                                </div>
+                                <div style={styles.profitGroup}>
+                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                    <h1 style={styles.header1}>Total Cost</h1>
+                                </div>
+                                <div style={styles.profitGroup}>
+                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                    <h1 style={styles.header1}>% Profit</h1>
+                                </div>
+                            </Card>
+
+                            <Card>
+                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
+                                <span style={styles.smallcard}>Long</span>
+                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
+                                <div style={styles.priceGroup}>
+                                    <h1 style={styles.header2}>0.0</h1>
+                                    <h1 style={styles.header1}>Average Price</h1>
+                                </div>
+                                <div style={styles.priceGroup}>
+                                    <h1 style={styles.header2}>0.0</h1>
+                                    <h1 style={styles.header1}>Total Cost</h1>
+                                </div>
+                                <div style={styles.profitGroup}>
+                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                    <h1 style={styles.header1}>Total Cost</h1>
+                                </div>
+                                <div style={styles.profitGroup}>
+                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                    <h1 style={styles.header1}>% Profit</h1>
+                                </div>
+                            </Card>
+                                    
                         </div>
-                        <div style={styles.cardContainer}>
-
-                            <Card>
-                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                <span style={styles.smallcard}>Long</span>
-                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Average Price</h1>
-                                </div>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>% Profit</h1>
-                                </div>
-                            </Card>
-
-                            <Card>
-                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                <span style={styles.smallcard}>Long</span>
-                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Average Price</h1>
-                                </div>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>% Profit</h1>
-                                </div>
-                            </Card>
-
-                            <Card>
-                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                <span style={styles.smallcard}>Long</span>
-                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Average Price</h1>
-                                </div>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>% Profit</h1>
-                                </div>
-                            </Card>
-
-                        </div>
-                    </div>
-                    <div style={styles.rightCard}>
+                        <div style={styles.rightCard}>
                         <div style={styles.upperGroup}>
                             <div style={styles.leftUpper}>
                                 <h1 style={styles.header4}>0.00001</h1>
@@ -193,6 +229,10 @@ export default function DummyPage({ title }) {
 
                             </div>
 
+                            <div style={styles.api} id="tradingview-widget-container">
+                            <div className="tradingview-widget-container__widget"></div>
+                        </div>
+
                             <div style={styles.cardButtonGroup}>
                                 <button style={{
                                     ...styles.Button2,
@@ -209,48 +249,10 @@ export default function DummyPage({ title }) {
                                 onMouseEnter={() => setIsHovered5(true)}
                                 onMouseLeave={() => setIsHovered5(false)}>Exit</button>
 
-                            </div>
+                            </div></div></div>
+                      </div>
 
-                            <div style={styles.coinCardContainer}>
-
-                                <CoinCard>
-                                    <div style={styles.innerCoinCard}> 
-                                        <h1 style={styles.header5}>Coin</h1> 
-                                        <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    </div>
-                                    <div style={styles.innerCoinCard}>
-                                    <h1 style={styles.header5}>0.000001</h1>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
-                                    </div>
-                                </CoinCard>
-
-                                <CoinCard>
-                                    <div style={styles.innerCoinCard}> 
-                                        <h1 style={styles.header5}>Coin</h1> 
-                                        <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    </div>
-                                    <div style={styles.innerCoinCard}>
-                                    <h1 style={styles.header5}>0.000001</h1>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
-                                    </div>
-                                </CoinCard>
-
-                                <CoinCard>
-                                    <div style={styles.innerCoinCard}> 
-                                        <h1 style={styles.header5}>Coin</h1> 
-                                        <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    </div>
-                                    <div style={styles.innerCoinCard}>
-                                    <h1 style={styles.header5}>0.000001</h1>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
-                                    </div>
-                                </CoinCard>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div style={styles.bottomContainer}>
+                    <div style={styles.bottomContainer}>
                     <h1 style={styles.header3}>Total</h1>
                     <div style={styles.totalRightPanel}>
                         <div style={styles.totalPriceGroup}>
@@ -272,9 +274,10 @@ export default function DummyPage({ title }) {
                         </div>
                     </div>
                 </div>
-           </div>
+                </div>
+            </div>
         </Layout>
-    )
+    );
 }
 
 const styles = {
@@ -451,7 +454,7 @@ const styles = {
         margin: '1rem',
         display:'flex',
         flexDirection:'column',
-        height: '600px',
+        height: '800px',
         width: '450px',
         border: '1px solid white',
         borderRadius: '20px',
@@ -598,31 +601,7 @@ const styles = {
                 marginTop: '1rem',
             },
 
-                CoinCard:{
-                    display:'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    height: '80px',
-                    width: '350px',
-                    border: '2px solid white',
-                    borderRadius: '20px',
-                    marginBottom: '1rem',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                },
-
-                CoinCardHover: {
-                    boxShadow: '0 0 15px rgba(255, 255, 255, 0.8)', 
-                    transform: 'scale(1.05)', 
-                },
-
-                innerCoinCard:{
-                    display:'flex',
-                    flexDirection:'row',
-                    justifyContent:'center',
-                    padding:'10px',
-                    alignItems:'center',
-                    margin: '5px',
-                },
+               
 
     bottomContainer:{
         display: 'flex',
