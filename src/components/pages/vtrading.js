@@ -3,7 +3,7 @@ import Layout from '../Layout';
 import { FaBitcoin } from "react-icons/fa";
 import { IoMdTrendingDown } from "react-icons/io";
 import gradient1 from '@/img/gradient-1.png';
-import React, {useState } from 'react';
+import React, {useState, useEffect } from 'react';
 
 const Card = ({ children }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -47,6 +47,61 @@ export default function DummyPage({ title }) {
     const [isHovered3, setIsHovered3] = useState(false);
     const [isHovered4, setIsHovered4] = useState(false); //For Entry Button
     const [isHovered5, setIsHovered5] = useState(false); //For Exit Button
+
+    useEffect(() => {
+        // Dynamically load the TradingView widget script
+        if (!document.querySelector('#tradingview-widget-script')) {
+            // Dynamically load the TradingView widget script
+            const script = document.createElement('script');
+            script.id = 'tradingview-widget-script'; // Assign an ID to prevent multiple instances
+            script.src = "https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js";
+            script.async = true;
+            script.innerHTML = JSON.stringify({
+              "colorTheme": "dark",
+              "dateRange": "12M",
+              "showChart": true,
+              "locale": "en",
+              "largeChartUrl": "",
+              "isTransparent": false,
+              "showSymbolLogo": true,
+              "showFloatingTooltip": false,
+              "width": "400",
+              "height": "350",
+              "plotLineColorGrowing": "rgba(41, 98, 255, 1)",
+              "plotLineColorFalling": "rgba(41, 98, 255, 1)",
+              "gridLineColor": "rgba(42, 46, 57, 0)",
+              "scaleFontColor": "rgba(209, 212, 220, 1)",
+              "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
+              "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
+              "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
+              "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
+              "symbolActiveColor": "rgba(41, 98, 255, 0.12)",
+              "tabs": [
+                {
+                  "title": "GCrypto",
+                  "symbols": [
+                    { "s": "BINANCE:BTCUSDT" },
+                    { "s": "OANDA:XAUUSD" }
+                  ]
+                },
+                {
+                  "title": "Maya",
+                  "symbols": [
+                    { "s": "AMEX:SPY" },
+                    { "s": "NASDAQ:NVDA" }
+                  ]
+                },
+                {
+                  "title": "CoinsPH",
+                  "symbols": [
+                    { "s": "NSE:NIFTY" }
+                  ]
+                }
+              ]
+            });
+            document.getElementById('tradingview-widget-container').appendChild(script);
+          }
+    }, []);
 
     return (
         <Layout
@@ -213,39 +268,9 @@ export default function DummyPage({ title }) {
 
                             <div style={styles.coinCardContainer}>
 
-                                <CoinCard>
-                                    <div style={styles.innerCoinCard}> 
-                                        <h1 style={styles.header5}>Coin</h1> 
-                                        <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    </div>
-                                    <div style={styles.innerCoinCard}>
-                                    <h1 style={styles.header5}>0.000001</h1>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
-                                    </div>
-                                </CoinCard>
-
-                                <CoinCard>
-                                    <div style={styles.innerCoinCard}> 
-                                        <h1 style={styles.header5}>Coin</h1> 
-                                        <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    </div>
-                                    <div style={styles.innerCoinCard}>
-                                    <h1 style={styles.header5}>0.000001</h1>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
-                                    </div>
-                                </CoinCard>
-
-                                <CoinCard>
-                                    <div style={styles.innerCoinCard}> 
-                                        <h1 style={styles.header5}>Coin</h1> 
-                                        <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    </div>
-                                    <div style={styles.innerCoinCard}>
-                                    <h1 style={styles.header5}>0.000001</h1>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span> 
-                                    </div>
-                                </CoinCard>
-
+                            <div style={styles.api} id="tradingview-widget-container">
+                                    <div className="tradingview-widget-container__widget"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -451,7 +476,7 @@ const styles = {
         margin: '1rem',
         display:'flex',
         flexDirection:'column',
-        height: '600px',
+        height: '675px',
         width: '450px',
         border: '1px solid white',
         borderRadius: '20px',

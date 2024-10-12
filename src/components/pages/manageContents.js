@@ -547,7 +547,7 @@ export default function HeroPage() {
       const [isHovered, setIsHovered] = useState(false);
 
       return (
-        <Layout pageTitle="Admin News - CryptPH">
+        <Layout pageTitle="Manage Contents - CryptPH Admin">
             <Head></Head>
             <div style={styles.pageContainer}>
                 <h1 style={styles.pageHeader}>Contents</h1>
