@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Layout from '../Layout'
 import { IoMdArrowDropdown } from "react-icons/io";
 import { MdOutlineChatBubble } from "react-icons/md";
-import React, {useState } from 'react';
+import React, {useState, useEffect } from 'react';
 
 const coinData = [
     { icon: '🪙', name: 'BTC' },
@@ -13,21 +13,51 @@ const coinData = [
 ];
 
 export default function DummyPage({ title }) {
+    useEffect(() => {
+        // Load the TradingView chart when the component mounts
+        const script = document.createElement('script');
+        script.src = 'https://s3.tradingview.com/tv.js';
+        script.async = true;
+        script.onload = () => {
+            new TradingView.widget({
+                "width": 1000,
+                "height": 600,
+                "symbol": "BINANCE:BTCUSDT", // Adjust the crypto pair as necessary
+                "interval": "D", // Daily interval
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1", // Candlestick chart
+                "locale": "en",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "hide_top_toolbar": false,
+                "withdateranges": true,
+                "allow_symbol_change": true,
+                "container_id": "tradingview_advanced"
+            });
+        };
+        document.body.appendChild(script);
+        return () => {
+            // Cleanup script when component unmounts
+            document.body.removeChild(script);
+        };
+    }, []);
+
+
+    
 
     return (
-        <Layout
-            pageTitle={title}
-        >
+        <Layout pageTitle={title}>
             <div style={styles.pageContainer}>
-                
                 <div style={styles.leftPanel}>
                     <div style={styles.dropDownGroup}>
                         <select style={styles.dropdown}>
-                                {coinData.map((coin, index) => (
-                                    <option key={index} value={coin.name}>
-                                        {coin.icon} {coin.name}
-                                    </option>
-                                ))}
+                            {coinData.map((coin, index) => (
+                                <option key={index} value={coin.name}>
+                                    {coin.icon} {coin.name}
+                                </option>
+                            ))}
                         </select>
                         <div style={styles.cryptoDataGroup}>
                             <h1 style={styles.cryptoData1}>&#x20B1;3,852,578</h1>
@@ -36,39 +66,18 @@ export default function DummyPage({ title }) {
                     </div>
                     <h1 style={styles.header1}>Latest News in CryptPH</h1>
                     <div style={styles.newsCardContainer}>
-
                         <div style={styles.newsCard}>
-                            <h1 style={styles.newsHeader}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur hendrerit placerat leo sit amet sollicitudin. Sed id lectus auctor orci facilisis commodo.</h1>
+                            <h1 style={styles.newsHeader}>Lorem ipsum dolor sit amet...</h1>
                             <p style={styles.p1}>10 days ago</p>
                         </div>
-
-                        <div style={styles.newsCard}>
-                            <h1 style={styles.newsHeader}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur hendrerit placerat leo sit amet sollicitudin. Sed id lectus auctor orci facilisis commodo.</h1>
-                            <p style={styles.p1}>10 days ago</p>
-                        </div>
-
-                        <div style={styles.newsCard}>
-                            <h1 style={styles.newsHeader}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur hendrerit placerat leo sit amet sollicitudin. Sed id lectus auctor orci facilisis commodo.</h1>
-                            <p style={styles.p1}>10 days ago</p>
-                        </div>
-
-                        <div style={styles.newsCard}>
-                            <h1 style={styles.newsHeader}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur hendrerit placerat leo sit amet sollicitudin. Sed id lectus auctor orci facilisis commodo.</h1>
-                            <p style={styles.p1}>10 days ago</p>
-                        </div>
-
-                        <div style={styles.newsCard}>
-                            <h1 style={styles.newsHeader}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur hendrerit placerat leo sit amet sollicitudin. Sed id lectus auctor orci facilisis commodo.</h1>
-                            <p style={styles.p1}>10 days ago</p>
-                        </div>
-
+                        {/* Add more news cards here */}
                     </div>
                 </div>
 
                 <div style={styles.rightPanel}>
-
+                    {/* TradingView Advanced Chart */}
                     <div style={styles.chartContainer}>
-                            <h1>CHARTS</h1>
+                        <div id="tradingview_advanced"></div> {/* Chart container */}
                     </div>
                     <div style={styles.historicalDataContainer}>
 
