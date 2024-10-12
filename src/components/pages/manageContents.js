@@ -566,7 +566,7 @@ export default function HeroPage() {
                                     <img src={newsItem.image} alt={newsItem.title} style={styles.cardImage} />
                                 </a>
                             </Link>   
-                            <h1 style={styles.cardName}>{newsItem.title}</h1>
+                            <h1 style={styles.cardName}>{newsItem.title.length > 20 ? `${newsItem.title.substring(0, 20)}...` : newsItem.title}</h1>
                             
                             <p style={styles.cardInfo}>
                                 {stripHtmlTags(newsItem.description).substring(0, 50)}...
