@@ -158,7 +158,7 @@ const styles = {
         flexDirection: 'column',
         backgroundColor: 'white',
         width: '1000px',
-        height: '1400px',
+        minHeight: '1000px',
         zIndex: '-1',
         borderRadius: '30px',
     },

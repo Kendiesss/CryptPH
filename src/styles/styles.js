@@ -8,9 +8,10 @@ const styles = {
         padding: '20px',
         marginLeft: '10rem', 
         marginRight: '10rem',
+        minHeight: '100vh',
         alignItems: 'left',
         justifyContent:'left',
-        position:'absolute',
+        position:'relative',
     },
 
     infoContainer: {
@@ -83,10 +84,10 @@ const styles = {
     // B-3 Cards
 
     cardsContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: '20px',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)', 
+        gap: '20px', 
+        width: '100%', 
     },
     card: {
         display: 'flex',
