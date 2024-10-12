@@ -120,22 +120,22 @@ export default function DummyPage({ title }) {
                                 
                                 <div style={styles.faqCards}>
                                     <h1 style={styles.faqHeader}>What is CryptPH?</h1>
-                                    <p style={styles.p2}>Lorem ipsum odor amet, consectetuer adipiscing elit. Commodo at penatibus dictumst adipiscing orci ridiculus nunc. Cursus vulputate fringilla in elit aliquet condimentum. Primis ligula penatibus platea; placerat enim feugiat accumsan accumsan. Arcu ultrices in nisi odio lorem habitasse tincidunt at. Lobortis volutpat vehicula volutpat sodales pellentesque ad adipiscing vulputate.</p>
+                                    <p style={styles.p2}>CryptPH is an innovative platform designed to make cryptocurrency trading more accessible in the Philippines. It provides users with cryptocurrency data visualizations, basic trading tools, and educational contents.</p>
                                 </div>
 
                                 <div style={styles.faqCards}>
                                     <h1 style={styles.faqHeader}>Who are CryptPH's Developers?</h1>
-                                    <p style={styles.p2}>Lorem ipsum odor amet, consectetuer adipiscing elit. Commodo at penatibus dictumst adipiscing orci ridiculus nunc. Cursus vulputate fringilla in elit aliquet condimentum. Primis ligula penatibus platea; placerat enim feugiat accumsan accumsan. Arcu ultrices in nisi odio lorem habitasse tincidunt at. Lobortis volutpat vehicula volutpat sodales pellentesque ad adipiscing vulputate.</p>
+                                    <p style={styles.p2}>CryptPH was developed by a dedicated team of students, including John Ken B. Angeles, Giemmel Adryeane A. Magno, Job Matthew J. Milo, and Tom Cyrus P. Vilar. </p>
                                 </div>
 
                                 <div style={styles.faqCards}>
                                     <h1 style={styles.faqHeader}>How to use CryptPH's Virtual Trading Game?</h1>
-                                    <p style={styles.p2}>Lorem ipsum odor amet, consectetuer adipiscing elit. Commodo at penatibus dictumst adipiscing orci ridiculus nunc. Cursus vulputate fringilla in elit aliquet condimentum. Primis ligula penatibus platea; placerat enim feugiat accumsan accumsan. Arcu ultrices in nisi odio lorem habitasse tincidunt at. Lobortis volutpat vehicula volutpat sodales pellentesque ad adipiscing vulputate.</p>
+                                    <p style={styles.p2}>CryptPH's Virtual Trading Game allows users to practice trading without risking real money. To start, sign up for an account, and you'll be given a set amount of virtual currency to trade. You can then explore the different trading pairs and try your hand at buying and selling cryptocurrencies based on market data. The game helps users build their skills and confidence before engaging in real-world trading.</p>
                                 </div>
 
                                 <div style={styles.faqCards}>
                                     <h1 style={styles.faqHeader}>How to Register for an Account?</h1>
-                                    <p style={styles.p2}>Lorem ipsum odor amet, consectetuer adipiscing elit. Commodo at penatibus dictumst adipiscing orci ridiculus nunc. Cursus vulputate fringilla in elit aliquet condimentum. Primis ligula penatibus platea; placerat enim feugiat accumsan accumsan. Arcu ultrices in nisi odio lorem habitasse tincidunt at. Lobortis volutpat vehicula volutpat sodales pellentesque ad adipiscing vulputate.</p>
+                                    <p style={styles.p2}>At the home page, click the register button. You will be redirected to the register page. Users can register and login using their Google Accounts.</p>
                                 </div>
                             </div>
                     </div>
