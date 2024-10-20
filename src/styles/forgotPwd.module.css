@@ -1,0 +1,172 @@
+.pageContainer {
+    background-image: url('../img/gradient-3.png'); /* Adjust the path as needed */
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: row;
+    margin-left: 3rem;
+    margin-top: 5rem;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Ensure that the gradient is positioned correctly */
+}
+
+.leftPanel {
+    height: 500px;
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.header1 {
+    font-family: 'Sora';
+    font-size: 50px;
+    font-weight: 900;
+    margin-bottom: 10px;
+}
+
+.body1 {
+    font-family: 'Sora';
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 50px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.emailInput {
+    font-size: 16px;
+    font-family: 'Sora';
+    padding: 10px;
+    width: 500px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    color: black;
+}
+
+.submitButton {
+    font-size: 16px;
+    font-family: 'Sora';
+    font-weight: 700;
+    padding: 10px 20px;
+    background-color: #F4594E;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 50px;
+    width: 150px;
+}
+
+.image {
+    max-width: 500px;
+    height: 500px;
+    margin-left: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Responsive Styles */
+@media only screen and (max-width: 1024px) {
+    .pageContainer {
+        flex-direction: column;
+        margin-left: 3rem; /* Adjust margin for smaller screens */
+        margin-top: 2rem; /* Adjust margin for smaller screens */
+    }
+
+    .leftPanel {
+        width: 90%;
+        height: auto; /* Allow height to adjust based on content */
+        padding: 15px;
+    }
+
+    .gradient1 {
+        top: 0; /* Adjust top for better visibility */
+        left: -50%;
+        width: 90%; /* Adjust gradient width */
+        height: 100%; /* Adjust height for responsive */
+    }
+
+    .emailInput {
+        width: 200%; /* Make email input responsive */
+    }
+
+    .header1 {
+        font-size: 36px; /* Adjust font size */
+    }
+
+    .body1 {
+        font-size: 16px; /* Adjust font size */
+    }
+
+    .submitButton {
+        width: 100%; /* Make button responsive */
+    }
+}
+
+@media only screen and (max-width: 768px) {
+
+    .pageContainer {
+        flex-direction: column;
+        margin-left: 0; /* Adjust margin for smaller screens */
+        margin-top: 2rem; /* Adjust margin for smaller screens */
+    }
+
+    .gradient1 {
+        top: 0; /* Adjust top for better visibility */
+        left: -50%;
+        width: 90%; /* Adjust gradient width */
+        height: 100%; /* Adjust height for responsive */
+    }
+
+    .header1 {
+        font-size: 30px; /* Further adjust font size */
+    }
+
+    .body1 {
+        font-size: 14px; /* Further adjust font size */
+    }
+
+    .image {
+        max-width: 400px; /* Adjust image size */
+        height: auto; /* Maintain aspect ratio */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .pageContainer {
+        flex-direction: column;
+        margin-left: 0; /* Adjust margin for smaller screens */
+        margin-top: 2rem; /* Adjust margin for smaller screens */
+        background-image: none;
+    }
+
+    .header1 {
+        font-size: 24px; /* Further adjust font size */
+    }
+
+    .body1 {
+        font-size: 12px; /* Further adjust font size */
+    }
+
+    .emailInput {
+        width: 150%; /* Adjust width for small screens */
+    }
+
+    .submitButton {
+        width: 100%; /* Make button full width */
+    }
+}

@@ -1,0 +1,166 @@
+/* @/styles/dashboard.module.css */
+.pageContainer {
+    position: relative;
+}
+
+.logo {
+    max-width: 30%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.heroContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 20px;
+    font-family: 'Sora', sans-serif;
+}
+
+.heroContainer2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 20px;
+    font-family: 'Sora', sans-serif;
+    margin-left: 5%;
+    position: relative;
+}
+
+.imageContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.image {
+    max-width: 80%;
+    height: auto;
+    min-width: 80%;
+    min-height: 80%;
+}
+
+.gradient1 {
+    position: absolute;
+    top: 20%; /* Start from the middle */
+    left: -50%; /* Align to the left */
+    width: 80%; /* Full width */
+    height: 40%; /* Adjust height to prevent overlap */
+    background-image: url('/img/gradient-1.png');
+    background-size: cover; /* Change to cover */
+    background-repeat: no-repeat;
+    background-position: center; /* Centered the gradient */
+    z-index: -1; /* Ensure it's behind other elements */
+}
+
+.gradient2 {
+    position: absolute;
+    bottom: 30%; /* Align it to the bottom of the hero section */
+    right: 0%; /* Align to the right */
+    width: 80%; /* Full width */
+    height: 30%; /* Adjust height to prevent overlap with footer */
+    background-image: url('/img/gradient-2half.png');
+    background-size: cover; /* Change to cover */
+    background-repeat: no-repeat;
+    background-position: center; /* Centered the gradient */
+    z-index: -1; /* Ensure it's behind other elements */
+}
+
+.contentContainer {
+    flex: 1;
+    padding-left: 40px;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.title2 {
+    font-size: 5rem;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+
+
+.brands {
+    display: flex;
+    justify-content: center;
+    max-width: 20%;
+    height: auto;
+    margin: 1% auto; /* Center with auto margins */
+}
+
+.brandContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    background-color: rgba(64, 64, 64, 0.2);
+    max-width: 80%;
+    height: auto;
+    margin: auto;
+    padding: 20px 0;
+}
+
+.ctaButton {
+    padding: 15px 30px;
+    background-color: #fff;
+    color: black;
+    border: none;
+    border-radius: 10rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-width: 50rem;  /* Maximum width */
+    max-height: 6rem;  /* Maximum height */
+}
+
+@media (max-width: 768px) { /* Media query for phone sizes */
+
+    
+    
+    .heroContainer {
+        flex-direction: column; /* Change direction to column on small screens */
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .heroContainer2 {
+        padding-left: 0;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .gradient2 {
+        bottom: 40%; /* Align it to the bottom of the hero section */
+    }
+
+    .contentContainer{
+        padding-left: 0;
+    }
+    
+    .title2 {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 50px;
+    }
+
+
+}

@@ -1,0 +1,325 @@
+.pageContainer {
+    display: flex;
+    flex-direction: row;
+    margin-left: 6rem;
+    margin-top: 1rem;
+}
+
+.newsPanel {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 1000px;
+    min-height: 1000px;
+    z-index: -1;
+    border-radius: 30px;
+}
+
+.upperPanel {
+    display: flex;
+    flex-direction: row;
+    width: 1200px;
+}
+
+.newsCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: right;
+    position: relative;
+    height: 500px; /* Set the height of the newsCard */
+    width: 1000px;  /* Set the width of the newsCard */
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.imageBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.detailsGrp {
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(0, 0, 0, 0.5); 
+    height: 150px;
+    width: 1000px;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 50px;
+}
+
+.headlineLarge {
+    font-family: 'Sora';
+    font-weight: 900;
+    font-size: 50px;
+}
+
+.button1 {
+    font-family: 'Sora';
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 50px;
+    background-color: white;
+    padding: 10px 20px;
+    color: #0B162B;
+    height: 30px;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconWrapper {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.icon {
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.midPanel {
+    width: 1000px;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    padding: 25px;
+}
+
+.authors {
+    font-family: 'Sora';
+    font-weight: 700;
+    color: white;
+    font-size: 12px;
+    margin-bottom: 10px;
+    background-color: #0B162B;
+    border-radius: 30px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
+
+.newsBody {
+    font-family: 'Sora'; 
+    font-size: 18px; 
+    font-weight: 600;
+    line-height: 1.6; 
+    text-align: justify; 
+    color: #0B162B;
+    margin-bottom: 20px; 
+    padding: 10px 20px; 
+}
+
+.lowerPanel {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.button2 {
+    font-family: 'Sora';
+    font-weight: 700;
+    color: #0B162B;
+    font-size: 12px;
+    background-color: whitesmoke;
+    border: 1px solid #0B162B;
+    width: 120px;
+    padding: 10px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.rightPanel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 375px;
+    height: 100%;
+    margin-left: 2rem;
+    background-color: #0B162B;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.innerCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    border: 1px solid white;
+    width: 100%;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.title {
+    font-family: 'Sora';
+    font-weight: 900;
+    font-size: 24px;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.newsCardSmall {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 150px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    cursor: pointer;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+}
+
+.title2 {
+    font-family: 'Sora';
+    font-weight: 700;
+    font-size: 18px;
+    color: white;
+}
+
+.viewAllButton {
+    font-family: 'Sora';
+    font-weight: 700;
+    font-size: 14px;
+    color: #0B162B;
+    background-color: whitesmoke;
+    border: 1px solid #0B162B;
+    border-radius: 30px;
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+    .pageContainer {
+        flex-direction: column;
+        margin-left: 2rem;
+        margin-right: 2rem;
+    }
+
+    .newsPanel, .newsCard, .midPanel, .detailsGrp {
+        width: 100%;
+    }
+
+    .upperPanel {
+        width: 100%;
+    }
+
+    .rightPanel {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .headlineLarge {
+        font-size: 32px;
+    }
+
+    .detailsGrp {
+        padding: 20px;
+        height: auto;
+    }
+
+    .authors {
+        font-size: 10px;
+        padding: 5px;
+    }
+
+    .newsBody {
+        font-size: 16px;
+        padding: 5px;
+    }
+
+    .button1 {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+
+    .button2 {
+        font-size: 10px;
+        width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .headlineLarge {
+        font-size: 24px;
+    }
+
+    .detailsGrp {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .authors {
+        font-size: 8px;
+        padding: 3px;
+    }
+
+    .newsBody {
+        font-size: 14px;
+        padding: 3px;
+    }
+
+    .button1, .button2 {
+        font-size: 8px;
+        padding: 5px;
+        width: auto;
+    }
+    
+    .pageContainer {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaRegBell, FaUserCircle } from "react-icons/fa";
 import logo from '@/img/logo.png';
 import { MdBorderBottom } from 'react-icons/md';
@@ -6,7 +6,7 @@ import { MdBorderBottom } from 'react-icons/md';
 export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [bellDropdownOpen, setBellDropdownOpen] = useState(false);
-  
+  const [isMobile, setIsMobile] = useState(false); // State to track mobile view
 
   const toggleUserDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -17,6 +17,22 @@ export default function Header() {
     setBellDropdownOpen(!bellDropdownOpen);
     setDropdownOpen(false); // Close user dropdown if open
   };
+
+  // Effect to track window size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // Check if width is less than 768px
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Call on mount
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (isMobile) {
+    return null; // Render nothing if on mobile
+  }
 
   return (
     <header style={styles.header}>
@@ -51,6 +67,7 @@ export default function Header() {
     </header>
   );
 }
+
 const styles = {
   header: {
     backgroundColor: '#0B162B',
@@ -59,7 +76,6 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: '1px solid #fff',
-    
   },
   container: {
     display: 'flex',
@@ -128,6 +144,5 @@ const styles = {
     transform: 'translate(-50%,-70%)',   
     height: '80px', 
     maxWidth: '350px', 
-
   },
 };

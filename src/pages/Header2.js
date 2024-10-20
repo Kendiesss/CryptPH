@@ -1,22 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaRegBell, FaUserCircle } from "react-icons/fa";
 import logo from '@/img/logo.png';
-import { MdBorderBottom } from 'react-icons/md';
 
 export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [bellDropdownOpen, setBellDropdownOpen] = useState(false);
-  
+  const [isMobile, setIsMobile] = useState(false);
 
   const toggleUserDropdown = () => {
     setDropdownOpen(!dropdownOpen);
-    setBellDropdownOpen(false); // Close bell dropdown if open
+    setBellDropdownOpen(false);
   };
 
   const toggleBellDropdown = () => {
     setBellDropdownOpen(!bellDropdownOpen);
-    setDropdownOpen(false); // Close user dropdown if open
+    setDropdownOpen(false);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Call on mount
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (isMobile) {
+    return null; // Render nothing on mobile
+  }
 
   return (
     <header style={styles.header}>
@@ -31,7 +45,7 @@ export default function Header() {
       </div>
 
       <img src={logo.src} style={styles.centerImage} alt="Logo" />
-      
+
       {dropdownOpen && (
         <div className="dropdown-menu" style={styles.dropdownMenu}>
           <ul style={styles.menuList}>
@@ -51,6 +65,7 @@ export default function Header() {
     </header>
   );
 }
+
 const styles = {
   header: {
     backgroundColor: '#0B162B',
@@ -59,7 +74,6 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: '1px solid #fff',
-    
   },
   container: {
     display: 'flex',
@@ -84,18 +98,18 @@ const styles = {
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     padding: '5px 10px',
-    borderRadius: '20px', // Added border-radius for smoother look
+    borderRadius: '20px',
   },
   userIcon: {
     color: '#fff',
-    fontSize: '25px', // Increased size for better visibility
+    fontSize: '25px',
   },
   username: {
     color: '#fff',
     marginLeft: '10px',
-    fontSize: '16px', // Adjusted font size for consistency
-    fontWeight: '500', // Added font-weight for better visibility
-    whiteSpace: 'nowrap', // Prevents text from wrapping
+    fontSize: '16px',
+    fontWeight: '500',
+    whiteSpace: 'nowrap',
   },
   dropdownMenu: {
     position: 'absolute',
@@ -119,15 +133,11 @@ const styles = {
     transition: 'background-color 0.3s',
     fontSize: '14px',
   },
-  menuItemHover: {
-    backgroundColor: '#f0f0f0',
-  },
   centerImage: {
     position: 'absolute',
     left: '50%',
-    transform: 'translate(-50%,-70%)',   
-    height: '80px', 
-    maxWidth: '350px', 
-
+    transform: 'translate(-50%,-70%)',
+    height: '80px',
+    maxWidth: '350px',
   },
 };

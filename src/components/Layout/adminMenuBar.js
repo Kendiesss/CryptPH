@@ -6,7 +6,7 @@ import logo from '@/img/logo.png';
 
 const Icon = () => <div className="text-white">☰</div>; // Keep the toggle icon white for contrast
 
-export default function MenuBarMobile({ setter }) {
+export default function AdminMenuBar({ setter }) {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -29,12 +29,14 @@ export default function MenuBarMobile({ setter }) {
             </div>
 
             {menuOpen && (
-                <div className="flex flex-col items-center space-y-4 p-4 bg-gray-800 transition-all duration-300 w-full overflow-x-hidden">
-                    <Link href="/" className="text-white text-lg font-sora">Dashboard</Link>
-                    <Link href="/charts" className="text-white text-lg font-sora">Charts</Link>
+                <div className="flex flex-col items-center space-y-4 p-4 bg-gray-800 transition-all duration-300">
+                    <Link href="/admin-dashboard" className="text-white text-lg font-sora">Home</Link>
+                    <Link href="/manageContents" className="text-white text-lg font-sora">Manage Contents</Link>
+                    <Link href="/manageUsers" className="text-white text-lg font-sora">Manage Users</Link>
                     <Link href="/news" className="text-white text-lg font-sora">News</Link>
                     <Link href="/learn" className="text-white text-lg font-sora">Learn</Link>
                     <Link href="/virtual-trading" className="text-white text-lg font-sora">Virtual Trading</Link>
+                    <Link href="/" className="text-white text-lg font-sora">Logout</Link>
                 </div>
             )}
         </nav>

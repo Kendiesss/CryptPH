@@ -1,0 +1,401 @@
+/* learn.module.css */
+
+.pageContainer {
+    position: relative;
+    overflow: hidden;
+}
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 6rem;
+}
+
+.heroContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 20px;
+    font-family: 'Sora', sans-serif;
+}
+
+.coursesContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-left: 6rem;
+    padding: 20px;
+    max-width: 80%;
+    min-height: 60vh;
+}
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.coursesHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.sectionTitle {
+    font-family: 'Sora';
+    font-size: 35px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.sectionText {
+    font-family: 'Sora';
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.arrow {
+    margin-left: 8px;
+    font-size: 20px;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    margin: 1%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    width: 550px;
+    height: 300px;
+}
+
+.cardLeft {
+    flex: 1 1 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.cardRight {
+    flex: 1 1 60%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-content: center;
+}
+
+.cardTitle {
+    color: #fff;
+    font-size: 20px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.cardDesc {
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Sora', sans-serif;
+    text-align: justify;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.cardButton {
+    background-color: white;
+    color: #0B162B;
+    font-family: 'Sora';
+    font-weight: 900;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    align-self: center;
+    margin-top: auto;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playIcon {
+    margin-left: 8px;
+    font-size: 14px;
+}
+
+.icon {
+    font-size: 30px;
+    color: #fff;
+}
+
+.cardHover {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+}
+
+.gradient1 {
+    position: absolute;
+    top: 1%;
+    left: -20%;
+    width: 70%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left;
+    z-index: -1;
+}
+
+.gradient2 {
+    position: absolute;
+    top: 30%;
+    right: 0%;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    z-index: -1;
+}
+
+.imageContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.image {
+    max-width: 80%;
+    height: auto;
+    min-width: 50%;
+    min-height: 50%;
+}
+
+.courseImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    min-width: 200px;
+    min-height: 200px;
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 20px;
+}
+
+.contentContainer {
+    flex: 1;
+    padding-left: 40px;
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.title2 {
+    font-size: 5rem;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.logo {
+    max-width: 30%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.brands {
+    display: flex;
+    justify-content: center;
+    max-width: 20%;
+    height: auto;
+    margin: 1% auto;
+}
+
+.brandContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    background-color: rgba(64, 64, 64, 0.2);
+    max-width: 80%;
+    height: auto;
+    margin: auto;
+    padding: 20px 0;
+}
+
+.centerContent {
+    flex-direction: column;
+    text-align: center;
+}
+
+.ctaButton {
+    padding: 15px 30px;
+    background-color: #fff;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 10rem;
+    max-width: 50rem;
+    max-height: 6rem;
+}
+
+.ctaButtonHover {
+    background-color: #0B162B;
+}
+
+/* Media Queries for Responsiveness */
+
+@media (max-width: 1024px) {
+    .mainContainer {
+        margin-left: 2rem; /* Reduced margin for medium screens */
+    }
+
+     .cardGrid {
+        grid-template-columns: 1fr; /* Single column layout */
+    }
+
+    .card {
+        max-width: 100%; /* Make cards full width on medium screens */
+        height: auto; /* Auto height for better fit */
+    }
+
+    .sectionTitle {
+        font-size: 28px; /* Slightly smaller title */
+    }
+
+    .sectionText {
+        font-size: 18px; /* Slightly smaller text */
+    }
+
+    .title {
+        font-size: 3rem; /* Smaller title size */
+    }
+
+    .title2 {
+        font-size: 4rem; /* Smaller second title size */
+    }
+}
+
+@media (max-width: 768px) {
+    .mainContainer {
+        margin-left: 0; /* Remove margin for small screens */
+    }
+
+    .coursesContainer {
+        max-width: 100%; /* Full width for courses container */
+        padding: 10px; /* Reduced padding */
+        margin-left: 0;
+    }
+
+    .cardGrid {
+        grid-template-columns: 1fr; /* Single column layout */
+    }
+
+    .card {
+        width: 90%; /* Adjust card width */
+        height: auto; /* Auto height */
+        margin: 10px auto; /* Center cards */
+    }
+
+    .sectionTitle {
+        font-size: 24px; /* Smaller title */
+    }
+
+    .sectionText {
+        font-size: 16px; /* Smaller text */
+    }
+
+    .title {
+        font-size: 2.5rem; /* Smaller title size */
+    }
+
+    .title2 {
+        font-size: 3.5rem; /* Smaller second title size */
+    }
+
+    .subtitle {
+        font-size: 1.2rem; /* Smaller subtitle */
+    }
+
+    .logo {
+        max-width: 50%; /* Adjust logo size */
+    }
+
+    .brands {
+        max-width: 80%; /* Adjust brands container size */
+    }
+}
+
+@media (max-width: 480px) {
+
+    .mainContainer {
+        margin-left: 0;
+        align-items: center; /* Remove margin for small screens */
+    }
+
+    .contentContainer{
+        padding: 0;
+    }
+
+    .heroContainer{
+        margin-left: 0;
+        flex-direction: column;
+        padding: 0px;
+        text-align: center;
+    }
+
+    .image{
+        max-width: 100%;
+        max-height: 100%;
+    }
+    
+
+    .card{
+        flex-direction: column;
+        max-width: 350px;
+        max-height: 500px;
+    }
+    .sectionTitle {
+        font-size: 22px; /* Smaller title */
+    }
+
+    .sectionText {
+        font-size: 14px; /* Smaller text */
+    }
+
+    .title {
+        font-size: 2.5rem; /* Smaller title size */
+    }
+
+    .title2 {
+        font-size: 2rem; /* Smaller second title size */
+    }
+
+    .subtitle {
+        font-size: 1rem; /* Smaller subtitle */
+    }
+}

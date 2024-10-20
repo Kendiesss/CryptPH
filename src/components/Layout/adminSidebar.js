@@ -9,15 +9,14 @@ import { FiLogOut } from "react-icons/fi";
 import { FaExchangeAlt } from "react-icons/fa";
 import logo from '@/img/logo.png'
 
-export default function adminSidebar() {
+export default function Sidebar() {
     const router = useRouter();
     const [isHovered, setIsHovered] = useState(false);
 
     // Define our base class
-    // const className = `bg-[#0B162B] transition-[width] ease-in-out duration-500 fixed md:static top-0 bottom-0 left-0 z-40 ${isHovered ? "w-[250px]" : "w-[60px]"}`;
-
     const className = `bg-[#0B162B] border-r border-white transition-[width] ease-in-out duration-500 
-    fixed top-0 bottom-0 left-0 z-40 ${isHovered ? "w-[250px]" : "w-[60px]"}`;
+    fixed top-0 bottom-0 left-0 z-40 ${isHovered ? "w-[250px]" : "w-[60px]"} 
+    ${isHovered || isHovered ? 'block' : 'hidden'} md:block`; // Hide on mobile size
 
     // Clickable menu items
     const MenuItem = ({ icon, name, route }) => {
@@ -32,14 +31,13 @@ export default function adminSidebar() {
                 <div className="text-xl">
                     {icon}
                 </div>
-                {/* {isHovered && <div className="whitespace-nowrap">{name}</div>} */}
                 {isHovered && (
-                <div style={{ fontFamily: 'Sora, sans-serif', fontSize: '16px', fontWeight: '500' }}>
-                    {name}
-                </div>
-            )}
+                    <div style={{ fontFamily: 'Sora, sans-serif', fontSize: '16px', fontWeight: '500' }}>
+                        {name}
+                    </div>
+                )}
             </Link>
-        )
+        );
     }
 
     return (
@@ -54,48 +52,19 @@ export default function adminSidebar() {
                         {/*eslint-disable-next-line*/}
                         <img src={logo.src} alt="Company Logo" className={`${isHovered ? "block" : "hidden"}`} width={150} height={150} />
                     </Link>
-                </div><br></br>
+                </div>
                 <div className="flex flex-col items-center gap-2">
-                    <MenuItem
-                        name="Home"
-                        route="/admin-dashboard"
-                        icon={<SlHome />}
-                    />
-                    <MenuItem
-                        name="Manage"
-                        route="/manageContents"
-                        icon={<FiDatabase />}
-                    />
-                    <MenuItem
-                        name="Charts"
-                        route="/charts"
-                        icon={<FiBarChart />}
-                    />
-                    <MenuItem
-                        name="News"
-                        route="/news"
-                        icon={<MdOutlineNewspaper />}
-                    />
-                    <MenuItem
-                        name="Learn"
-                        route="/learn"
-                        icon={<FiBook />}
-                    />
-                    <MenuItem
-                        name="Virtual Trading"
-                        route="/virtual-trading"
-                        icon={<FaExchangeAlt />}
-                    />
-                    <MenuItem
-                        name="Logout"
-                        route="/"
-                        icon={<FiLogOut />}
-                    />
+                    <MenuItem name="Home" route="/" icon={<SlHome />} />
+                    <MenuItem name="Manage Contents" route="/manageContents" icon={<FiDatabase />} />
+                    <MenuItem name="Manage Users" route="/manageUsers" icon={<FiDatabase />} />
+                    <MenuItem name="Charts" route="/charts" icon={<FiBarChart />} />
+                    <MenuItem name="News" route="/news" icon={<MdOutlineNewspaper />} />
+                    <MenuItem name="Learn" route="/learn" icon={<FiBook />} />
+                    <MenuItem name="Virtual Trading" route="/virtual-trading" icon={<FaExchangeAlt />} />
+                    <MenuItem name="Logout" route="/" icon={<FiLogOut />} />
                 </div>
-                <div className="mt-auto p-4">
-
-                </div>
+                <div className="mt-auto p-4"></div>
             </div>
         </div>
-    )
+    );
 }
