@@ -1,0 +1,390 @@
+.pageContainer {
+    margin-left: 5rem;
+    margin-right: 4rem;
+    margin-top: 3rem;
+    height: auto;
+    max-width: 100%; /* Set to 100% for responsiveness */
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+.leftPanel {
+    display: flex;
+    flex-direction: column;
+    height: auto; /* Change to auto to allow flexing */
+    min-height: 1500px; /* Set a minimum height */
+    width: 25%;
+    border-right: 1px solid white;
+    padding: 20px;
+}
+
+.dropDownGroup {
+    margin-bottom: 1rem;
+    border: 1px solid white;
+    border-bottom: 1px solid white;
+    border-radius: 10px;
+}
+
+.dropdown {
+    width: 100%;
+    padding: 10px;
+    font-family: 'Sora';
+    font-weight: 600;
+    font-size: 16px;
+    background-color: white;
+    color: #0B162B;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+}
+
+.cryptoDataGroup {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.cryptoData1, .cryptoData2 {
+    font-family: 'Sora';
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.cryptoData2 {
+    color: red;
+    display: flex;
+    align-items: center;
+}
+
+.arrowIcon {
+    margin-right: 5px;
+    color: red;
+}
+
+.header1 {
+    margin-bottom: 1rem;
+    font-family: 'Sora';
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.newsCardContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    margin-bottom: auto;
+    overflow-y: auto;
+}
+
+.newsCard {
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 5px;
+    height: 235px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    text-align: left;
+    background: linear-gradient(150deg, rgba(21,44,88,1) 0%, rgba(11,22,43,1) 72%);
+}
+
+.newsHeader, .p1 {
+    font-family: 'Sora';
+}
+
+.newsHeader {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.p1 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: #0B162B;
+    background-color: white;
+    border-radius: 30px;
+    text-align: center;
+    padding: 1px;
+    width: 100px;
+}
+
+.rightPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 3rem;
+    margin-right: 3rem;
+    margin-bottom: 8rem;
+    height: auto;
+}
+
+.historicalDataContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 100px;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    padding: 5px;
+}
+
+.hdataCard {
+    display: flex;
+    flex-direction: column;
+    height: 80px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.header3 {
+    font-family: 'Sora';
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.faqSection {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3rem;
+    height: 300px;
+    width: 100%;
+}
+
+.header2 {
+    background-color: white;
+    color: #0B162B;
+    font-family: 'Sora';
+    font-size: 25px;
+    font-weight: 900;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 50px;
+    height: 40px;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.icon {
+    color: white;
+    margin-left: 10px;
+    font-size: 50px;
+    border-radius: 50px;
+    border: 3px solid white;
+    padding: 10px;
+    background: linear-gradient(150deg, rgba(21,44,88,1) 0%, rgba(11,22,43,1) 72%);
+}
+
+.faqCards {
+    width: 1000px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    justify-content: left;
+}
+
+.faqHeader, .p2 {
+    font-family: 'Sora';
+}
+
+.faqHeader {
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.p2 {
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+
+.faqCard {
+    width: 1000px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 3rem;
+    height: 100%;
+}
+
+.faqHeader {
+    font-family: 'Sora';
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.faqAnswer {
+    max-height: 0;
+    overflow: hidden;
+    font-family: 'Sora';
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 0;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 10px;
+}
+
+.showAnswer {
+    max-height: 200px; /* Set this high enough for long answers */
+    padding: 10px;
+}
+
+.plusIcon, .minusIcon {
+    font-size: 1.2em;
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.minusIcon {
+    transform: rotate(180deg);
+}
+
+.tradingViewWidget {
+    position: relative; /* Position absolute to fill the container */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+
+    .pageContainer{
+        max-width: 100%;
+        margin-right: 1rem;
+    }
+    .leftPanel {
+        width: 30%; /* Adjust for larger tablets */
+    }
+
+    .hdataCard{
+        max-width: 15%;
+    }
+
+    .faqHeader{
+        font-size: 1rem;
+    }
+
+    .header2{
+        font-size: 1rem;
+    }
+
+    .header3{
+        font-size: 1rem;
+    }
+
+    .cryptoData2{
+        font-size: 1rem;
+    }
+    
+    .rightPanel {
+        width: 50%;
+        margin-left: 1rem; /* Reduce margin on smaller screens */
+        margin-right: 1rem;
+    }
+
+    
+}
+
+@media (max-width: 767.5px) {
+    .pageContainer {
+        flex-direction: row;
+        margin-left: 0;
+    }
+    .historicalDataContainer {
+        width: 100%; /* Full width on mobile */
+        flex-direction: row; /* Stack items vertically */
+    }
+
+    .faqSection {
+        width: 100%; /* Full width for FAQ */
+    }
+
+    .faqHeader{
+        font-size: 1rem;
+    }
+
+    .header3{
+        font-size: 1rem;
+    }
+
+    .cryptoData2{
+        font-size: 0.7rem;
+    }
+}
+
+/* Ensure cards and containers adapt */
+.newsCardContainer, .faqCards {
+    width: 100%; /* Full width */
+}
+
+.newsCard, .hdataCard, .faqCard {
+    width: 100%; /* Make cards full width */
+    margin-right: 0; /* Remove right margin */
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+/* Adjust font sizes for smaller screens */
+@media (max-width: 768px) {
+
+    .pageContainer{
+        flex-direction: column;
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .leftPanel{
+        border-right: none;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .rightPanel{
+        height: auto;
+        width: 95%;
+    }
+
+    .newsCard{
+        height: 20%;
+    }
+    .header1, .header2, .header3, .faqHeader, .faqAnswer {
+        font-size: 0.8em; /* Slightly smaller headers */
+    }
+
+    .p1, .p2 {
+        font-size: 0.8em; /* Smaller text for paragraphs */
+    }
+
+    .tradingViewWidget {
+        position: relative; /* Position absolute to fill the container */
+        width: 100%; /* Full width */
+        height: 1000px; /* Full height */
+    }
+}
+
+

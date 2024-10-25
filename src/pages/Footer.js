@@ -132,7 +132,7 @@ export default function Footer() {
         }
       }
 
-      @media (max-width: 768px) {
+      @media (max-width: 767.5px) {
         footer {
           padding-left: 0; /* Remove left padding on smaller screens */
         }
