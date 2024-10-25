@@ -2,7 +2,8 @@
 
 import Head from 'next/head';
 import Layout from '../Layout/adminIndex';
-import styles from '@/styles/styles'
+// import {styles, mediaQueries} from '@/styles/styles';
+import { FaWindowClose } from "react-icons/fa";
 import { FaRegEdit } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaSortUp } from "react-icons/fa";
@@ -14,6 +15,7 @@ import logo from '@/img/logo.png'
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import styles from '@/styles/manageContents.module.css';
 
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 
@@ -37,15 +39,12 @@ const Card = ({ children }) => {
 
     return (
         <div
-            style={{
-                ...styles.card,
-                ...(isHovered ? styles.cardHover : {})
-            }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
-            {children}
-        </div>
+        className={`${styles.card} ${isHovered ? styles.cardHover : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+    >
+        {children}
+    </div>
     );
 };
 
@@ -116,24 +115,27 @@ const EditModal = ({ show, onClose, newsItem, onSave }) => {
 
 
     return (
-        <div style={styles.modalOverlay}>
-            <div style={styles.modal}>
-                <div style={styles.formContainer}>
-                    <img src={logo.src} style={styles.cryptPH} />
-                    <div style={styles.contentTitleContainer}>
-                        <h2 style={styles.modalHeaderSub}>News Title</h2>
+        <div className={styles.modalOverlay}>
+            <div className={styles.modal}>
+                <div className={styles.formHeader}>
+                    <img src={logo.src} className={styles.cryptPH} />
+                    <FaWindowClose className={styles.closeButton} onClick={onClose}/>
+                </div>
+                <div className={styles.formContainer}>
+                    <div className={styles.contentTitleContainer}>
+                        <h2 className={styles.modalHeaderSub}>Content Title</h2>
                         <input
                             type="text"
                             placeholder="Content Title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            style={styles.titleInput}
+                            className={styles.titleInput}
                         />
-                        <h2 style={styles.modalHeaderSub}>Category</h2>
+                        <h2 className={styles.modalHeaderSub}>Category</h2>
                         <select
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
-                            style={styles.dropdown}
+                            className={styles.dropdown}
                         >
                             <option value="News">News</option>
                             <option value="Education">Educational Article</option>
@@ -141,42 +143,42 @@ const EditModal = ({ show, onClose, newsItem, onSave }) => {
                         </select>
                     </div>
                 </div>
-                <div style={styles.fileInputContainer}>
-                    <h2 style={styles.fileLabel}>Content Image</h2>
+                <div className={styles.fileInputContainer}>
+                    <h2 className={styles.fileLabel}>Content Image</h2>
                     <input
                         accept="image/*"
                         type="file"
                         onChange={convertToBase64}
-                        style={styles.fileInput}
+                        className={styles.fileInput}
                     />
-                    <h2 style={styles.modalHeaderSub}>Authors</h2>
+                    <h2 className={styles.modalHeaderSub}>Authors</h2>
                     <input
                         type="text"
                         placeholder="Content Authors"
                         value={author}
                         onChange={(e) => setAuthor(e.target.value)}
-                        style={styles.textInput}
+                        className={styles.textInput}
                     />
-                    <h2 style={styles.modalHeaderSub}>Date Published</h2>
+                    <h2 className={styles.modalHeaderSub}>Date Published</h2>
                     <input
                         type="date"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
-                        style={styles.textInput}
+                        className={styles.textInput}
                     />
                 </div>
 
                 <ReactQuill
                     value={description}
                     onChange={setDescription}
-                    style={styles.quillEditor}
+                    className={styles.quillEditor}
                     theme="snow"
                 />
-                <div style={styles.bottomFormContainer}>
-                    <h2 style={styles.modalHeaderMain}>Edit News</h2>
-                    <div style={styles.modalActions}>
-                        <button onClick={handleSubmit} style={styles.ModalSave}>Save</button>
-                        <button onClick={onClose} style={styles.ModalCancel}>Cancel</button>
+                <div className={styles.bottomFormContainer}>
+                    <h2 className={styles.modalHeaderMain}>Edit Content</h2>
+                    <div className={styles.modalActions}>
+                        <button onClick={handleSubmit} className={styles.ModalSave}>Save</button>
+                        <button onClick={onClose} className={styles.ModalCancel}>Cancel</button>
                     </div>
                 </div>
             </div>
@@ -252,26 +254,29 @@ const AddModal = ({ show, onClose, onSave }) => {
     };
 
     return (
-        <div style={styles.modalOverlay}>
-            <div style={styles.modal}>
+        <div className={styles.modalOverlay}>
+            <div className={styles.modal}>
+                <div className={styles.formHeader}>
+                    <img src={logo.src} className={styles.cryptPH} />
+                    <FaWindowClose className={styles.closeButton} onClick={onClose}/>
+                </div>
                 <form onSubmit={handleSubmit}>
-                    <div style={styles.formContainer}>
-                        <img src={logo.src} style={styles.cryptPH} />
-                        <div style={styles.contentTitleContainer}>
-                            <h2 style={styles.modalHeaderSub}>Content Title</h2>
+                    <div className={styles.formContainer}>
+                        <div className={styles.contentTitleContainer}>
+                            <h2 className={styles.modalHeaderSub}>Content Title</h2>
                             <input
                                 type="text"
                                 placeholder="Content Title"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                style={styles.titleInput}
+                                className={styles.titleInput}
                                 required
                             />
-                            <h2 style={styles.modalHeaderSub}>Category</h2>
+                            <h2 className={styles.modalHeaderSub}>Category</h2>
                             <select
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
-                                style={styles.dropdown}
+                                className={styles.dropdown}
                                 required
                             >
                                 <option value="">Select a category</option>
@@ -281,43 +286,43 @@ const AddModal = ({ show, onClose, onSave }) => {
                             </select>
                         </div>
                     </div>
-                    <div style={styles.fileInputContainer}>
-                        <h2 style={styles.fileLabel}>Content Image</h2>
+                    <div className={styles.fileInputContainer}>
+                        <h2 className={styles.fileLabel}>Content Image</h2>
                         <input
                             type="file"
                             accept="image/*"
                             onChange={handleImageChange}
-                            style={styles.fileInput}
+                            className={styles.fileInput}
                         />
-                        <h2 style={styles.modalHeaderSub}>Authors</h2>
+                        <h2 className={styles.modalHeaderSub}>Authors</h2>
                         <input
                             type="text"
                             placeholder="Content Authors"
                             value={author}
                             onChange={(e) => setAuthor(e.target.value)}
-                            style={styles.textInput}
+                            className={styles.textInput}
                             required
                         />
-                        <h2 style={styles.modalHeaderSub}>Date Published</h2>
+                        <h2 className={styles.modalHeaderSub}>Date Published</h2>
                         <input
                             type="date"
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
-                            style={styles.textInput}
+                            className={styles.textInput}
                             required
                         />
                     </div>
                     <ReactQuill
                         value={description}
                         onChange={setDescription}
-                        style={styles.quillEditor}
+                        className={styles.quillEditor}
                         theme="snow"
                     />
-                    <div style={styles.bottomFormContainer}>
-                        <h2 style={styles.modalHeaderMain}>New Content</h2>
-                        <div style={styles.modalActions}>
-                            <button type="submit" style={styles.ModalSave}>Save</button>
-                            <button onClick={onClose} type="button" style={styles.ModalCancel}>Cancel</button>
+                    <div className={styles.bottomFormContainer}>
+                        <h2 className={styles.modalHeaderMain}>New Content</h2>
+                        <div className={styles.modalActions}>
+                            <button type="submit" className={styles.ModalSave}>Save</button>
+                            <button onClick={onClose} type="button" className={styles.ModalCancel}>Cancel</button>
                         </div>
                     </div>
                 </form>
@@ -549,49 +554,49 @@ export default function HeroPage() {
       return (
         <Layout pageTitle="Manage Contents - CryptPH Admin">
             <Head></Head>
-            <div style={styles.pageContainer}>
-                <h1 style={styles.pageHeader}>Contents</h1>
+            <div className={styles.pageContainer}>
+                <h1 className={styles.pageHeader}>Contents</h1>
     
-                <button onClick={handleAddClick} style={styles.addNewButton}>
+                <button onClick={handleAddClick} className={styles.addNewButton}>
                     Add New
-                    <IoIosAddCircle style={styles.addNewIcon} />
+                    <IoIosAddCircle className={styles.addNewIcon} />
                 </button>
     
-                <div style={styles.cardsContainer}>
+                <div className={styles.cardsContainer}>
                     {newsData.length > 0 ? (
                         newsData.map((newsItem) => (
                         <Card key={newsItem._id}>
                                 <Link href={newsItem.category === "Education" ? `/educational/${newsItem._id}` : `/news/${newsItem._id}`} legacyBehavior>
                                 <a>
-                                    <img src={newsItem.image} alt={newsItem.title} style={styles.cardImage} />
+                                    <img src={newsItem.image} alt={newsItem.title} className={styles.cardImage} />
                                 </a>
                             </Link>   
-                            <h1 style={styles.cardName}>{newsItem.title.length > 20 ? `${newsItem.title.substring(0, 20)}...` : newsItem.title}</h1>
+                            <h1 className={styles.cardName}>{newsItem.title.length > 20 ? `${newsItem.title.substring(0, 20)}...` : newsItem.title}</h1>
                             
-                            <p style={styles.cardInfo}>
+                            <p className={styles.cardInfo}>
                                 {stripHtmlTags(newsItem.description).substring(0, 50)}...
                             </p>
     
-                            <div style={styles.categoryGroup}>
-                                <p style={styles.cardHeader}>Category</p>
-                                <p style={styles.cardInfo}>{newsItem.category}</p>
+                            <div className={styles.categoryGroup}>
+                                <p className={styles.cardHeader}>Category</p>
+                                <p className={styles.cardInfo}>{newsItem.category}</p>
                             </div>
-                            <div style={styles.categoryGroup}>
-                                <p style={styles.cardHeader}>Date Created</p>
-                                <p style={styles.cardInfo}>{new Date(newsItem.date).toLocaleDateString()}</p>
+                            <div className={styles.categoryGroup}>
+                                <p className={styles.cardHeader}>Date Created</p>
+                                <p className={styles.cardInfo}>{new Date(newsItem.date).toLocaleDateString()}</p>
                             </div>
-                            <div style={styles.categoryGroup}>
-                                <p style={styles.cardHeader}>Authors</p>
-                                <p style={styles.cardInfo}>{newsItem.author}</p>
+                            <div className={styles.categoryGroup}>
+                                <p className={styles.cardHeader}>Authors</p>
+                                <p className={styles.cardInfo}>{newsItem.author}</p>
                             </div>
-                            <div style={styles.iconGroup}>
-                                <button onClick={() => handleEditClick(newsItem)}><FaRegEdit style={styles.cardIcon} /></button>
-                                <button><FaRegTrashAlt style={styles.cardIcon} onClick={() => handleDeleteClick(newsItem._id)} /></button>
+                            <div className={styles.iconGroup}>
+                                <button onClick={() => handleEditClick(newsItem)}><FaRegEdit className={styles.cardIcon} /></button>
+                                <button><FaRegTrashAlt className={styles.cardIcon} onClick={() => handleDeleteClick(newsItem._id)} /></button>
                             </div>
                         </Card>
                         ))
                     ) : (
-                        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '18px' }}>
+                        <p className={{ textAlign: 'center', marginTop: '20px', fontSize: '18px' }}>
                             No Content Being Displayed.
                         </p>
                     )}
