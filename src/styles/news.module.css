@@ -104,7 +104,7 @@
     font-size: 30px;
     font-weight: 900;
 }
-
+   
 .seeAll {
     font-family: 'Sora';
     font-size: 25px;
@@ -127,14 +127,17 @@
     overflow: hidden;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.5);
+    height: 400px; /* Fixed height */
+    width: 420px; /* Fixed width */
 }
 
 .image2 {
     width: 100%;
-    height: auto;
-    border-radius: 30px;
-    margin-bottom: 20px;
+    height: 60%; /* Set height relative to the card size */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-radius: 8px; 
 }
+
 
 .headlineGrp {
     display: flex;
@@ -404,4 +407,6 @@
         gap: 10px;
         padding: 30px;
     }
+
+    
 }
