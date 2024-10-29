@@ -376,11 +376,11 @@ export default function DummyPage({ title }) {
                     </table>
 
                     <div className={styles.pagination}>
-                        <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+                        <button style={styles.button1} onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
                         Previous
                         </button>
                         <span>Page {currentPage} of {totalPages}</span>
-                        <button onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+                        <button style={styles.button1} onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
                         Next
                         </button>
                     </div>
@@ -881,6 +881,7 @@ const styles = {
         pagination: {
             display: 'flex',
             justifyContent: 'center',
+            alignItems: 'center',
             margin: '20px 0',
         },
           
