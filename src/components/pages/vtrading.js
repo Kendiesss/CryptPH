@@ -3,7 +3,13 @@ import Layout from '../Layout';
 import { FaBitcoin } from "react-icons/fa";
 import { IoMdTrendingDown, IoMdTrendingUp } from 'react-icons/io';
 import gradient1 from '@/img/gradient-1.png';
+import Modal from '@/components/Layout/modal';
+import Modal2 from '@/components/Layout/modal2';
+import Modal3 from '@/components/Layout/modal3';
 import React, {useState, useEffect} from 'react';
+import modalStyles from '@/styles/modal.module.css';
+
+
 
 
 const Card = ({ children }) => {
@@ -37,7 +43,41 @@ export default function DummyPage({ title }) {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 15;
 
+    //Modals
+    const [openModal, setOpenModal] = useState(null);
+    const openSpecificModal = (modalName) => setOpenModal(modalName);
+    const [BuySuccessModal, setBuySuccessModal] = useState(false);
+    const [SellSuccessModal, setSellSuccessModal] = useState(false);
+
+
+    //Sample Error and Lose Modals
+
+    //Lose Modal
+    const [isLoseModalOpen, setIsLoseModalOpen] = useState(false);
+    const openLoseModal = () => setIsLoseModalOpen(true);
+    const closeLoseModal = () => setIsLoseModalOpen(false);
+
+    //Error Modal
+    const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+    const openErrorModal = () => setIsErrorModalOpen(true);
+    const closeErrorModal = () => setIsErrorModalOpen(false);
+
+     
+    const closeModal = () => {
+        setOpenModal(null);
+        setBuySuccessModal(false); // Close second modal when first is closed
+        setSellSuccessModal(false); // Close second modal when first is closed
+      };
     
+    const openBuySuccessModal = () => {
+        setBuySuccessModal(true); // Open second modal
+        setOpenModal(null); // Close the first modal
+    };
+
+    const openSellSuccessModal = () => {
+        setSellSuccessModal(true); // Open second modal
+        setOpenModal(null); // Close the first modal
+    };
 
     const handleViewClick = (coin) => {
         setSelectedCoin(coin); // Update the selected coin state
@@ -110,8 +150,83 @@ export default function DummyPage({ title }) {
         <Layout
             pageTitle={title}
         >
-           
-            <div style={styles.pageContainer}>
+
+        <Modal
+            isOpen={openModal === 'modal1'}
+            onClose={closeModal}
+            title="Confirmation"
+            content={<p>Do you want to buy this coin?</p>}
+            footerActions={
+                <>
+                  <button className={modalStyles.cancelButton} onClick={closeModal}>Cancel</button>
+                  <button className={modalStyles.confirmButton} onClick={openBuySuccessModal} >Confirm</button>
+                </>
+            }
+        />
+
+        <Modal
+            isOpen={openModal === 'modal2'}
+            onClose={closeModal}
+            title="Confirmation"
+            content={<p>Do you want to sell this coin?</p>}
+            footerActions={
+                <>
+                <button className={modalStyles.cancelButton} onClick={closeModal}>Cancel</button>
+                <button className={modalStyles.confirmButton} onClick={openSellSuccessModal} >Confirm</button>
+                </>
+            }
+        />
+
+        <Modal
+            isOpen={BuySuccessModal}
+            onClose={closeModal}
+            title="Purchase Successful"
+            content={<p>Your purchase has been confirmed!</p>}
+            footerActions={
+            <>
+                <button className={modalStyles.cancelButton} onClick={closeModal}>Close</button>
+            </>
+            }
+        />
+
+        <Modal
+            isOpen={SellSuccessModal}
+            onClose={closeModal}
+            title="Sell Successful"
+            content={<p>Your coin was sold successfully!</p>}
+            footerActions={
+            <>
+                <button className={modalStyles.cancelButton} onClick={closeModal}>Close</button>
+            </>
+            }
+        />
+
+        <Modal2 
+            isOpen={isLoseModalOpen}
+            onClose={closeLoseModal}
+            title="YOU LOST"
+            content={<p>you ran out of virtual money!</p>}
+            footerActions={
+                <>
+                    <button className={modalStyles.cancelButton} onClick={closeLoseModal}>Exit</button>
+                    <button className={modalStyles.confirmButton} onClick={closeLoseModal}>Try Again</button>
+                </>
+            }
+        />
+
+        <Modal3
+            isOpen={isErrorModalOpen}
+            onClose={closeErrorModal}
+            title="Transaction Unsuccessful"
+            content={<p>You can't purchase this coin. You have insufficient balance!</p>}
+            footerActions={
+            <>
+                <button className={modalStyles.cancelButton} onClick={closeErrorModal}>Close</button>
+            </>
+            }
+        />
+
+            <div style={styles.pageContainer} id='modal-root'>
                 <div style={styles.gradient1}></div>
                 <div style={styles.topContainer}>
                     <div style={styles.leftPanel}>
@@ -279,7 +394,8 @@ export default function DummyPage({ title }) {
                                             ...(isHovered4 ? styles.Button2Hover : {}),
                                         }}
                                         onMouseEnter={() => setIsHovered4(true)}
-                                        onMouseLeave={() => setIsHovered4(false)}>Entry</button>
+                                        onMouseLeave={() => setIsHovered4(false)}
+                                        onClick={() => openSpecificModal('modal1')}>Entry</button>
 
 
                                         <button style={{
@@ -287,7 +403,8 @@ export default function DummyPage({ title }) {
                                             ...(isHovered5 ? styles.Button3Hover : {}),
                                         }}
                                         onMouseEnter={() => setIsHovered5(true)}
-                                        onMouseLeave={() => setIsHovered5(false)}>Exit</button>
+                                        onMouseLeave={() => setIsHovered5(false)}
+                                        onClick={() => openSpecificModal('modal2')}>Exit</button>
                                     </div>
                                 </div>
                             </>
@@ -319,6 +436,10 @@ export default function DummyPage({ title }) {
                     </div>
                 </div>
 
+                {/* for lose and error modal previews */}
+
+                <button style={styles.button1} onClick={openLoseModal}>Open Lose Modal</button>
+                <button style={styles.button1} onClick={openErrorModal}>Open Error Modal</button>
                 <div style={styles.tableContainer}>
                 <div>
                     <h1 style={styles.titleHeader}>Crypto Market</h1>
@@ -890,5 +1011,4 @@ const styles = {
             padding: '10px',
             cursor: 'pointer',
         },
-
 };

@@ -1,0 +1,95 @@
+/* styles/modal.module.css */
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it is on top of other elements */
+  }
+  
+  .modalContent {
+    background-color: #fff; /* White background for the modal content */
+    color: #0B162B; /* Dark text color */
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%; /* Responsive width */
+    font-family: "Sora", sans-serif;
+    font-weight: 600;
+
+  }
+  
+  .modalBody {
+    margin: 15px 0; /* Space between body and title */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .icon{
+    max-width: 175px;
+    width: 90%; /* Responsive width */
+    margin-bottom: 1rem;
+  }
+
+  .modalTitle {
+    background-color: #0B162B;
+    padding: 1%;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #333; /* Close button color */
+  }
+  
+  .modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 35px;
+  }
+  
+  .cancelButton,
+  .confirmButton {
+    padding: 10px 20px;
+    border: 1px solid black;
+    border-radius: 20px;
+    font-size: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  .cancelButton {
+    background-color: #f0f0f0; 
+    color: #333;
+  }
+  
+  .confirmButton {
+    background-color: #007bff; 
+    color: #fff; 
+  }
+
+  /* Add hover effects */
+.cancelButton:hover {
+    background-color: #e0e0e0; 
+  }
+  
+  .confirmButton:hover {
+    background-color: #0056b3; 
+  }
+  
