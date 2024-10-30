@@ -3,6 +3,7 @@ import Layout from '../Layout';
 import { FaBitcoin } from "react-icons/fa";
 import { IoMdTrendingDown, IoMdTrendingUp } from 'react-icons/io';
 import gradient1 from '@/img/gradient-1.png';
+import emptyList from '@/img/emptyList.png';
 import Modal from '@/components/Layout/modal';
 import Modal2 from '@/components/Layout/modal2';
 import Modal3 from '@/components/Layout/modal3';
@@ -62,7 +63,13 @@ export default function DummyPage({ title }) {
     const openErrorModal = () => setIsErrorModalOpen(true);
     const closeErrorModal = () => setIsErrorModalOpen(false);
 
-     
+    //Panel Switching for Porfolio, Records and Order History
+    const [activePanel, setActivePanel] = useState('panel1');
+
+    const handlePanelSwitch = (panel) => {
+        setActivePanel(panel);
+      };
+
     const closeModal = () => {
         setOpenModal(null);
         setBuySuccessModal(false); // Close second modal when first is closed
@@ -244,7 +251,7 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered1(true)}
                                 onMouseLeave={() => setIsHovered1(false)}
-                                
+                                onClick={() =>handlePanelSwitch('panel1')}
                                 >My Portfolio</button>
 
                                 <button
@@ -254,7 +261,7 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered2(true)}
                                 onMouseLeave={() => setIsHovered2(false)}
-                                
+                                onClick={() =>handlePanelSwitch('panel2')}
                                 >Records</button>
 
                                 <button
@@ -264,77 +271,95 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered3(true)}
                                 onMouseLeave={() => setIsHovered3(false)}
-                                
+                                onClick={() =>handlePanelSwitch('panel3')}
                                 >Order History</button>
                             </div>
                         </div>
-                        <div style={styles.cardContainer}>
+                        <div style={styles.coinPanel}>
 
-                            <Card>
-                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                <span style={styles.smallcard}>Long</span>
-                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Average Price</h1>
-                                </div>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>% Profit</h1>
-                                </div>
-                            </Card>
+                            {/* Panel 1 : My Portfolio */}
+                            {activePanel === 'panel1' && <div style={styles.cardContainer}>   
+                                <Card>
+                                    <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
+                                    <span style={styles.smallcard}>Long</span>
+                                    <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
+                                    <div style={styles.priceGroup}>
+                                        <h1 style={styles.header2}>0.0</h1>
+                                        <h1 style={styles.header1}>Average Price</h1>
+                                    </div>
+                                    <div style={styles.priceGroup}>
+                                        <h1 style={styles.header2}>0.0</h1>
+                                        <h1 style={styles.header1}>Total Cost</h1>
+                                    </div>
+                                    <div style={styles.profitGroup}>
+                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                        <h1 style={styles.header1}>Total Cost</h1>
+                                    </div>
+                                    <div style={styles.profitGroup}>
+                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                        <h1 style={styles.header1}>% Profit</h1>
+                                    </div>
+                                </Card>
 
-                            <Card>
-                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                <span style={styles.smallcard}>Long</span>
-                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Average Price</h1>
-                                </div>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>% Profit</h1>
-                                </div>
-                            </Card>
+                                <Card>
+                                    <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
+                                    <span style={styles.smallcard}>Long</span>
+                                    <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
+                                    <div style={styles.priceGroup}>
+                                        <h1 style={styles.header2}>0.0</h1>
+                                        <h1 style={styles.header1}>Average Price</h1>
+                                    </div>
+                                    <div style={styles.priceGroup}>
+                                        <h1 style={styles.header2}>0.0</h1>
+                                        <h1 style={styles.header1}>Total Cost</h1>
+                                    </div>
+                                    <div style={styles.profitGroup}>
+                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                        <h1 style={styles.header1}>Total Cost</h1>
+                                    </div>
+                                    <div style={styles.profitGroup}>
+                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                        <h1 style={styles.header1}>% Profit</h1>
+                                    </div>
+                                </Card>
 
-                            <Card>
-                                <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                <span style={styles.smallcard}>Long</span>
-                                <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Average Price</h1>
-                                </div>
-                                <div style={styles.priceGroup}>
-                                    <h1 style={styles.header2}>0.0</h1>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>Total Cost</h1>
-                                </div>
-                                <div style={styles.profitGroup}>
-                                    <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                    <h1 style={styles.header1}>% Profit</h1>
-                                </div>
-                            </Card>
+                                <Card>
+                                    <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
+                                    <span style={styles.smallcard}>Long</span>
+                                    <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
+                                    <div style={styles.priceGroup}>
+                                        <h1 style={styles.header2}>0.0</h1>
+                                        <h1 style={styles.header1}>Average Price</h1>
+                                    </div>
+                                    <div style={styles.priceGroup}>
+                                        <h1 style={styles.header2}>0.0</h1>
+                                        <h1 style={styles.header1}>Total Cost</h1>
+                                    </div>
+                                    <div style={styles.profitGroup}>
+                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                        <h1 style={styles.header1}>Total Cost</h1>
+                                    </div>
+                                    <div style={styles.profitGroup}>
+                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                                        <h1 style={styles.header1}>% Profit</h1>
+                                    </div>
+                                </Card>
+                             </div>
+                            }
+
+                            {/* Panel 2 : My Records */}
+                            {activePanel === 'panel2' && <div style={styles.emptyPanel}>
+                                <img src={emptyList.src} style={styles.emptyIcon}></img>
+                                <h1 style={styles.header9}>Your list is currently empty. Start Investing.</h1>
+                            </div>
+                            }
+
+                            {/* Panel 3 : Order History */}
+                            {activePanel === 'panel3' && <div style={styles.emptyPanel}>
+                                <img src={emptyList.src} style={styles.emptyIcon}></img>
+                                <h1 style={styles.header9}>Your list is currently empty. Start Investing.</h1>
+                            </div>
+                            }
 
                         </div>
                     </div>
@@ -1011,4 +1036,32 @@ const styles = {
             padding: '10px',
             cursor: 'pointer',
         },
+
+        //Panel
+
+        emptyPanel:{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: '3px solid white',
+            borderRadius:'30px',
+            padding: '2%',
+
+        },
+
+        header9:{
+            fontFamily: 'Sora',
+            fontSize: '25px',
+            fontWeight: '700',
+            alignItems: 'center',
+            textAlign: 'center',
+            margin: '2%',
+        },
+
+        emptyIcon:{
+            width: '250px',
+            maxWidth: '80%',
+        }
+
 };
