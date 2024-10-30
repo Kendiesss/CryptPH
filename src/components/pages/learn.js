@@ -42,6 +42,7 @@ const Card = ({ image, title, description }) => {
 
 export default function HeroPage() {
     const [newsItems, setNewsItems] = useState([]);
+    const [showAll, setShowAll] = useState(false); // New state to control "See all" functionality
 
     useEffect(() => {
         const fetchNews = async () => {
@@ -56,6 +57,9 @@ export default function HeroPage() {
 
         fetchNews();
     }, []);
+
+    const displayedItems = showAll ? newsItems : newsItems.slice(0, 8); // Show only a limited number unless "See all" is clicked
+   
 
     return (
         <Layout pageTitle="Learn">
@@ -77,12 +81,18 @@ export default function HeroPage() {
                     <div className={styles.coursesContainer}>
                         <div className={styles.coursesHeader}>
                             <h1 className={styles.sectionTitle}>Popular Articles</h1>
-                            <h1 className={styles.sectionText}>See all <span className={styles.arrow}>→</span></h1>
+                            <h1 
+                                className={styles.sectionText} 
+                                onClick={() => setShowAll(!showAll)} 
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {showAll ? 'Show less' : 'See all'} <span className={styles.arrow}>→</span>
+                            </h1>
                         </div>
 
                         <div className={styles.cardGrid}>
-                            {newsItems.length > 0 ? (
-                                newsItems.map((newsItem) => (
+                        {displayedItems.length > 0 ? (
+                                displayedItems.map((newsItem) => (
                                     <Link key={newsItem._id} href={`/educational/${newsItem._id}`} passHref>
                                         <div className={styles.cardWrapper}>
                                             <Card

@@ -29,6 +29,7 @@ const formatDate = (dateString) => {
 
 export default function DummyPage({ title }) {
     const [newsItems, setNewsItems] = useState([]); 
+    const [showAll, setShowAll] = useState(false); //see all
 
     useEffect(() => {
         const fetchNews = async () => {
@@ -43,6 +44,8 @@ export default function DummyPage({ title }) {
 
         fetchNews();
     }, []); 
+
+    const displayedItems = showAll ? newsItems : newsItems.slice(0, 12); //Show 12 news items at startup
 
     return (
         <Layout pageTitle={title}>
@@ -69,11 +72,13 @@ export default function DummyPage({ title }) {
                     <div className={styles.headerGrp}>
                         <h1 className={styles.title}>More News</h1>
                         <Link href="/news" passHref>
-                            <button className={styles.seeAll}>See All</button>
+                        <button className={styles.seeAll} onClick={() => setShowAll(!showAll)}>
+                            {showAll ? 'Show Less' : 'See All'}
+                        </button>
                         </Link>
                     </div>
                     <div className={styles.cardContainer}>
-                        {newsItems.map((item) => (
+                        {displayedItems.map((item) => (
                             <Link key={item._id} href={`/news/${item._id}`} passHref>
                                 <div className={styles.cardWrapper}>
                                     <Card image={item.image || pholder.src} title={item.title} date={item.date} />
