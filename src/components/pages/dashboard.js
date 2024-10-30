@@ -81,6 +81,7 @@ export default function HeroPage() {
                         >
                             Register Now
                         </button>
+                        <h1 className={styles.signInLink}>Have an Existing Account? <a href="/Login" className={styles.link}><u>Click here</u> </a> to sign in.</h1>
                     </div>
                 </div>
             </div>
