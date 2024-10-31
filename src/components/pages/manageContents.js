@@ -26,14 +26,6 @@ const ReactQuill = dynamic(() => import('react-quill'), {
 });
 
 
-const toggleSort = (key) => {
-    setSortState((prevState) => ({
-        ...prevState,
-        [key]: prevState[key] === 'asc' ? 'desc' : 'asc',
-    }));
-};
-
-
 const Card = ({ children }) => {
     const [isHovered, setIsHovered] = useState(false);
 
@@ -354,6 +346,11 @@ export default function HeroPage() {
     const [newsItem, setNewsItem] = useState(null);
     const [selectedNewsItem, setSelectedNewsItem] = useState(null);
 
+    const [filteredNewsData, setFilteredNewsData] = useState([]); // For filtering and searching
+    const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 12; 
+
     
 
     const [hoveredButton, setHoveredButton] = useState(null);
@@ -373,6 +370,7 @@ export default function HeroPage() {
                 const data = await response.json();
                 console.log('Fetched news data:', data); // Confirm data structure
                 setNewsData(data); // Assuming you have useState for newsData
+                setFilteredNewsData(data); // Initial set
             } catch (error) {
                 console.error('Error fetching news:', error);
 
@@ -381,13 +379,43 @@ export default function HeroPage() {
     
         fetchNews();
 
-        const intervalId = setInterval(() => {
-            fetchNews();
-        }, 1500); //
+        // const intervalId = setInterval(() => {
+        //     fetchNews();
+        // }, 1500); //
 
-        // Clear the interval on component unmount
-        return () => clearInterval(intervalId);
+        // // Clear the interval on component unmount
+        // return () => clearInterval(intervalId);
     }, []);
+
+
+     // Handle search
+     useEffect(() => {
+        const filteredData = newsData.filter(item =>
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setFilteredNewsData(filteredData);
+        setCurrentPage(1); // Reset to first page on new search
+    }, [searchQuery, newsData]);
+
+    // Handle pagination
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const paginatedData = filteredNewsData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+    // Handle sorting
+    const toggleSort = (key) => {
+        const sortedData = [...filteredNewsData].sort((a, b) => {
+            if (sortState[key] === 'asc') {
+                return a[key] > b[key] ? -1 : 1;
+            }
+            return a[key] < b[key] ? -1 : 1;
+        });
+        setFilteredNewsData(sortedData);
+        setSortState((prev) => ({ ...prev, [key]: prev[key] === 'asc' ? 'desc' : 'asc' }));
+    };
     
     //modals
 
@@ -528,13 +556,6 @@ export default function HeroPage() {
         }
     };
     
-    const toggleSort = (key) => {
-        setSortState((prevState) => ({
-            ...prevState,
-            [key]: prevState[key] === 'asc' ? 'desc' : 'asc',
-        }));
-    };
-
     const handleSearchClick = () => {
         setIsSearchActive(!isSearchActive);
         setIsSearchHovered(!isSearchHovered);
@@ -557,14 +578,32 @@ export default function HeroPage() {
             <div className={styles.pageContainer}>
                 <h1 className={styles.pageHeader}>Contents</h1>
     
-                <button onClick={handleAddClick} className={styles.addNewButton}>
-                    Add New
-                    <IoIosAddCircle className={styles.addNewIcon} />
-                </button>
+                <div className={styles.actionContainer}>
+                    <button onClick={handleAddClick} className={styles.addNewButton}>
+                        Add New
+                        <IoIosAddCircle className={styles.addNewIcon} />
+                    </button>
+
+                    <div className={styles.sortButtons}>
+                        <button className={styles.sortButton} onClick={() => toggleSort('title')}>Sort by Title</button>
+                        <button className={styles.sortButton} onClick={() => toggleSort('category')}>Sort by Category</button>
+                        <button className={styles.sortButton} onClick={() => toggleSort('date')}>Sort by Date</button>
+                    </div>
+
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className={styles.searchInput}
+                    />
+                </div>
+
+                
     
                 <div className={styles.cardsContainer}>
-                    {newsData.length > 0 ? (
-                        newsData.map((newsItem) => (
+                {paginatedData.length > 0 ? (
+                        paginatedData.map((newsItem) => (
                         <Card key={newsItem._id}>
                                 <Link href={newsItem.category === "Education" ? `/educational/${newsItem._id}` : `/news/${newsItem._id}`} legacyBehavior>
                                 <a>
@@ -600,6 +639,18 @@ export default function HeroPage() {
                             No Content Being Displayed.
                         </p>
                     )}
+                </div>
+
+                <div className={styles.pagination}>
+                    {Array.from({ length: Math.ceil(filteredNewsData.length / itemsPerPage) }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => handlePageChange(index + 1)}
+                            className={index + 1 === currentPage ? styles.activePage : ''}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
                 </div>
     
                 <EditModal 
