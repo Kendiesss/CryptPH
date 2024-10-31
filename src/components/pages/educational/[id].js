@@ -136,7 +136,9 @@ export default function NewsDetailPage() {
                             ))
                         }
                         <div className={styles.viewAllButton}>
-                            View All
+                            <Link href="/learn">
+                                View All
+                            </Link>
                         </div>
                     </div>
                 </div>
