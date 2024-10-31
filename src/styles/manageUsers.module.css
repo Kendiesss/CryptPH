@@ -1,0 +1,368 @@
+/* Container for the whole page */
+.container {
+    margin-left: 5rem;
+    padding: 20px;
+    font-family: "Sora", sans-serif;
+}
+
+/* Title styling */
+.title {
+    font-size: 50px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Search input styling */
+.search {
+    margin-bottom: 20px;
+    margin-right: 20px;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 100px;
+    font-size: 16px;
+    color: #0B162B;
+}
+
+/* Table styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #F8F9FA;
+    color: #0B162B;
+    font-weight: 500;
+}
+
+/* Table header and cell styling */
+.table th,
+.table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 16px;
+}
+
+.table th {
+    background-color: #CED4DA;
+    cursor: pointer;
+    color: black;
+    font-weight: 800;
+}
+
+/* Hover effect on table headers */
+.table th:hover {
+    background-color: #ADB5BD;
+}
+
+/* Styling for sorted column indicator */
+.table th span {
+    margin-left: 5px;
+}
+
+/* Table rows hover effect */
+.table tr:hover {
+    background-color: #DEE2E6;
+}
+
+.recordContainer{
+    max-width: 100%;
+    margin-right: 2rem;
+    display: flex;
+    flex-direction: row; 
+}
+
+.panel1 {
+    max-width: 40%;
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    background-color: #F8F9FA;
+    margin-bottom: 1rem;
+    border-radius: 35px;
+    margin-right: 1rem;
+}
+
+.numberText{
+    font-size: 4em;
+    font-weight: 700;
+    width: 50%;
+    margin-right: 1rem;
+    color: #0B162B;
+    background-color: #CED4DA;
+    padding: 5%;
+    text-align: center;
+    border-radius: 25px;
+}
+
+.userIcon{
+    font-size: 100px;
+    color: #0B162B;
+}
+
+.headerGroup {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: auto;
+    align-items: center;
+}
+
+.header1{
+    color: #0B162B;
+    margin-left: 1.5rem;
+    text-align: left;
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.panel2{
+    display: flex;
+    flex-direction: column;
+    background-color: #F8F9FA;
+    max-width: 30%;
+    width: 100%;
+    display: flex;
+    padding: 10px;
+    margin-bottom: 1rem;
+    border-radius: 35px;
+    margin-right: 1rem;
+    justify-content: center;
+}
+
+.recordGroup{
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    background-color: #E9ECEF;
+    border-radius: 20px;
+    margin: 1rem;
+    align-items: center;
+}
+
+.numberText2{
+    font-size: 20px;
+    font-weight: 700;
+    max-width: 100%;
+    width: 20%;
+    margin-right: 1rem;
+    color: #0B162B;
+    background-color: #CED4DA;
+    padding: 10px;
+    text-align: center;
+    border-radius: 25px;
+}
+
+.header2{
+    text-align: left;
+    color: #0B162B;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+
+/* Pagination container styling */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Pagination button styling */
+.pagination button {
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+    color: #0B162B;
+    font-weight: 700;
+}
+
+/* Disabled pagination button styling */
+.pagination button:disabled {
+    cursor: not-allowed;
+    color: #ccc;
+}
+
+/* Pagination button hover effect */
+.pagination button:not(:disabled):hover {
+    background-color: #e0e0e0;
+}
+
+@media (max-width: 1024px) {
+    
+
+    .title{
+        font-size: 2em;
+    }
+
+    .headerGroup{
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .numberText {
+        font-size: 3em;
+    }
+
+    .numberText2 {
+        font-size: 18px;
+        padding: 8px;
+    }
+
+    .header1 {
+        font-size: 1em;
+    }
+
+    .header2 {
+        font-size: 0.8em;
+    }
+
+    .userIcon {
+        font-size: 60px;
+        margin-bottom: 1rem;
+    }
+
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 767.5px) {
+
+    .container{
+        margin-left: 0;
+    }
+    .title {
+        font-size: 2em;
+    }
+
+    .search {
+        width: 100%;
+        max-width: none;
+    }
+
+
+    .table th,
+    .table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .pagination button {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    .panel1{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 35%;
+    }
+
+    .panel2{
+        max-width: 100%;
+        width: 35%;
+        
+    }
+
+    .recordGroup{
+        padding: 0;
+        flex-direction: column;
+        height: fit-content;
+        align-items: center;
+        justify-content: center;
+    }
+    
+
+    .numberText {
+        font-size: 2em;
+        text-align: center;
+        margin-bottom: 1rem;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .numberText2 {
+        font-size: 16px;
+        padding: 0;
+        margin: 0;
+    }
+
+    .header1 {
+        font-size: 18px;
+        text-align: center;
+        margin-left: 0;
+    }
+
+    .header2 {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .userIcon {
+        font-size: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .container{
+        margin-left: 0;
+        margin-right: auto;
+    }
+    .title {
+        font-size: 20px;
+    }
+
+    .table{
+        width: 100%;
+    }
+
+    .search {
+        width: 100%;
+        max-width: none;
+    }
+
+    .table th,
+    .table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .pagination button {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+
+    .numberText {
+        font-size: 1.5em;
+    }
+
+    .numberText2 {
+        font-size: 16px;
+        padding: 6px;
+    }
+
+    .header1 {
+        font-size: 18px;
+    }
+
+    .header2 {
+        font-size: 14px;
+    }
+
+    .userIcon {
+        font-size: 60px;
+    }
+}
+
