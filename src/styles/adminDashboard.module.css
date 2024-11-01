@@ -1,124 +1,242 @@
-/* adminDashboard.module.css */
-
-.pageContainer {
+.adminDashboard {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     padding: 20px;
-    position: relative;
-    margin: -10px;
-    width: 100%; /* Ensure the page container takes full width */
-}
+    background-color: #11132A;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    flex-wrap: wrap;
+    margin-left: 5rem;
+    font-family: "Sora", sans-serif;
+  }
 
-.cardsContainer {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns for desktop */
-    margin: 0 auto; /* Center the container */
-    grid-gap: 20px;
-    align-items: center;
-    justify-content: center;
-    width: 100%; /* Full width for the cards container */
-    max-width: 1200px; /* Add a max width to limit the container size */
-    padding: 20px; /* Add padding around the container */
-}
-
-.card {
+  .header1{
+    font-weight: 900;
+    font-size: 3em;
+    align-self: flex-start;
+  }
+  
+  .adminGreetingSection, .adminNavigationSection {
+    flex: 1 1 100%;
+    margin: 10px 0;
+    max-width: 100%;
+  }
+  
+  .adminGreetingSection {
     display: flex;
     flex-direction: column;
-    background-color: white;
-    opacity: 1;
-    background-image: radial-gradient(circle at center center, #ced0d4, #fdfdfd), repeating-radial-gradient(circle at center center, #ced0d4, #ced0d4, 1px, transparent 5px, transparent 75px);
-    background-blend-mode: multiply;
-    width: 450px;
-    height: 250px;
-    border-radius: 20px;
-    margin: 2%;
-    border: 2px solid white;
-    justify-content: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-}
-
-.cardHeader {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 5%;
     align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-}
-
-.cardBody {
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-}
-
-.cardTitle {
-    color: #0B162B;
-    font-size: 45px;
-    font-family: 'Sora', sans-serif;
-    font-weight: 800;
-    margin-right: auto;
-}
-
-.icon {
-    font-size: 150px;
-    background-color: #0B162B;
-    border-radius: 10px;
-    padding: 10px;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.cardHover {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-    transform: scale(1.05);
-}
-
-.gradient3 {
-    position: absolute;
-    top: 0; /* Adjust to place it correctly */
-    left: 0; /* Adjust to place it correctly */
+    padding: 20px;
+    background-color: #1D1F36;
+    border-radius: 8px;
+    background-image: url("../img/gradient-3.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  
+  .adminClockDisplay {
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensure it covers the entire area */
-    z-index: -1; /* Ensure it's behind other elements */
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    
+  }
+  
+  .adminClockTime {
+    font-weight: 500;
+    font-size: 5em;
+    margin: 0;
+  }
+  
+  .adminClockDate {
+    font-size: 1.5em;
+    font-weight: 400;
+  }
+  
+  .adminStatsSection {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .adminStatBox {
+    background-color: #F8F9FA;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+    width: 200px;
+    color: #11132A;
+  }
+  
+  .adminStatNumber {
+    font-size: 3em;
+    margin: 5px 0 0;
+    font-weight: 700;
+  }
 
-@media (max-width: 1180px) {
-    .cardsContainer {
-        margin-left: 5rem; /* You can adjust this as needed */
-        margin-bottom: 0; /* Ensures there's no bottom margin */
-        grid-gap: 20px;
-        align-items: center;
-        grid-template-columns: repeat(2, 1fr); /* 2 columns for iPad */
+  .p1{
+    font-weight: 600;
+  }
+  
+  .adminNavigationSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #F8F9FD;
+    color: #11132A;
+    border-radius: 8px;
+  }
+  
+  .adminNavigationTitle {
+    align-self: flex-start;
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: 700;
+  }
+  
+  .adminButtonGroup {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 100%;
+  }
+
+  .icon {
+    font-size: 3rem; /* Default icon size for desktop */
+    margin-right: 8px; /* Spacing between icon and text */
+    vertical-align: middle;
+    justify-self: center;
+  }
+  
+  .adminButton {
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #E9ECEF;
+    color: #11132A;
+    font-weight: 900;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+  
+  .adminButton:hover {
+    background-color: #ADB5BD;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .adminDashboard {
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
     }
-
-    .card {
-        width: 300px; /* Full width for cards */
-        height: 250px; /* Fixed height for cards */
+  
+    .adminStatsSection {
+      flex-direction: column;
+      align-items: center;
+      width: auto;
+    }
+  
+    .adminStatBox {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .adminButtonGroup {
+      grid-template-columns: 1fr;
+    }
+  
+    .adminClockTime {
+      font-size: 2em;
+    }
+  
+    .adminClockDate {
+      font-size: 0.9em;
     }
 
     .icon {
-        font-size: 100px;
-    }
-
-    .cardTitle {
-        font-size: 30px;
-    }
-}
+        font-size: 2rem; /* Slightly smaller for tablets */
+      }
+  }
+  
 
 @media (max-width: 768px) {
-    .cardsContainer {
-        margin :10px;
-        align-items: center;
-        grid-template-columns: 1fr; /* 1 column for mobile */
+    .adminDashboard {
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
     }
-    .card {
-        height: auto; /* Allow cards to grow in height based on content */
-        margin: 10px 0; /* Adjust margin for mobile devices */
+  
+    .adminStatsSection {
+      flex-direction: column;
+      align-items: center;
+      width: auto;
     }
-    .cardTitle {
-        font-size: 50px; /* Smaller title font for mobile */
+  
+    .adminStatBox {
+      width: 100%;
+      margin-bottom: 10px;
     }
-}
+  
+    .adminButtonGroup {
+      grid-template-columns: 1fr;
+    }
+  
+    .adminClockTime {
+      font-size: 2em;
+    }
+  
+    .adminClockDate {
+      font-size: 0.9em;
+    }
+
+    .icon {
+        font-size: 2rem; /* Slightly smaller for tablets */
+      }
+  }
+
+  @media (max-width: 480px) {
+    .adminGreetingSection {
+      padding: 15px;
+    }
+  
+    .header1 {
+      font-size: 2.5em; /* Smaller header for mobile */
+    }
+  
+    .adminClockTime {
+      font-size: 1.5em; /* Even smaller clock time */
+    }
+  
+    .adminClockDate {
+      font-size: 0.8em; /* Smaller date text */
+    }
+  
+    .adminStatBox {
+      padding: 15px;
+      width: 90%; /* Use more width for smaller screens */
+    }
+  
+    .adminButton {
+      font-size: 1.25rem; /* Slightly smaller buttons */
+      padding: 8px; /* Reduce padding */
+    }
+  
+    .icon {
+      font-size: 1.5rem; /* Smaller icons for mobile */
+    }
+  
+    .adminNavigationTitle {
+      font-size: 1.5em; /* Smaller navigation title */
+    }
+  
+    .adminButtonGroup {
+      grid-template-columns: 1fr; /* Stack buttons in one column */
+    }
+  }

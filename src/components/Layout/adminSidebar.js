@@ -55,7 +55,7 @@ export default function Sidebar() {
                     </Link>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <MenuItem name="Home" route="/" icon={<SlHome />} />
+                    <MenuItem name="Home" route="/admin-dashboard" icon={<SlHome />} />
                     <MenuItem name="Manage Contents" route="/manageContents" icon={<FiDatabase />} />
                     <MenuItem name="Manage Users" route="/manageUsers" icon={<FaUsersCog />} />
                     <MenuItem name="Charts" route="/charts" icon={<FiBarChart />} />
