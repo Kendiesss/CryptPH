@@ -1,41 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router'; // Import useRouter for navigation in Next.js
 import logo from '@/img/logo.png';
 
-
 function RegisterPage() {
-  const [username, setUsername] = useState('');
+  const router = useRouter(); // Initialize useRouter for navigation
   const [email, setEmail] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [birthday, setBirthday] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  useEffect(() => {
-    const showHiddenPass = (passId, eyeId) => {
-      const input = document.getElementById(passId);
-      const iconEye = document.getElementById(eyeId);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
-      iconEye.addEventListener('click', () => {
-        if (input.type === 'password') {
-          input.type = 'text';
-          iconEye.classList.add('ri-eye-line');
-          iconEye.classList.remove('ri-eye-off-line');
-        } else {
-          input.type = 'password';
-          iconEye.classList.remove('ri-eye-line');
-          iconEye.classList.add('ri-eye-off-line');
-        }
-      });
-    };
-
-    showHiddenPass('register-pass', 'register-eye');
-    showHiddenPass('confirm-pass', 'confirm-eye');
-  }, []);
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log('Username:', username);
     console.log('Email:', email);
     console.log('Contact Number:', contactNumber);
     console.log('Birthday:', birthday);
@@ -44,271 +30,192 @@ function RegisterPage() {
   };
 
   return (
-    <div className="register">
-      <style jsx>{`
-        body {
-          color: var(--white-color);
-          background-color: #0B162B;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-        }
+    <div style={styles.register}>
+      <form style={styles.registerForm} onSubmit={handleSubmit}>
+        <div style={styles.logoContainer} onClick={() => router.push('/')}>
+          <img src={logo.src} alt="Logo" style={styles.logo} />
+        </div>
+        <h3 style={styles.title}>Register</h3>
 
-        input,
-        button {
-          border: none;
-          outline: none;
-          color: #fff;
-        }
-
-        img {
-          max-width: 100%;
-          height: auto;
-        }
-
-        .register {
-          position: relative;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
-          padding: 1rem;
-        }
-
-        .register__form {
-          background-color: #0B162B;
-          padding: 2.5rem 2rem;
-          border-radius: 1rem;
-          backdrop-filter: blur(10px);
-          border: 2px solid #fff;
-          max-width: 400px;
-          width: 100%;
-          color: #fff;
-        }
-
-        .register__title {
-          text-align: center;
-          font-size: var(--h1-font-size);
-          font-weight: var(--font-medium);
-          margin-bottom: 2rem;
-        }
-
-        .register__content {
-          display: grid;
-          row-gap: 1.5rem;
-        }
-
-=
-
-        .register__icon {
-          position: absolute;
-          left: 0;
-          top: 50%;
-          transform: translateY(-50%);
-          font-size: 1.25rem;
-          color: #fff;
-        }
-
-.register__box {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  border-bottom: 1px solid #fff; 
-  padding-bottom: 0.5rem; 
-  width: 80%;
-  margin: 0 auto; /* Centers the box horizontally */
-}
-
-
-.register__input {
-  width: 70%;
-  padding: 1rem;
-  background: none;
-  border: none; 
-  border-radius: 0.5rem;
-  padding-left: 2rem;
-  color: var(--white-color);
-            transition: top 0.3s, font-size 0.3s;
-
-}
-
-        .register__label {
-          position: absolute;
-          left: 2rem;
-          top: 50%;
-          transform: translateY(-50%);
-          font-weight: var(--font-medium);
-          transition: top 0.3s, font-size 0.3s;
-          color: var(--white-color);
-        }
-
-        .register__input:focus + .register__label,
-        .register__input:not(:placeholder-shown) + .register__label {
-          top: -0.5rem;
-          font-size: var(--small-font-size);
-        }
-
-        .register__eye {
-          position: absolute;
-          right: 1rem;
-          top: 50%;
-          transform: translateY(-50%);
-          cursor: pointer;
-          font-size: 1.25rem;
-        }
-
-   .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%; /* Ensure full width for centering */
-    margin-top: 1.5rem;
-  }
-
-  .cancel_button, .register__button {
-    width: 80%; /* Width of the buttons */
-    padding: 1rem;
-    border-radius: 10rem;
-    font-weight: var(--font-medium);
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s;
-    margin-bottom: 1rem; 
-    margin-left: 2rem;
-  }
-
-  .cancel_button {
-    background-color: #0B162B;
-    color: #fff;
-    border: 1px solid #fff;
-  }
-
-  .register__button {
-    background-color: #fff;
-    color: #0B162B;
-  }
-
-        .register__login {
-          text-align: center;
-          margin-top: 2rem;
-          font-size: var(--small-font-size);
-        }
-
-        .register__login a {
-          color: var(--white-color);
-          font-weight: var(--font-medium);
-          text-decoration: none;
-        }
-
-        .register__login a:hover {
-          text-decoration: underline;
-        }
-      `}</style>
-
-      <form className="register__form" onSubmit={handleSubmit}>
-      <img src={logo.src}/>
-        <h1 className="register__title">Register</h1>
-
-        <div className="register__content">
-          <div className="register__box">
-            <i className="ri-user-3-line register__icon"></i>
-            <input
-              type="text"
-              required
-              className="register__input"
-              id="register-username"
-              placeholder=" "
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <label htmlFor="register-username" className="register__label">Username</label>
-          </div>
-
-          <div className="register__box">
-            <i className="ri-mail-line register__icon"></i>
+        <div style={styles.content}>
+          <div style={styles.inputBox}>
             <input
               type="email"
-              required
-              className="register__input"
               id="register-email"
-              placeholder=" "
+              required
+              style={styles.input}
+              placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <label htmlFor="register-email" className="register__label">Email</label>
           </div>
 
-          <div className="register__box">
-            <i className="ri-phone-line register__icon"></i>
+          <div style={styles.inputBox}>
             <input
               type="tel"
-              required
-              className="register__input"
               id="register-contact"
-              placeholder=" "
+              required
+              style={styles.input}
+              placeholder="Contact Number"
               value={contactNumber}
               onChange={(e) => setContactNumber(e.target.value)}
             />
-            <label htmlFor="register-contact" className="register__label">Contact Number</label>
           </div>
 
-          <div className="register__box">
-            <i className="ri-calendar-line register__icon"></i>
+          <div style={styles.inputBox}>
             <input
               type="date"
-              required
-              className="register__input"
               id="register-birthday"
-              placeholder=" "
+              required
+              style={styles.input}
+              placeholder="Birthday"
               value={birthday}
               onChange={(e) => setBirthday(e.target.value)}
             />
-            <label htmlFor="register-birthday" className="register__label"></label>
-          </div> 
+          </div>
 
-          <div className="register__box">
-            <i className="ri-lock-2-line register__icon"></i>
+          <div style={styles.inputBox}>
             <input
-              type="password"
-              required
-              className="register__input"
+              type={showPassword ? 'text' : 'password'}
               id="register-pass"
-              placeholder=" "
+              required
+              style={styles.input}
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <label htmlFor="register-pass" className="register__label">Password</label>
-            <i className="ri-eye-off-line register__eye" id="register-eye"></i>
+            <span
+              style={styles.eyeIcon}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </span>
           </div>
 
-          <div className="register__box">
-            <i className="ri-lock-2-line register__icon"></i>
+          <div style={styles.inputBox}>
             <input
-              type="password"
-              required
-              className="register__input"
+              type={showConfirmPassword ? 'text' : 'password'}
               id="confirm-pass"
-              placeholder=" "
+              required
+              style={styles.input}
+              placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            <label htmlFor="confirm-pass" className="register__label">Confirm Password</label>
-            <i className="ri-eye-off-line register__eye" id="confirm-eye"></i>
-          </div><br/> 
+            <span
+              style={styles.eyeIcon}
+              onClick={toggleConfirmPasswordVisibility}
+            >
+              {showConfirmPassword ? '🙈' : '👁️'}
+            </span>
+          </div>
         </div>
 
-        <button href="/login" className="cancel_button">CANCEL</button>
-        <button href="/dashboard" className="register__button">REGISTER</button>
+        <p style={styles.termsText}>
+          By signing up, you agree to our <a href="/terms" style={styles.link}>Terms of Use</a> and <a href="/privacy" style={styles.link}>Privacy Policy</a>.
+        </p>
 
+        <button type="submit" style={styles.registerButton}>Sign up</button>
 
-        <p className="register__login">
-          Already have an account? <a href="/Login">Login</a>
+        <p style={styles.loginText}>
+          Already have an account? <a href="/Login" style={styles.loginLink}>Login</a>
         </p>
       </form>
     </div>
   );
 }
+
+const styles = {
+  register: {
+    position: 'relative',
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0B162B',
+  },
+  registerForm: {
+    width: '100%',
+    maxWidth: '400px',
+    padding: '2rem',
+    backgroundColor: '#0B162B',
+    borderRadius: '8px',
+    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  logoContainer: {
+    marginBottom: '2rem',
+    cursor: 'pointer', // Make the logo clickable
+  },
+  logo: {
+    display: 'block',
+    margin: '0 auto',
+    width: '70%',
+  },
+  title: {
+    fontSize: '1.75rem',
+    marginBottom: '1.5rem',
+    color: '#fff',
+  },
+  content: {
+    display: 'grid',
+    rowGap: '1.5rem',
+  },
+  inputBox: {
+    position: 'relative',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.5)',
+  },
+  input: {
+    width: '100%',
+    padding: '0.75rem 0',
+    background: 'none',
+    border: 'none',
+    color: '#fff',
+    fontSize: '1rem',
+    fontFamily: 'Poppins, sans-serif',
+    outline: 'none',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: '10px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: '1.25rem',
+  },
+  termsText: {
+    fontSize: '0.875rem',
+    color: '#ffffffb3',
+    textAlign: 'center',
+    marginTop: '1rem',
+    marginBottom: '1.5rem',
+  },
+  link: {
+    color: '#3B82F6',
+    textDecoration: 'none',
+  },
+  registerButton: {
+    width: '100%',
+    padding: '0.75rem',
+    borderRadius: '50px',
+    backgroundColor: '#1D4ED8',
+    color: '#fff',
+    fontWeight: '500',
+    cursor: 'pointer',
+    border: 'none',
+    marginTop: '1rem',
+  },
+  loginText: {
+    color: '#fff',
+    marginTop: '1rem',
+  },
+  loginLink: {
+    color: '#3B82F6',
+    fontWeight: '500',
+    textDecoration: 'none',
+  },
+};
 
 export default RegisterPage;

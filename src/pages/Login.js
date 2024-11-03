@@ -1,80 +1,66 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router'; // Import useRouter for navigation in Next.js
 import logo from '@/img/logo.png';
 import gmail from '@/img/gmail.png';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
+  const router = useRouter(); // Initialize useRouter for navigation
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    const showHiddenPass = () => {
-      const input = document.getElementById('login-pass');
-      const iconEye = document.getElementById('login-eye');
-
-      if (input && iconEye) {
-        iconEye.addEventListener('click', () => {
-          if (input.type === 'password') {
-            input.type = 'text';
-            iconEye.classList.add('ri-eye-line');
-            iconEye.classList.remove('ri-eye-off-line');
-          } else {
-            input.type = 'password';
-            iconEye.classList.remove('ri-eye-line');
-            iconEye.classList.add('ri-eye-off-line');
-          }
-        });
-      }
-    };
-
-    showHiddenPass();
-
-    // Clean up the event listener on component unmount
-    return () => {
-      const iconEye = document.getElementById('login-eye');
-      if (iconEye) {
-        iconEye.removeEventListener('click', () => {});
-      }
-    };
-  }, []);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Username:', username);
+    console.log('Email:', email);
     console.log('Password:', password);
   };
 
   return (
     <div style={styles.login}>
       <form style={styles.loginForm} onSubmit={handleSubmit}>
-        <div style={styles.logoContainer}>
+        <div style={styles.logoContainer} onClick={() => router.push('/')}>
           <img src={logo.src} alt="Logo" style={styles.logo} />
         </div>
         <h3 style={styles.title}>Login</h3>
 
         <div style={styles.content}>
+          <button type="button" style={styles.googleButton}>
+            <img src={gmail.src} alt="Gmail" style={styles.googleIcon} />
+            Continue with Google
+          </button>
+
           <div style={styles.inputBox}>
             <input
               type="email"
+              id="login-email"
               required
               style={styles.input}
-              id="login-email"
-              placeholder="Email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
           <div style={styles.inputBox}>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
+              id="login-pass"
               required
               style={styles.input}
-              id="login-pass"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <i className="ri-eye-off-line" id="login-eye" style={styles.eyeIcon}></i>
+            <span
+              style={styles.eyeIcon}
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </span>
           </div>
         </div>
 
@@ -85,11 +71,9 @@ export default function LoginPage() {
         <button type="submit" style={styles.submitButton}>Login</button>
 
         <div style={styles.registerSection}>
-          <p style={styles.signUpText}>or sign up using</p>
-          <div style={styles.gmailContainer}>
-            <img src={gmail.src} alt="Gmail" style={styles.gmailIcon} />
-          </div>
-          <a href="/Register" style={styles.signUpLink}>SIGN UP</a>
+          <p style={styles.signUpText}>
+            Don't have an account yet? <a href="/Register" style={styles.signUpLink}>Sign up</a>.
+          </p>
         </div>
       </form>
     </div>
@@ -117,6 +101,7 @@ const styles = {
   },
   logoContainer: {
     marginBottom: '2rem',
+    cursor: 'pointer', // Make the logo clickable
   },
   logo: {
     display: 'block',
@@ -125,12 +110,31 @@ const styles = {
   },
   title: {
     fontSize: '1.75rem',
-    marginBottom: '2rem',
+    marginBottom: '1rem',
     color: '#fff',
   },
   content: {
     display: 'grid',
     rowGap: '1.5rem',
+  },
+  googleButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    padding: '0.75rem',
+    borderRadius: '50px',
+    backgroundColor: '#fff',
+    color: '#0B162B',
+    fontWeight: '500',
+    cursor: 'pointer',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    marginBottom: '1.5rem',
+    border: 'none',
+  },
+  googleIcon: {
+    marginRight: '0.5rem',
+    width: '20px',
   },
   inputBox: {
     position: 'relative',
@@ -153,10 +157,12 @@ const styles = {
     transform: 'translateY(-50%)',
     color: '#fff',
     cursor: 'pointer',
+    fontSize: '1.25rem',
   },
   forgotPassword: {
     textAlign: 'right',
     marginTop: '1rem',
+    marginBottom: '1.5rem',
   },
   forgotLink: {
     color: '#ffffffb3',
@@ -167,15 +173,12 @@ const styles = {
     width: '100%',
     padding: '0.75rem',
     borderRadius: '50px',
-    backgroundColor: 'transparent',
-    border: '2px solid #fff',
+    backgroundColor: '#1D4ED8',
     color: '#fff',
+    fontWeight: '500',
     cursor: 'pointer',
+    border: 'none',
     transition: 'all 0.3s ease',
-  },
-  submitButtonHover: {
-    backgroundColor: '#fff',
-    color: '#0B162B',
   },
   registerSection: {
     marginTop: '2rem',
@@ -183,19 +186,9 @@ const styles = {
   },
   signUpText: {
     color: '#fff',
-    marginBottom: '0.5rem',
-  },
-  gmailContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: '1rem',
-  },
-  gmailIcon: {
-    width: '50px',
-    height: '50px',
   },
   signUpLink: {
-    color: '#fff',
+    color: '#3B82F6',
     fontWeight: '500',
     textDecoration: 'none',
   },
