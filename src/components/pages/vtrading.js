@@ -3,7 +3,6 @@ import Layout from '../Layout';
 import { FaBitcoin } from "react-icons/fa";
 import { IoMdTrendingDown, IoMdTrendingUp } from 'react-icons/io';
 import gradient1 from '@/img/gradient-1.png';
-import emptyList from '@/img/emptyList.png';
 import Modal from '@/components/Layout/modal';
 import Modal2 from '@/components/Layout/modal2';
 import Modal3 from '@/components/Layout/modal3';
@@ -63,13 +62,99 @@ export default function DummyPage({ title }) {
     const openErrorModal = () => setIsErrorModalOpen(true);
     const closeErrorModal = () => setIsErrorModalOpen(false);
 
-    //Panel Switching for Porfolio, Records and Order History
-    const [activePanel, setActivePanel] = useState('panel1');
 
-    const handlePanelSwitch = (panel) => {
-        setActivePanel(panel);
-      };
 
+    //GAME LOGIC!!!
+
+    const [investedCoin, setInvestedCoin] = useState(null); // Stores invested coin details
+    const [dummyCash, setDummyCash] = useState(100000);  
+    const [investment, setInvestment] = useState(0);      
+    const [coinQuantity, setCoinQuantity] = useState(0);  
+    const [entryPrice, setEntryPrice] = useState(0);      
+    const [isEntryActive, setIsEntryActive] = useState(true);
+    const [quantity, setQuantity] = useState(0);          
+    const [hasInvested, setHasInvested] = useState(false); 
+
+    const [cardAveragePrice, setCardAveragePrice] = useState(0);
+    const [cardTotalCost, setCardTotalCost] = useState(0);
+    const [cardProfit, setCardProfit] = useState(0);
+
+    const [investments, setInvestments] = useState([]);
+
+
+
+
+    const coinPrice = selectedCoin ? selectedCoin.quote.USD.price : 0; // Coin price without conversion
+
+    const handleEntry = () => {
+        const quantity = parseFloat(document.getElementById('quantity').value);
+        const currentPrice = selectedCoin.quote.USD.price;
+        const investmentAmount = quantity * currentPrice;
+    
+        if (quantity > 0 && investmentAmount <= dummyCash) {
+            setDummyCash(dummyCash - investmentAmount);
+            setInvestment(investment + investmentAmount);
+            setCoinQuantity(coinQuantity + quantity);
+            setEntryPrice(currentPrice);
+    
+            // Create a new investment object for the coin
+            const newInvestment = {
+                id: selectedCoin.id,               // Unique ID for the coin
+                name: selectedCoin.name,
+                symbol: selectedCoin.symbol,
+                logo: selectedCoin.logo,
+                pricePHP: currentPrice * 56,       // Convert to PHP
+                quantity: quantity,
+                totalCost: investmentAmount,
+                averagePrice: currentPrice,
+                profit: 0,
+            };
+    
+            // Add the new investment to the list and track as the current investment
+            setInvestments([...investments, newInvestment]);
+            setInvestedCoin(newInvestment); // Track the current investment
+    
+            alert(`Successfully invested $${investmentAmount.toFixed(2)} in ${selectedCoin.name}!`);
+        } else if (quantity <= 0) {
+            alert('Please enter a valid quantity greater than 0.');
+        } else {
+            alert('Insufficient dummy cash for this investment.');
+        }
+    };
+    
+    
+    const handleExit = () => {
+        if (investedCoin) { // Check if there is an active investment
+            const currentValue = investedCoin.quantity * coinPrice; // Use investedCoin for quantity
+            const profitOrLoss = currentValue - investedCoin.totalCost; // Calculate based on total cost of that specific investment
+    
+            setDummyCash(dummyCash + currentValue); // Update dummy cash balance
+    
+            alert(`You exited your position with a ${profitOrLoss >= 0 ? 'profit' : 'loss'} of $${profitOrLoss.toFixed(2)}!`);
+    
+            // Remove the exited investment from the investments array
+            setInvestments((prevInvestments) =>
+                prevInvestments.filter((inv) => inv.id !== investedCoin.id)
+            );
+    
+            // Reset the invested coin state
+            setInvestedCoin(null);
+            closeModal(); // Close the modal after exiting
+        } else {
+            alert('You have no active investment to exit.'); // Alert if there's no active investment
+            closeModal(); // Close the modal if no investment is active
+        }
+    };
+    
+    
+
+    const handleQuantityChange = (event) => {
+        const value = Number(event.target.value);
+        setQuantity(value);
+    };
+
+
+     
     const closeModal = () => {
         setOpenModal(null);
         setBuySuccessModal(false); // Close second modal when first is closed
@@ -88,11 +173,16 @@ export default function DummyPage({ title }) {
 
     const handleViewClick = (coin) => {
         setSelectedCoin(coin); // Update the selected coin state
+    
+        const existingInvestment = investments.find(inv => inv.id === coin.id);
+        setInvestedCoin(existingInvestment || null); // Set the current investment if it exists
     };
 
     const formatNumberWithCommas = (number) => {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
+
+    
 
         const fetchData = async () => {
             try {
@@ -153,6 +243,7 @@ export default function DummyPage({ title }) {
 
         const handlePageClick = ({ selected }) => setCurrentPage(selected);
 
+
     return (
         <Layout
             pageTitle={title}
@@ -178,8 +269,15 @@ export default function DummyPage({ title }) {
             content={<p>Do you want to sell this coin?</p>}
             footerActions={
                 <>
-                <button className={modalStyles.cancelButton} onClick={closeModal}>Cancel</button>
-                <button className={modalStyles.confirmButton} onClick={openSellSuccessModal} >Confirm</button>
+                    <button className={modalStyles.cancelButton} onClick={closeModal}>Cancel</button>
+                    <button
+                        className={modalStyles.confirmButton}
+                        onClick={() => {
+                            handleExit(); // Execute exit logic upon confirmation
+                        }}
+                    >
+                        Confirm
+                    </button>
                 </>
             }
         />
@@ -212,7 +310,7 @@ export default function DummyPage({ title }) {
             isOpen={isLoseModalOpen}
             onClose={closeLoseModal}
             title="YOU LOST"
-            content={<p>you ran out of virtual money!</p>}
+            content={<p>You ran out of virtual money!</p>}
             footerActions={
                 <>
                     <button className={modalStyles.cancelButton} onClick={closeLoseModal}>Exit</button>
@@ -239,10 +337,12 @@ export default function DummyPage({ title }) {
                     <div style={styles.leftPanel}>
                             <h1 style={styles.titleHeader}>Virtual Trading</h1>
                         <div style={styles.topGroup}>
-                            <div style={styles.dummyCashContainer}>
-                                <h1 style={styles.header1}>Available Dummy Cash</h1>
-                                <h1 style={styles.header2}>$100,000.00</h1>
-                            </div>
+                        <div style={styles.dummyCashContainer}>
+                            <h1 style={styles.header1}>Available Dummy Cash</h1>
+                                <h1 style={styles.header2}>
+                                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dummyCash)}
+                                    </h1>
+                                </div>
                             <div style={styles.buttonGroup}>
                                 <button
                                 style={{
@@ -251,7 +351,7 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered1(true)}
                                 onMouseLeave={() => setIsHovered1(false)}
-                                onClick={() =>handlePanelSwitch('panel1')}
+                                
                                 >My Portfolio</button>
 
                                 <button
@@ -261,7 +361,7 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered2(true)}
                                 onMouseLeave={() => setIsHovered2(false)}
-                                onClick={() =>handlePanelSwitch('panel2')}
+                                
                                 >Records</button>
 
                                 <button
@@ -271,172 +371,115 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered3(true)}
                                 onMouseLeave={() => setIsHovered3(false)}
-                                onClick={() =>handlePanelSwitch('panel3')}
+                                
                                 >Order History</button>
                             </div>
                         </div>
-                        <div style={styles.coinPanel}>
-
-                            {/* Panel 1 : My Portfolio */}
-                            {activePanel === 'panel1' && <div style={styles.cardContainer}>   
-                                <Card>
-                                    <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                    <span style={styles.smallcard}>Long</span>
-                                    <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    <div style={styles.priceGroup}>
-                                        <h1 style={styles.header2}>0.0</h1>
-                                        <h1 style={styles.header1}>Average Price</h1>
-                                    </div>
-                                    <div style={styles.priceGroup}>
-                                        <h1 style={styles.header2}>0.0</h1>
-                                        <h1 style={styles.header1}>Total Cost</h1>
-                                    </div>
-                                    <div style={styles.profitGroup}>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                        <h1 style={styles.header1}>Total Cost</h1>
-                                    </div>
-                                    <div style={styles.profitGroup}>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                        <h1 style={styles.header1}>% Profit</h1>
-                                    </div>
-                                </Card>
-
-                                <Card>
-                                    <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                    <span style={styles.smallcard}>Long</span>
-                                    <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    <div style={styles.priceGroup}>
-                                        <h1 style={styles.header2}>0.0</h1>
-                                        <h1 style={styles.header1}>Average Price</h1>
-                                    </div>
-                                    <div style={styles.priceGroup}>
-                                        <h1 style={styles.header2}>0.0</h1>
-                                        <h1 style={styles.header1}>Total Cost</h1>
-                                    </div>
-                                    <div style={styles.profitGroup}>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                        <h1 style={styles.header1}>Total Cost</h1>
-                                    </div>
-                                    <div style={styles.profitGroup}>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                        <h1 style={styles.header1}>% Profit</h1>
-                                    </div>
-                                </Card>
-
-                                <Card>
-                                    <h1 style={styles.header3}>CRYPTO : Coin Name</h1>
-                                    <span style={styles.smallcard}>Long</span>
-                                    <FaBitcoin style={styles.coinPlaceHolder}></FaBitcoin>
-                                    <div style={styles.priceGroup}>
-                                        <h1 style={styles.header2}>0.0</h1>
-                                        <h1 style={styles.header1}>Average Price</h1>
-                                    </div>
-                                    <div style={styles.priceGroup}>
-                                        <h1 style={styles.header2}>0.0</h1>
-                                        <h1 style={styles.header1}>Total Cost</h1>
-                                    </div>
-                                    <div style={styles.profitGroup}>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                        <h1 style={styles.header1}>Total Cost</h1>
-                                    </div>
-                                    <div style={styles.profitGroup}>
-                                        <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
-                                        <h1 style={styles.header1}>% Profit</h1>
-                                    </div>
-                                </Card>
-                             </div>
-                            }
-
-                            {/* Panel 2 : My Records */}
-                            {activePanel === 'panel2' && <div style={styles.emptyPanel}>
-                                <img src={emptyList.src} style={styles.emptyIcon}></img>
-                                <h1 style={styles.header9}>Your list is currently empty. Start Investing.</h1>
-                            </div>
-                            }
-
-                            {/* Panel 3 : Order History */}
-                            {activePanel === 'panel3' && <div style={styles.emptyPanel}>
-                                <img src={emptyList.src} style={styles.emptyIcon}></img>
-                                <h1 style={styles.header9}>Your list is currently empty. Start Investing.</h1>
-                            </div>
-                            }
-
+                        <div style={styles.cardContainer}>
+                            {investments.length === 0 ? (
+                                // Display this message if there are no investments
+                                <p style={styles.noInvestmentsMessage}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</p>
+                            ) : (
+                                // Map through investments and display a card for each
+                                investments.map((investment, index) => (
+                                    <Card key={investment.id || index}>
+                                        <h1 style={styles.header3}>CRYPTO : {investment.name}</h1>
+                                        <span style={styles.smallcard}>{investment.symbol}</span>
+                                        <img src={investment.logo} alt={`${investment.name} logo`} style={styles.coinPlaceHolder} />
+                                        <div style={styles.priceGroup}>
+                                            <h1 style={styles.header2}>₱{investment.pricePHP.toFixed(2)}</h1>
+                                            <h1 style={styles.header1}>Current Price (PHP)</h1>
+                                        </div>
+                                        <div style={styles.priceGroup}>
+                                            <h1 style={styles.header2}>{investment.totalCost.toFixed(2)}</h1>
+                                            <h1 style={styles.header1}>Total Cost</h1>
+                                        </div>
+                                        <div style={styles.profitGroup}>
+                                            <span style={styles.smallcard2}>
+                                                {investment.profit >= 0 ? <IoMdTrendingUp style={styles.trendingUp} /> : <IoMdTrendingDown style={styles.trendingDown} />}
+                                                {investment.profit.toFixed(1)}%
+                                            </span>
+                                            <h1 style={styles.header1}>% Profit</h1>
+                                        </div>
+                                    </Card>
+                                ))
+                            )}
                         </div>
                     </div>
 
+                  <div style={styles.rightCard}>
+                    {selectedCoin ? (
+                        <>
+                            <div style={styles.upperGroup}>
+                                <div style={styles.leftUpper}>
+                                    <h1 style={styles.header4}>${formatNumberWithCommas(coinPrice.toFixed(2))}</h1>
+                                    <h1 style={styles.header5}>{selectedCoin.name}</h1>
+                                </div>
+                                <span style={styles.smallRightcard}>
+                                    {selectedCoin.quote.USD.percent_change_1h >= 0 ? (
+                                        <IoMdTrendingUp style={styles.trendingUp} />
+                                    ) : (
+                                        <IoMdTrendingDown style={styles.trendingDown} />
+                                    )}
+                                    <span style={{
+                                        color: selectedCoin.quote.USD.percent_change_1h >= 0 ? 'green' : 'red'
+                                    }}>
+                                        {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
+                                    </span>
+                                </span>
+                            </div>
 
-                    <div style={styles.rightCard}>
-                        {selectedCoin ? (
-                            <>
-                                <div style={styles.upperGroup}>
-                                    <div style={styles.leftUpper}>
-                                        <h1 style={styles.header4}>{formatNumberWithCommas((selectedCoin.quote.USD.price * 56).toFixed(2))}</h1>
-                                        <h1 style={styles.header5}>{selectedCoin.name}</h1>
-                                    </div>
-                                    <span style={styles.smallRightcard}>
-                                        {selectedCoin.quote.USD.percent_change_1h >= 0 ? (
-                                            <IoMdTrendingUp style={styles.trendingUp} />
-                                        ) : (
-                                            <IoMdTrendingDown style={styles.trendingDown} />
-                                        )}
-                                        <span style={{
-                                            color: selectedCoin.quote.USD.percent_change_1h >= 0 ? 'green' : 'red'
-                                        }}>
-                                            {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
-                                        </span>
-                                     </span>
+                            <div style={styles.middleGroup}>    
+                                <div style={styles.flexContainer}>
+                                    <span style={styles.dataGroup}>
+                                        <h3 style={styles.header7}>Market Cap</h3>
+                                        <h1 style={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.market_cap / 1e12).toFixed(2))} T</h1>
+                                    </span>
+                                    <span style={styles.dataGroup}>
+                                        <h3 style={styles.header7}>24h Volume</h3>
+                                        <h1 style={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.volume_24h * 56).toFixed(2))}</h1>
+                                    </span>
+                                    <span style={styles.dataGroup}>
+                                        <h3 style={styles.header7}>Circulating Supply</h3>
+                                        <h1 style={styles.header8}>{formatNumberWithCommas(selectedCoin.circulating_supply)}</h1>
+                                    </span>
                                 </div>
 
-                                <div style={styles.middleGroup}>    
-                                    <div style={styles.flexContainer}>
-                                        <span style={styles.dataGroup}>
-                                            <h3 style={styles.header7}>Market Cap</h3><h1 style={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.market_cap / 1e12).toFixed(2))} T</h1>
-                                        </span>
-                                        <span style={styles.dataGroup}>
-                                            <h3 style={styles.header7}>24h Volume</h3><h1 style={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.volume_24h * 56).toFixed(2))}</h1>
-                                        </span>
-                                        <span style={styles.dataGroup}>
-                                            <h3 style={styles.header7}>Circulating Supply</h3><h1 style={styles.header8}>{formatNumberWithCommas(selectedCoin.circulating_supply)}</h1>
-                                        </span>
-                                    </div>
-                                    <div style={styles.qtyGroup}>
-                                        <label style={styles.header2} htmlFor="quantity">Quantity</label><br></br>
-                                        <input 
-                                            type="number" 
-                                            id="quantity" 
-                                            name="quantity" 
-                                            style={styles.inputField} 
-                                            placeholder="Enter quantity" 
-                                        />
-                                    </div>
-                                    <br></br>
-
-                                    <h1 style={styles.header2}>Action</h1>
-
-                                    <div style={styles.cardButtonGroup}>
-                                        <button style={{
-                                            ...styles.Button2,
-                                            ...(isHovered4 ? styles.Button2Hover : {}),
-                                        }}
-                                        onMouseEnter={() => setIsHovered4(true)}
-                                        onMouseLeave={() => setIsHovered4(false)}
-                                        onClick={() => openSpecificModal('modal1')}>Entry</button>
-
-
-                                        <button style={{
-                                            ...styles.Button3,
-                                            ...(isHovered5 ? styles.Button3Hover : {}),
-                                        }}
-                                        onMouseEnter={() => setIsHovered5(true)}
-                                        onMouseLeave={() => setIsHovered5(false)}
-                                        onClick={() => openSpecificModal('modal2')}>Exit</button>
-                                    </div>
+                                <div style={styles.qtyGroup}>
+                                    <label style={styles.header2} htmlFor="quantity">Coin Quantity</label><br />
+                                    <input 
+                                        type="number" 
+                                        id="quantity" 
+                                        name="quantity" 
+                                        style={styles.inputField} 
+                                        placeholder="Enter quantity" 
+                                        min="0"
+                                        value={quantity} // Controlled input
+                                        onChange={handleQuantityChange} // Update state on change
+                                    />
                                 </div>
-                            </>
-                         ) : (
-                            <p>Select a coin to view its details.</p>
-                        )}
-                    </div>
+                                <br />
+
+                                <h1 style={styles.header2}>Action</h1>
+
+                                <div style={styles.cardButtonGroup}>
+                                    <button style={styles.Button2} onClick={handleEntry}>
+                                        Entry
+                                    </button>
+                                    <button style={styles.Button3} onClick={() => openSpecificModal('modal2')}>
+                                        Exit
+                                    </button>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="flex items-center justify-center h-screen p-8 ">
+                            <p className="text-center text-lg p-4 rounded">
+                                Select a coin to view its details.
+                            </p>
+                        </div>
+                    )}
+                </div>
                 </div>
                 <div style={styles.bottomContainer}>
                     <h1 style={styles.header3}>Total</h1>
@@ -540,6 +583,8 @@ export default function DummyPage({ title }) {
 }
 
 const styles = {
+
+    
 
     pageContainer:{
         display:'flex',
@@ -1037,31 +1082,10 @@ const styles = {
             cursor: 'pointer',
         },
 
-        //Panel
-
-        emptyPanel:{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: '3px solid white',
-            borderRadius:'30px',
-            padding: '2%',
-
-        },
-
-        header9:{
-            fontFamily: 'Sora',
-            fontSize: '25px',
-            fontWeight: '700',
-            alignItems: 'center',
+        noInvestmentsMessage: {
             textAlign: 'center',
-            margin: '2%',
+            fontSize: '1.2rem',
+            color: 'white', // Light gray or any color you prefer
+            marginTop: '20px',
         },
-
-        emptyIcon:{
-            width: '250px',
-            maxWidth: '80%',
-        }
-
-};
+    };
