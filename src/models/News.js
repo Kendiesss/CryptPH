@@ -1,4 +1,3 @@
-// In your News model file (e.g., News.js)
 import mongoose from "mongoose";
 
 const NewsSchema = new mongoose.Schema({
@@ -14,7 +13,7 @@ const NewsSchema = new mongoose.Schema({
         type: String, 
         required: true,
     },
-    imageType: { // Add this line
+    imageType: { 
         type: String,
         required: true,
     },

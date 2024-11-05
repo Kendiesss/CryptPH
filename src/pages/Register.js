@@ -1,32 +1,26 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router'; // Import useRouter for navigation in Next.js
+import { useRouter } from 'next/router';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import logo from '@/img/logo.png';
 
 function RegisterPage() {
-  const router = useRouter(); // Initialize useRouter for navigation
+  const router = useRouter();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [contactNumber, setContactNumber] = useState('');
-  const [birthday, setBirthday] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('First Name:', firstName);
+    console.log('Last Name:', lastName);
     console.log('Email:', email);
-    console.log('Contact Number:', contactNumber);
-    console.log('Birthday:', birthday);
     console.log('Password:', password);
-    console.log('Confirm Password:', confirmPassword);
   };
 
   return (
@@ -38,6 +32,30 @@ function RegisterPage() {
         <h3 style={styles.title}>Register</h3>
 
         <div style={styles.content}>
+          <div style={styles.inputBox}>
+            <input
+              type="text"
+              id="register-firstname"
+              required
+              style={styles.input}
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+
+          <div style={styles.inputBox}>
+            <input
+              type="text"
+              id="register-lastname"
+              required
+              style={styles.input}
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+
           <div style={styles.inputBox}>
             <input
               type="email"
@@ -52,32 +70,8 @@ function RegisterPage() {
 
           <div style={styles.inputBox}>
             <input
-              type="tel"
-              id="register-contact"
-              required
-              style={styles.input}
-              placeholder="Contact Number"
-              value={contactNumber}
-              onChange={(e) => setContactNumber(e.target.value)}
-            />
-          </div>
-
-          <div style={styles.inputBox}>
-            <input
-              type="date"
-              id="register-birthday"
-              required
-              style={styles.input}
-              placeholder="Birthday"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
-            />
-          </div>
-
-          <div style={styles.inputBox}>
-            <input
               type={showPassword ? 'text' : 'password'}
-              id="register-pass"
+              id="register-password"
               required
               style={styles.input}
               placeholder="Password"
@@ -88,25 +82,7 @@ function RegisterPage() {
               style={styles.eyeIcon}
               onClick={togglePasswordVisibility}
             >
-              {showPassword ? '🙈' : '👁️'}
-            </span>
-          </div>
-
-          <div style={styles.inputBox}>
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              id="confirm-pass"
-              required
-              style={styles.input}
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <span
-              style={styles.eyeIcon}
-              onClick={toggleConfirmPasswordVisibility}
-            >
-              {showConfirmPassword ? '🙈' : '👁️'}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
         </div>
@@ -146,7 +122,7 @@ const styles = {
   },
   logoContainer: {
     marginBottom: '2rem',
-    cursor: 'pointer', // Make the logo clickable
+    cursor: 'pointer',
   },
   logo: {
     display: 'block',

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router'; // Import useRouter for navigation in Next.js
+import { useRouter } from 'next/router'; 
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 import logo from '@/img/logo.png';
-import gmail from '@/img/gmail.png';
 
 export default function LoginPage() {
-  const router = useRouter(); // Initialize useRouter for navigation
+  const router = useRouter(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +30,7 @@ export default function LoginPage() {
 
         <div style={styles.content}>
           <button type="button" style={styles.googleButton}>
-            <img src={gmail.src} alt="Gmail" style={styles.googleIcon} />
+            <FcGoogle style={styles.googleIcon} />
             Continue with Google
           </button>
 
@@ -59,7 +60,7 @@ export default function LoginPage() {
               style={styles.eyeIcon}
               onClick={togglePasswordVisibility}
             >
-              {showPassword ? '🙈' : '👁️'}
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
         </div>
@@ -101,7 +102,7 @@ const styles = {
   },
   logoContainer: {
     marginBottom: '2rem',
-    cursor: 'pointer', // Make the logo clickable
+    cursor: 'pointer', 
   },
   logo: {
     display: 'block',
@@ -134,7 +135,7 @@ const styles = {
   },
   googleIcon: {
     marginRight: '0.5rem',
-    width: '20px',
+    fontSize: '1.25rem',
   },
   inputBox: {
     position: 'relative',
