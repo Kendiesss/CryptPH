@@ -5,16 +5,25 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { FaPlus } from "react-icons/fa";
 import { MdOutlineChatBubble } from "react-icons/md";
 import { FaMinus } from "react-icons/fa";
-import React, {useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from '@/styles/charts.module.css';
 
-
-const coinData = [
-    { icon: '🪙', name: 'BTC' },
-    { icon: '🟢', name: 'ETH' },
-    { icon: '🟡', name: 'BIN' },
-    // add coins more here
-];
+const ids = [ //Dont Modify or Delete, Important!!!
+    '7278', '29676', '31683', '4030', '18876', '11841', '22765', '27565', '5805', '6783', 
+    '28066', '1697', '31668', '23635', '1839', '1', '1831', '23121', '29870', '23095', 
+    '29743', '2010', '30126', '5567', '1975', '4066', '10903', '5692', '16399', '3794', 
+    '23351', '13383', '3635', '1966', '30096', '74', '30933', '32698', '28752', '30494', 
+    '2130', '30171', '1027', '29814', '17450', '10804', '2280', '26081', '7080', '33440', 
+    '11857', '32195', '4642', '28829', '31234', '22850', '23707', '29835', '10603', '21916', 
+    '9444', '8000', '7429', '21533', '2', '17081', '27872', '14783', '1518', '18895', 
+    '31165', '28301', '33093', '31510', '8766', '6535', '32521', '28850', '33570', '11840', 
+    '30315', '25028', '4705', '27772', '9481', '24478', '31704', '29335', '9720', '6636', 
+    '3890', '29555', '3155', '21106', '30843', '52', '2943', '14101', '30969', '32724', 
+    '32717', '5994', '5824', '5426', '5279', '28081', '11212', '11213', '512', '20947', 
+    '6758', '2586', '30449', '5176', '825', '2011', '6210', '28299', '11419', '1958', 
+    '7725', '24911', '3408', '27009', '32984', '7083', '22059', '2634', '52', '21259', 
+    '10688', '28683'
+].join(','); 
 
 const faqs = [
     {
@@ -38,8 +47,63 @@ const faqs = [
 
 
 
+
 export default function DummyPage({ title }) {
     const [openFaq, setOpenFaq] = useState(null);
+    const [cryptoData, setCryptoData] = useState([]);
+    const [selectedCoin, setSelectedCoin] = useState(null);
+    const [selectedCoinId, setSelectedCoinId] = useState(null); // Declare selectedCoinId here
+    const [error, setError] = useState(null);
+    const [priceChanged, setPriceChanged] = useState(false);
+    
+
+    
+
+
+    const prevPriceRef = useRef();
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`/api/crypto?ids=${ids}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            const data = await response.json();
+            setCryptoData(data);
+            setError(null);
+
+            // Check if the previously selected coin is still available
+            if (selectedCoinId && data[selectedCoinId]) {
+                const newPrice = data[selectedCoinId].quote.USD.price;
+                const prevPrice = prevPriceRef.current;
+
+                if (prevPrice !== undefined && newPrice !== prevPrice) {
+                    setPriceChanged(true);
+                    setTimeout(() => setPriceChanged(false), 3000);
+                }
+                
+                prevPriceRef.current = newPrice;
+                setSelectedCoin(data[selectedCoinId]);
+                // setSelectedCoin(data[selectedCoinId]); // Keep the selected coin updated
+            }
+
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchData(); // Fetch data on component mount
+
+        const intervalId = setInterval(() => {
+            fetchData(); // Refresh data every minute
+        }, 60000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [selectedCoinId]); // Change dependency to selectedCoinId
+
 
     useEffect(() => {
         // Load the TradingView chart when the component mounts
@@ -77,23 +141,54 @@ export default function DummyPage({ title }) {
         setOpenFaq(openFaq === index ? null : index);
     };
 
+    const handleCoinSelect = (event) => {
+        const selectedId = event.target.value;
+        setSelectedCoinId(selectedId); // Store the selected coin ID
+        const selectedCoin = cryptoData[selectedId];
+        setSelectedCoin(selectedCoin);
+    };
+    
+
 
     return (
         <Layout pageTitle={title}>
             <div className={styles.pageContainer}>
                 <div className={styles.leftPanel}>
                     <div className={styles.dropDownGroup}>
-                        <select className={styles.dropdown}>
-                            {coinData.map((coin, index) => (
-                                <option key={index} value={coin.name}>
-                                    {coin.icon} {coin.name}
+                    <select className={styles.dropdown} onChange={handleCoinSelect}>
+                        <option value="">Select a coin</option>
+                            {Object.keys(cryptoData).map((key) => (
+                                <option key={key} value={key}>
+                                    {cryptoData[key].symbol} - {cryptoData[key].name}
                                 </option>
                             ))}
                         </select>
-                        <div className={styles.cryptoDataGroup}>
-                            <h1 className={styles.cryptoData1}>&#x20B1;3,852,578</h1>
-                            <h1 className={styles.cryptoData2}><span className={styles.arrowIcon}><IoMdArrowDropdown /></span> 3.2%</h1>
-                        </div>
+                        {selectedCoin && (
+                            <div className={styles.cryptoDataGroup}>
+                                <img
+                                    src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${selectedCoinId}.png`}
+                                    alt={selectedCoin.name}
+                                    style={{ maxWidth: "30px", height: "30px", marginRight: "10px" }}
+                                />
+                               <h1
+                                    className={priceChanged ? styles.priceChangeAnimation : ''}
+                                >
+                                    ${selectedCoin.quote.USD.price.toFixed(2)}
+                                </h1>
+                                <h1 
+                                    className={`${styles.cryptoData2} ${
+                                        selectedCoin.quote.USD.percent_change_1h >= 0
+                                            ? styles.positiveChange
+                                            : styles.negativeChange
+                                    }`}
+                                >
+                                    <span className={styles.arrowIcon}>
+                                        {selectedCoin.quote.USD.percent_change_1h >= 0 ? '📈' : '📉'}
+                                    </span>
+                                    {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
+                                </h1>
+                            </div>
+                        )}
                     </div>
                     <h1 className={styles.header1}>Latest News in CryptPH</h1>
                     <div className={styles.newsCardContainer}>
@@ -106,42 +201,78 @@ export default function DummyPage({ title }) {
                 </div>
 
                 <div className={styles.rightPanel}>
-                    {/* TradingView Advanced Chart */}
-            
-                        <div id="tradingview_advanced" className={styles.tradingViewWidget} ></div> {/* Chart container */}
-                    
+                    {/* TradingView Chart */}
+                    <div id="tradingview_advanced" className={styles.tradingViewWidget}></div>
+
                     <div className={styles.historicalDataContainer}>
-
-                            <div className={styles.hdataCard}>
-                                <h1 className={styles.header3}>1h</h1>
-                                <h1 className={styles.cryptoData2}><span className={styles.arrowIcon}><IoMdArrowDropdown /></span> 0.0%</h1>
-                            </div>
-
-                            <div className={styles.hdataCard}>
-                                <h1 className={styles.header3}>24h</h1>
-                                <h1 className={styles.cryptoData2}><span className={styles.arrowIcon}><IoMdArrowDropdown /></span> 0.0%</h1>
-                            </div>
-
-                            <div className={styles.hdataCard}>
-                                <h1 className={styles.header3}>7d</h1>
-                                <h1 className={styles.cryptoData2}><span className={styles.arrowIcon}><IoMdArrowDropdown /></span> 0.0%</h1>
-                            </div>
-
-                            <div className={styles.hdataCard}>
-                                <h1 className={styles.header3}>14d</h1>
-                                <h1 className={styles.cryptoData2}><span className={styles.arrowIcon}><IoMdArrowDropdown /></span> 0.0%</h1>
-                            </div>
-
-                            <div className={styles.hdataCard}>
-                                <h1 className={styles.header3}>30d</h1>
-                                <h1 className={styles.cryptoData2}><span className={styles.arrowIcon}><IoMdArrowDropdown /></span> 0.0%</h1>
-                            </div>
-
-                            <div className={styles.hdataCard}>
-                                <h1 className={styles.header3}>1yr</h1>
-                                <h1 className={styles.cryptoData2}><span className={styles.arrowIcon}><IoMdArrowDropdown /></span> 0.0%</h1>
-                            </div>
+                        {selectedCoin && (
+                            <>
+                                <div className={styles.hdataCard}>
+                                    <h1 className={styles.header3}>1h</h1>
+                                    <h1 
+                                        className={`${styles.cryptoData2} ${
+                                            selectedCoin.quote.USD.percent_change_1h >= 0
+                                                ? styles.positiveChange
+                                                : styles.negativeChange
+                                        }`}
+                                    >
+                                        <span className={styles.arrowIcon}>
+                                            {selectedCoin.quote.USD.percent_change_1h >= 0 ? '📈' : '📉'}
+                                        </span>
+                                        {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
+                                    </h1>
+                                </div>
+                                <div className={styles.hdataCard}>
+                                    <h1 className={styles.header3}>24h</h1>
+                                    <h1 
+                                        className={`${styles.cryptoData2} ${
+                                            selectedCoin.quote.USD.percent_change_24h >= 0
+                                                ? styles.positiveChange
+                                                : styles.negativeChange
+                                        }`}
+                                    >
+                                        <span className={styles.arrowIcon}>
+                                            {selectedCoin.quote.USD.percent_change_24h >= 0 ? '📈' : '📉'}
+                                        </span>
+                                        {selectedCoin.quote.USD.percent_change_24h.toFixed(2)}%
+                                    </h1>
+                                </div>
+                                <div className={styles.hdataCard}>
+                                    <h1 className={styles.header3}>7d</h1>
+                                    <h1 
+                                        className={`${styles.cryptoData2} ${
+                                            selectedCoin.quote.USD.percent_change_7d >= 0
+                                                ? styles.positiveChange
+                                                : styles.negativeChange
+                                        }`}
+                                    >
+                                        <span className={styles.arrowIcon}>
+                                            {selectedCoin.quote.USD.percent_change_7d >= 0 ? '📈' : '📉'}
+                                        </span>
+                                        {selectedCoin.quote.USD.percent_change_7d.toFixed(2)}%
+                                    </h1>
+                                </div>
+                                {/* Add more historical data for 30d, 1yr as needed */}
+                                <div className={styles.hdataCard}>
+                                    <h1 className={styles.header3}>30d</h1>
+                                    <h1 
+                                        className={`${styles.cryptoData2} ${
+                                            selectedCoin.quote.USD.percent_change_30d >= 0
+                                                ? styles.positiveChange
+                                                : styles.negativeChange
+                                        }`}
+                                    >
+                                        <span className={styles.arrowIcon}>
+                                            {selectedCoin.quote.USD.percent_change_30d >= 0 ? '📈' : '📉'}
+                                        </span>
+                                        {selectedCoin.quote.USD.percent_change_30d.toFixed(2)}%
+                                    </h1>
+                                </div>
+                            </>
+                        )}
                     </div>
+
+                    {/* FAQ Section */}
                     <div className={styles.faqSection}>
                         <h1 className={styles.header2}>
                             Frequently Asked Questions 
@@ -168,14 +299,8 @@ export default function DummyPage({ title }) {
                             </div>
                         ))}
                     </div>
-            
                 </div>
-
-
             </div>
         </Layout>
-    
-    )
-
+    );
 }
-
