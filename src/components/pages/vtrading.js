@@ -8,7 +8,8 @@ import Modal2 from '@/components/Layout/modal2';
 import Modal3 from '@/components/Layout/modal3';
 import React, {useState, useEffect} from 'react';
 import modalStyles from '@/styles/modal.module.css';
-
+import TradingViewWidget from './TradingViewWidget'; // Adjust the path accordingly
+import widgetData from '@/data/widgetData'; 
 
 
 
@@ -31,23 +32,33 @@ const Card = ({ children }) => {
 
 export default function DummyPage({ title }) {
 
+    const [symbol, setSymbol] = useState(null);
     const [selectedCoin, setSelectedCoin] = useState(null);
     const [isHovered1, setIsHovered1] = useState(false);
     const [isHovered2, setIsHovered2] = useState(false);
     const [isHovered3, setIsHovered3] = useState(false);
     const [isHovered4, setIsHovered4] = useState(false); //For Entry Button
     const [isHovered5, setIsHovered5] = useState(false); //For Exit Button
+    const [activeButton, setActiveButton] = useState(null); // Track the active button
+
+  const handleButtonClick = (button) => {
+    setActiveButton(button); // Set the clicked button as active
+  };
+    
 
     const [cryptoData, setCryptoData] = useState(null);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 15;
+    const itemsPerPage = 5;
 
     //Modals
     const [openModal, setOpenModal] = useState(null);
     const openSpecificModal = (modalName) => setOpenModal(modalName);
     const [BuySuccessModal, setBuySuccessModal] = useState(false);
     const [SellSuccessModal, setSellSuccessModal] = useState(false);
+
+    //Tradingview Modal
+    const [openTVModal, setOpenTVModal] = useState(null);
 
 
     //Sample Error and Lose Modals
@@ -61,8 +72,6 @@ export default function DummyPage({ title }) {
     const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
     const openErrorModal = () => setIsErrorModalOpen(true);
     const closeErrorModal = () => setIsErrorModalOpen(false);
-
-
 
     //GAME LOGIC!!!
 
@@ -80,6 +89,12 @@ export default function DummyPage({ title }) {
     const [cardProfit, setCardProfit] = useState(0);
 
     const [investments, setInvestments] = useState([]);
+
+    //Panel Switching for Porfolio, Records and Order History
+    const [activePanel, setActivePanel] = useState('panel1');
+    const handlePanelSwitch = (panel) => {
+        setActivePanel(panel);
+      };
 
 
 
@@ -152,9 +167,7 @@ export default function DummyPage({ title }) {
         const value = Number(event.target.value);
         setQuantity(value);
     };
-
-
-     
+  
     const closeModal = () => {
         setOpenModal(null);
         setBuySuccessModal(false); // Close second modal when first is closed
@@ -176,6 +189,9 @@ export default function DummyPage({ title }) {
     
         const existingInvestment = investments.find(inv => inv.id === coin.id);
         setInvestedCoin(existingInvestment || null); // Set the current investment if it exists
+
+        const match = widgetData.find(item => item.id === coin.id);
+        setSymbol(match ? match.symbol : null);
     };
 
     const formatNumberWithCommas = (number) => {
@@ -242,6 +258,11 @@ export default function DummyPage({ title }) {
         const currentItems = Object.keys(cryptoData).slice(startIndex, startIndex + itemsPerPage);
 
         const handlePageClick = ({ selected }) => setCurrentPage(selected);
+
+        const getSymbol = (selectedCoinId) => {
+            const match = widgetData.find(item => item.id === selectedCoinId);
+            return match ? match.symbol : null; // Return symbol if found, else null
+        };
 
 
     return (
@@ -351,6 +372,7 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered1(true)}
                                 onMouseLeave={() => setIsHovered1(false)}
+                                onClick={() =>handlePanelSwitch('panel1')}
                                 
                                 >My Portfolio</button>
 
@@ -361,8 +383,9 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered2(true)}
                                 onMouseLeave={() => setIsHovered2(false)}
+                                onClick={() =>handlePanelSwitch('panel2')}
                                 
-                                >Records</button>
+                                >Coin List</button>
 
                                 <button
                                 style={{
@@ -371,39 +394,128 @@ export default function DummyPage({ title }) {
                                 }}
                                 onMouseEnter={() => setIsHovered3(true)}
                                 onMouseLeave={() => setIsHovered3(false)}
+                                onClick={() =>handlePanelSwitch('panel3')}
                                 
                                 >Order History</button>
                             </div>
                         </div>
-                        <div style={styles.cardContainer}>
-                            {investments.length === 0 ? (
-                                // Display this message if there are no investments
-                                <p style={styles.noInvestmentsMessage}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</p>
-                            ) : (
-                                // Map through investments and display a card for each
-                                investments.map((investment, index) => (
-                                    <Card key={investment.id || index}>
-                                        <h1 style={styles.header3}>CRYPTO : {investment.name}</h1>
-                                        <span style={styles.smallcard}>{investment.symbol}</span>
-                                        <img src={investment.logo} alt={`${investment.name} logo`} style={styles.coinPlaceHolder} />
-                                        <div style={styles.priceGroup}>
-                                            <h1 style={styles.header2}>₱{investment.pricePHP.toFixed(2)}</h1>
-                                            <h1 style={styles.header1}>Current Price (PHP)</h1>
-                                        </div>
-                                        <div style={styles.priceGroup}>
-                                            <h1 style={styles.header2}>{investment.totalCost.toFixed(2)}</h1>
-                                            <h1 style={styles.header1}>Total Cost</h1>
-                                        </div>
-                                        <div style={styles.profitGroup}>
-                                            <span style={styles.smallcard2}>
-                                                {investment.profit >= 0 ? <IoMdTrendingUp style={styles.trendingUp} /> : <IoMdTrendingDown style={styles.trendingDown} />}
-                                                {investment.profit.toFixed(1)}%
-                                            </span>
-                                            <h1 style={styles.header1}>% Profit</h1>
-                                        </div>
-                                    </Card>
-                                ))
-                            )}
+                        <div style={styles.coinPanel}>
+
+                            {activePanel === 'panel1' && <div style={styles.cardContainer}> 
+                                {investments.length === 0 ? (
+                                    // Display this message if there are no investments
+                                    <p style={styles.noInvestmentsMessage}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</p>
+                                ) : (
+                                    // Map through investments and display a card for each
+                                    investments.map((investment, index) => (
+                                        <Card key={investment.id || index}>
+                                            <h1 style={styles.header3}>{investment.name}</h1>
+                                            <span style={styles.smallcard}>{investment.symbol}</span>
+                                            <img 
+                                                src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
+                                                alt={`${investment.name} logo`} 
+                                                style={styles.coinPlaceHolder} 
+                                            />
+                                            <div style={styles.priceGroup}>
+                                                <h1 style={styles.header2}>₱{investment.pricePHP.toFixed(2)}</h1>
+                                                <h1 style={styles.header1}>Current Price (PHP)</h1>
+                                            </div>
+                                            <div style={styles.priceGroup}>
+                                                <h1 style={styles.header2}>{investment.totalCost.toFixed(2)}</h1>
+                                                <h1 style={styles.header1}>Total Cost</h1>
+                                            </div>
+                                            <div style={styles.profitGroup}>
+                                                <span style={styles.smallcard2}>
+                                                    {investment.profit >= 0 ? <IoMdTrendingUp style={styles.trendingUp} /> : <IoMdTrendingDown style={styles.trendingDown} />}
+                                                    {investment.profit.toFixed(1)}%
+                                                </span>
+                                                <h1 style={styles.header1}>% Profit</h1>
+                                            </div>
+                                        </Card>
+                                    ))
+                                )}
+                            </div>}
+
+                            {activePanel === 'panel2' && <div style={styles.tableContainer}>
+                                <div>
+                                    <table style={styles.table}>
+                                        <thead>
+                                        <tr>
+                                            <th style={styles.tableHeader}>Coin Name</th>
+                                            <th style={styles.tableHeader}>Symbol</th>
+                                            <th style={styles.tableHeader}>Price (PHP)</th>
+                                            <th style={styles.tableHeader}>1h Change (%)</th>
+                                            <th style={styles.tableHeader}>24h Change (%)</th>
+                                            <th style={styles.tableHeader}>7d Change (%)</th>
+                                            <th style={styles.tableHeader}>Volume (24h)</th>
+                                            <th style={styles.tableHeader}>Market Cap (in Trillions)</th>
+                                            <th style={styles.tableHeader}>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {currentItems.map((id) => {
+                                            const coin = cryptoData[id];
+                                            const pricePHP = formatNumberWithCommas((coin.quote.USD.price * 56).toFixed(2)); // Adjust multiplier as needed
+                                            const marketCapT = formatNumberWithCommas((coin.quote.USD.market_cap / 1e12).toFixed(2)); // Convert to trillions
+                                            const volume24hPHP = formatNumberWithCommas((coin.quote.USD.volume_24h * 56).toFixed(2));
+
+                                            return (
+                                            <tr key={id}>
+                                                <td style={styles.tableCell}>
+                                                    {coin.name} 
+                                                    <img 
+                                                        src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${coin.id}.png`} 
+                                                        alt={`${coin.name} logo`} 
+                                                        style={styles.logo} 
+                                                    />
+                                                </td>
+                                                <td style={styles.tableCell}>{coin.symbol}</td>
+                                                <td style={styles.tableCell}>₱{pricePHP}</td>
+                                                <td style={styles.tableCell}>
+                                                    <span style={coin.quote.USD.percent_change_1h < 0 ? styles.changeNegative : styles.changePositive}>
+                                                        {coin.quote.USD.percent_change_1h.toFixed(2)}%
+                                                    </span>
+                                                </td>
+                                                <td style={styles.tableCell}>
+                                                    <span style={coin.quote.USD.percent_change_24h < 0 ? styles.changeNegative : styles.changePositive}>
+                                                        {coin.quote.USD.percent_change_24h.toFixed(2)}%
+                                                    </span>
+                                                </td>
+                                                <td style={styles.tableCell}>
+                                                    <span style={coin.quote.USD.percent_change_7d < 0 ? styles.changeNegative : styles.changePositive}>
+                                                        {coin.quote.USD.percent_change_7d.toFixed(2)}%
+                                                    </span>
+                                                </td>
+                                                <td style={styles.tableCell}>₱{volume24hPHP}</td>
+                                                <td style={styles.tableCell}>₱{marketCapT} T</td>
+
+                                                <td style={styles.tableCell}>
+                                                <button style={styles.button1} onClick={() => handleViewClick(coin)}>SELECT</button>
+                                                </td>
+                                            </tr>
+                                            );
+                                        })}
+                                        </tbody>
+                                    </table>
+
+                                    <div className={styles.pagination}>
+                                        <button style={styles.button1} onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+                                        Previous
+                                        </button>
+                                        <span>Page {currentPage} of {totalPages}</span>
+                                        <button style={styles.button1} onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+                                        Next
+                                        </button>
+                                    </div>
+                                </div>
+                            </div> }
+
+                            {activePanel === 'panel3' && <div style={styles.emptyPanel}>
+                                <h1 style={styles.header2}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</h1>
+                            </div>
+                            }
+
+
                         </div>
                     </div>
 
@@ -411,6 +523,11 @@ export default function DummyPage({ title }) {
                     {selectedCoin ? (
                         <>
                             <div style={styles.upperGroup}>
+                            <img 
+                                src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${selectedCoin.id}.png`} 
+                                alt={`${selectedCoin.name} logo`} 
+                                style={styles.logoLarge} 
+                            />
                                 <div style={styles.leftUpper}>
                                     <h1 style={styles.header4}>${formatNumberWithCommas(coinPrice.toFixed(2))}</h1>
                                     <h1 style={styles.header5}>{selectedCoin.name}</h1>
@@ -427,6 +544,10 @@ export default function DummyPage({ title }) {
                                         {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
                                     </span>
                                 </span>
+                            </div>
+
+                            <div style={styles.widgetContainer}>
+                                {symbol && <TradingViewWidget style={styles.widget1} symbol={symbol} />}
                             </div>
 
                             <div style={styles.middleGroup}>    
@@ -459,9 +580,6 @@ export default function DummyPage({ title }) {
                                     />
                                 </div>
                                 <br />
-
-                                <h1 style={styles.header2}>Action</h1>
-
                                 <div style={styles.cardButtonGroup}>
                                     <button style={styles.Button2} onClick={handleEntry}>
                                         Entry
@@ -509,74 +627,8 @@ export default function DummyPage({ title }) {
                 <button style={styles.button1} onClick={openLoseModal}>Open Lose Modal</button>
                 <button style={styles.button1} onClick={openErrorModal}>Open Error Modal</button>
                 <div style={styles.tableContainer}>
-                <div>
-                    <h1 style={styles.titleHeader}>Crypto Market</h1>
-                    <table style={styles.table}>
-                        <thead>
-                        <tr>
-                            <th style={styles.tableHeader}>Coin Name</th>
-                            <th style={styles.tableHeader}>Symbol</th>
-                            <th style={styles.tableHeader}>Price (PHP)</th>
-                            <th style={styles.tableHeader}>1h Change (%)</th>
-                            <th style={styles.tableHeader}>24h Change (%)</th>
-                            <th style={styles.tableHeader}>7d Change (%)</th>
-                            <th style={styles.tableHeader}>Volume (24h)</th>
-                            <th style={styles.tableHeader}>Market Cap (in Trillions)</th>
-                            <th style={styles.tableHeader}>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {currentItems.map((id) => {
-                            const coin = cryptoData[id];
-                            const pricePHP = formatNumberWithCommas((coin.quote.USD.price * 56).toFixed(2)); // Adjust multiplier as needed
-                            const marketCapT = formatNumberWithCommas((coin.quote.USD.market_cap / 1e12).toFixed(2)); // Convert to trillions
-                            const volume24hPHP = formatNumberWithCommas((coin.quote.USD.volume_24h * 56).toFixed(2));
-
-                            return (
-                            <tr key={id}>
-                                 <td style={styles.tableCell}>{coin.name} <img src={coin.logo} alt={`${coin.name} logo`} style={styles.logo} /></td>
-                                 <td style={styles.tableCell}>{coin.symbol}</td>
-                                 <td style={styles.tableCell}>₱{pricePHP}</td>
-                                 <td style={styles.tableCell}>
-                                    <span style={coin.quote.USD.percent_change_1h < 0 ? styles.changeNegative : styles.changePositive}>
-                                        {coin.quote.USD.percent_change_1h.toFixed(2)}%
-                                    </span>
-                                </td>
-                                <td style={styles.tableCell}>
-                                    <span style={coin.quote.USD.percent_change_24h < 0 ? styles.changeNegative : styles.changePositive}>
-                                        {coin.quote.USD.percent_change_24h.toFixed(2)}%
-                                    </span>
-                                </td>
-                                <td style={styles.tableCell}>
-                                    <span style={coin.quote.USD.percent_change_7d < 0 ? styles.changeNegative : styles.changePositive}>
-                                        {coin.quote.USD.percent_change_7d.toFixed(2)}%
-                                    </span>
-                                </td>
-                                 <td style={styles.tableCell}>₱{volume24hPHP}</td>
-                                 <td style={styles.tableCell}>₱{marketCapT} T</td>
-
-                                 <td style={styles.tableCell}>
-                                 <button style={styles.button1} onClick={() => handleViewClick(coin)}>VIEW</button>
-                                 </td>
-                            </tr>
-                            );
-                        })}
-                        </tbody>
-                    </table>
-
-                    <div className={styles.pagination}>
-                        <button style={styles.button1} onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
-                        Previous
-                        </button>
-                        <span>Page {currentPage} of {totalPages}</span>
-                        <button style={styles.button1} onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
-                        Next
-                        </button>
-                    </div>
-                    </div>
-
-
-                </div>
+                    
+                 </div>
            </div>
         </Layout>
     )
@@ -719,9 +771,10 @@ const styles = {
                     },
 
                     coinPlaceHolder:{
-                        fontSize: '35px',
                         color: 'yellow',
                         padding: '5px',
+                        width: '50px',
+                        height: '50px',
                     },
 
                     priceGroup: {
@@ -789,7 +842,7 @@ const styles = {
                     header4:{
                         fontFamily: 'Sora',
                         fontWeight: '900',
-                        fontSize: '30px',
+                        fontSize: '25px',
                     },
 
                     header5:{
@@ -1020,10 +1073,9 @@ const styles = {
         //table
 
         tableContainer: {
-            marginTop: '20px',
+            marginTop: '1px',
+            width: '960px',
             overflowX: 'auto', // Allows for horizontal scrolling on smaller screens
-            padding: '1rem',
-            borderRadius: '5rem',
         },
         table: {
             width: '100%',
@@ -1032,9 +1084,9 @@ const styles = {
         },
         tableHeader: {
             backgroundColor: '#f2f2f2',
-            fontSize: '1em',
+            fontSize: '0.8em',
             textAlign: 'left',
-            padding: '12px',
+            padding: '10px',
             borderBottom: '1px solid #ddd',
             fontFamily: 'Sora',
             fontWeight: '900',
@@ -1042,12 +1094,15 @@ const styles = {
             color: '#0B162B',
         },
         tableCell: {
-            padding: '12px',
-            height: '10rem',
+            padding: '5px',
+            height: '6rem',
             borderBottom: '1px solid #ddd',
             fontFamily: 'Sora',
             fontWeight: '900',
-            fontSize: '1em',
+            fontSize: '0.8em',
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
         },
 
         changePositive: {
@@ -1088,4 +1143,46 @@ const styles = {
             color: 'white', // Light gray or any color you prefer
             marginTop: '20px',
         },
+
+        logo:{
+            width: '35px',
+            height: '35px',
+            alignSelf: 'center',
+            justifySelf: 'center',
+        },
+
+        logoLarge: {
+            width: '80px',
+            height: '80px',
+            alignSelf: 'center',
+            justifySelf: 'center',
+            padding: '1rem',
+        },
+
+        widgetContainer:{
+            height: '10rem',
+            margin: '0 1rem 2rem 1rem',
+        },
+
+        widget1:{
+            position: 'relative',
+            width: '100%', 
+            height: '100%', 
+            padding: '2%',
+        },
+
+        tvButton:{
+            height: '50px',
+            width: '300px',
+            alignSelf: 'center',
+            marginBottom: '1rem',
+            fontFamily: 'Sora',
+            fontSize: '11px',
+            fontWeight: '700',
+            color:'white',
+            border: '1px solid white',
+            borderRadius: '30px',
+        }
+    
+        
     };
