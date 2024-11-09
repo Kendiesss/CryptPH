@@ -45,6 +45,8 @@ export default function DummyPage({ title }) {
         fetchNews();
     }, []); 
 
+     // Limit the carousel to the top 5 news items
+     const topNewsItems = newsItems.slice(0, 5); // Show only the first 5 items in the carousel
     const displayedItems = showAll ? newsItems : newsItems.slice(0, 12); //Show 12 news items at startup
 
     return (
@@ -52,19 +54,23 @@ export default function DummyPage({ title }) {
             <div className={styles.pageContainer}>
                 <div className={styles.upperPanel}>
                     <div className={styles.carouselWrapper}>
-                        <Carousel showThumbs={false} infiniteLoop autoPlay interval={3000} showStatus={false}>
-                            <div className={styles.newsCard}>
-                                <div className={styles.detailsGrp}>
-                                    <div className={styles.imageBackground} style={{ backgroundImage: `url(${pholder.src})` }}></div>
-                                    <h1 className={styles.headlineLarge}>News Headline</h1>
-                                    <button className={styles.button1}>
-                                        Read More
-                                        <span className={styles.iconWrapper}>
-                                            <FaArrowCircleRight className={styles.icon} />
-                                        </span>
-                                    </button>
+                        <Carousel showThumbs={false} infiniteLoop autoPlay interval={10000} showStatus={false}>
+                        {topNewsItems.map((item) => (
+                                <div key={item._id} className={styles.newsCard}>
+                                    <div className={styles.detailsGrp}>
+                                        <div className={styles.imageBackground} style={{ backgroundImage: `url(${item.image || pholder.src})` }}></div>
+                                        <h1 className={styles.headlineLarge}>{item.title}</h1>
+                                        <Link key={item._id} href={`/news/${item._id}`} passHref>
+                                        <button className={styles.button1}>
+                                            Read More
+                                            <span className={styles.iconWrapper}>
+                                                <FaArrowCircleRight className={styles.icon} />
+                                            </span>
+                                        </button>
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
+                            ))}
                         </Carousel>
                     </div>
                 </div>
