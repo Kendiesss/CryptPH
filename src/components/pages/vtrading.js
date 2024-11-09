@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Layout from '../Layout';
-import { FaBitcoin } from "react-icons/fa";
+import { RiCoinsFill } from "react-icons/ri";
+import { FaBoxOpen } from "react-icons/fa";
 import { IoMdTrendingDown, IoMdTrendingUp } from 'react-icons/io';
 import gradient1 from '@/img/gradient-1.png';
 import Modal from '@/components/Layout/modal';
@@ -302,6 +303,16 @@ export default function DummyPage({ title }) {
               clearInterval(intervalId);
             };
           }, []);
+
+          useEffect(() => {
+            // Ensure selectedCoin is synced with the updated cryptoData if it's based on `cryptoData`
+            if (selectedCoin && cryptoData) {
+              const newCoin = cryptoData[selectedCoin.id];
+              if (newCoin && newCoin !== selectedCoin) {
+                setSelectedCoin(newCoin);
+              }
+            }
+          }, [cryptoData]); 
         
     
         if (error) return <div>Error: {error}</div>;
@@ -598,7 +609,7 @@ export default function DummyPage({ title }) {
                                                 <td style={styles.tableCell}>₱{marketCapT} T</td>
 
                                                 <td style={styles.tableCell}>
-                                                <button style={styles.button1} onClick={() => handleViewClick(coin)}>SELECT</button>
+                                                <button style={styles.button4} onClick={() => handleViewClick(coin)}>SELECT</button>
                                                 </td>
                                             </tr>
                                             );
@@ -607,11 +618,11 @@ export default function DummyPage({ title }) {
                                     </table>
 
                                     <div className={styles.pagination}>
-                                        <button style={styles.button1} onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+                                        <button style={styles.button4} onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
                                         Previous
                                         </button>
                                         <span>Page {currentPage} of {totalPages}</span>
-                                        <button style={styles.button1} onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+                                        <button style={styles.button4} onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
                                         Next
                                         </button>
                                     </div>
@@ -747,6 +758,7 @@ export default function DummyPage({ title }) {
                     ) : (
                         <div className="flex items-center justify-center h-screen p-8 ">
                             <p className="text-center text-lg p-4 rounded">
+                                <RiCoinsFill style={styles.logoLarge2}/>
                                 Select a coin to view its details.
                             </p>
                         </div>
@@ -809,10 +821,10 @@ const styles = {
         },
 
             titleHeader:{
-                fontSize: '50px',
+                fontSize: '35px',
                 fontFamily: 'Sora',
                 fontWeight: '900',
-                marginBottom: '3rem',
+                marginBottom: '1rem',
             },
 
             topGroup:{
@@ -1227,6 +1239,7 @@ const styles = {
             marginTop: '1px',
             width: '960px',
             overflowX: 'auto', // Allows for horizontal scrolling on smaller screens
+            borderRadius: '25px',
         },
         table: {
             width: '100%',
@@ -1234,32 +1247,35 @@ const styles = {
             border: '1px solid white',
         },
         tableHeader: {
-            backgroundColor: '#f2f2f2',
+            backgroundColor: '#E9ECEF',
             fontSize: '0.8em',
-            textAlign: 'left',
+            textAlign: 'center',
             padding: '10px',
             borderBottom: '1px solid #ddd',
             fontFamily: 'Sora',
             fontWeight: '900',
             padding: '10px',
             color: '#0B162B',
+           
         },
         tableCell: {
             padding: '5px',
             height: '6rem',
             borderBottom: '1px solid #ddd',
             fontFamily: 'Sora',
-            fontWeight: '900',
+            fontWeight: '700',
             fontSize: '0.8em',
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
+            backgroundColor: '#F8F9FA',
+            color: 'black',
         },
 
         changePositive: {
             width: '1rem',
             color: 'green',
-            backgroundColor: '#141821',
+            backgroundColor: '#E9ECEF',
             padding: '10px',
             fontWeight: '500',
             borderRadius: '1rem',
@@ -1268,7 +1284,7 @@ const styles = {
         changeNegative: {
             width: '1rem',
             color: 'red',
-            backgroundColor: '#141821',
+            backgroundColor: '#E9ECEF',
             padding: '10px',
             fontWeight: '500',
             borderRadius: '1rem',
@@ -1311,6 +1327,13 @@ const styles = {
             padding: '1rem',
         },
 
+        logoLarge2: {
+            fontSize: '10rem',
+            alignSelf: 'center',
+            justifySelf: 'center',
+            padding: '1rem',
+        },
+
         widgetContainer:{
             height: '10rem',
             margin: '0 1rem 2rem 1rem',
@@ -1334,7 +1357,20 @@ const styles = {
             color:'white',
             border: '1px solid white',
             borderRadius: '30px',
-        }
+        },
+
+        button4:{
+            fontSize: '14px',
+            fontFamily: 'Sora',
+            fontWeight: '700',
+            color:'white',
+            width: '100px',
+            height: '35px',
+            border: '2px solid white',
+            borderRadius: '30px',
+            backgroundColor: '#0B162B',
+            margin: '5px',
+        },
     
         
     };
