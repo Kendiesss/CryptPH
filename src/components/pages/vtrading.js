@@ -73,6 +73,20 @@ export default function DummyPage({ title }) {
     const openErrorModal = () => setIsErrorModalOpen(true);
     const closeErrorModal = () => setIsErrorModalOpen(false);
 
+    //Buy Modal
+    const [isBuyModalOpen, setIsBuyModalOpen] = useState(false);
+    const openBuyModal = () => setIsBuyModalOpen(true);
+    const closeBuyModal = () => setIsBuyModalOpen(false);
+
+    //Sell Modal
+    const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+    const openSellModal = () => setIsSellModalOpen(true);
+    const closeSellModal = () => setIsSellModalOpen(false);
+
+        //Sell Modal
+    const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
+    const closeInvestmentModal = () => setIsInvestmentModalOpen(false);
+    
     //GAME LOGIC!!!
 
     const [investedCoin, setInvestedCoin] = useState(null); // Stores invested coin details
@@ -83,10 +97,14 @@ export default function DummyPage({ title }) {
     const [isEntryActive, setIsEntryActive] = useState(true);
     const [quantity, setQuantity] = useState(0);          
     const [hasInvested, setHasInvested] = useState(false); 
+    const [profitOrLoss, setProfitOrLoss] = useState(0);
 
-    const [cardAveragePrice, setCardAveragePrice] = useState(0);
-    const [cardTotalCost, setCardTotalCost] = useState(0);
-    const [cardProfit, setCardProfit] = useState(0);
+
+    // const [cardAveragePrice, setCardAveragePrice] = useState(0);
+    // const [cardTotalCost, setCardTotalCost] = useState(0);
+    // const [cardProfit, setCardProfit] = useState(0);
+
+    const [orderHistory, setOrderHistory] = useState([]);
 
     const [investments, setInvestments] = useState([]);
 
@@ -95,6 +113,11 @@ export default function DummyPage({ title }) {
     const handlePanelSwitch = (panel) => {
         setActivePanel(panel);
       };
+
+
+    //Currency swap  
+    const [currency, setCurrency] = useState('USD'); // Default currency is USD
+    const [exchangeRate, setExchangeRate] = useState(1); // Conversion rate (1 USD = 1 PHP initially)
 
 
 
@@ -128,38 +151,73 @@ export default function DummyPage({ title }) {
             // Add the new investment to the list and track as the current investment
             setInvestments([...investments, newInvestment]);
             setInvestedCoin(newInvestment); // Track the current investment
-    
-            alert(`Successfully invested $${investmentAmount.toFixed(2)} in ${selectedCoin.name}!`);
+
+            setIsBuyModalOpen(true);
+            // alert(`Successfully invested $${investmentAmount.toFixed(2)} in ${selectedCoin.name}!`);
         } else if (quantity <= 0) {
             alert('Please enter a valid quantity greater than 0.');
         } else {
-            alert('Insufficient dummy cash for this investment.');
+            // Open the error modal when insufficient balance
+            setIsErrorModalOpen(true);
         }
     };
     
     
     const handleExit = () => {
-        if (investedCoin) { // Check if there is an active investment
-            const currentValue = investedCoin.quantity * coinPrice; // Use investedCoin for quantity
-            const profitOrLoss = currentValue - investedCoin.totalCost; // Calculate based on total cost of that specific investment
-    
-            setDummyCash(dummyCash + currentValue); // Update dummy cash balance
-    
-            alert(`You exited your position with a ${profitOrLoss >= 0 ? 'profit' : 'loss'} of $${profitOrLoss.toFixed(2)}!`);
-    
-            // Remove the exited investment from the investments array
-            setInvestments((prevInvestments) =>
-                prevInvestments.filter((inv) => inv.id !== investedCoin.id)
-            );
-    
-            // Reset the invested coin state
-            setInvestedCoin(null);
-            closeModal(); // Close the modal after exiting
+        if (investedCoin) {
+          const currentValue = investedCoin.quantity * coinPrice;
+          const profitOrLoss = currentValue - investedCoin.totalCost;
+          const profitPercent = ((currentValue - investedCoin.totalCost) / investedCoin.totalCost) * 100;
+      
+          // Add to order history
+          const exitedInvestment = {
+            coinName: investedCoin.coinName,
+            symbol: investedCoin.symbol,
+            quantity: investedCoin.quantity,
+            priceAtEntry: investedCoin.totalCost / investedCoin.quantity,
+            priceAtExit: coinPrice,
+            profitPercent: profitPercent,
+            date: new Date(),
+            coinId: investedCoin.id,
+          };
+      
+          setOrderHistory((prevHistory) => [...prevHistory, exitedInvestment]);
+      
+          // Update dummy cash balance
+          const newDummyCash = dummyCash + currentValue;
+          setDummyCash(newDummyCash);
+      
+          // Show exit alert (integrated into the modal)
+          setIsSellModalOpen(true);
+      
+          // Remove the exited investment from the investments array
+          setInvestments((prevInvestments) =>
+            prevInvestments.filter((inv) => inv.id !== investedCoin.id)
+          );
+      
+          // Reset the invested coin state
+          setInvestedCoin(null);
+          closeModal(); // Close the modal after exiting (optional)
+      
+          if (newDummyCash <= 0) {
+            openLoseModal(); // Show the lose modal
+          }
         } else {
-            alert('You have no active investment to exit.'); // Alert if there's no active investment
+            setIsInvestmentModalOpen(true);
             closeModal(); // Close the modal if no investment is active
         }
-    };
+      };
+    
+
+
+    //currency conversion
+    const convertCurrency = (amount) => {
+        if (currency === 'USD') {
+          return (amount / exchangeRate).toFixed(2); // Convert PHP to USD
+        }
+        return (amount * exchangeRate).toFixed(2); // Convert USD to PHP
+      };
+    
     
     
 
@@ -331,7 +389,7 @@ export default function DummyPage({ title }) {
             isOpen={isLoseModalOpen}
             onClose={closeLoseModal}
             title="YOU LOST"
-            content={<p>You ran out of virtual money!</p>}
+            content={<p>You ran out of dummy cash!</p>}
             footerActions={
                 <>
                     <button className={modalStyles.cancelButton} onClick={closeLoseModal}>Exit</button>
@@ -340,10 +398,22 @@ export default function DummyPage({ title }) {
             }
         />
 
+        <Modal2 
+            isOpen={isInvestmentModalOpen}
+            onClose={closeInvestmentModal}
+            title="Invest first!"
+            content={<p>You have no active investments with this coin.</p>}
+            footerActions={
+                <>
+                    <button className={modalStyles.cancelButton} onClick={closeInvestmentModal}>Exit</button>
+                </>
+            }
+        />
+
         <Modal3
             isOpen={isErrorModalOpen}
             onClose={closeErrorModal}
-            title="Transaction Unsuccessful"
+            title="Transaction Unsuccessful!"
             content={<p>You can't purchase this coin. You have insufficient balance!</p>}
             footerActions={
             <>
@@ -351,6 +421,42 @@ export default function DummyPage({ title }) {
             </>
             }
         />
+
+        <Modal3
+        isOpen={isBuyModalOpen}
+        onClose={closeBuyModal}
+        title="Transaction Successful!"
+        content={
+            <div>
+            <p>Successfully purchased {selectedCoin?.name}!</p>
+            <p>You invested ${(quantity * (selectedCoin?.quote?.USD?.price || 0)).toFixed(2)}.</p>
+            </div>
+        }
+        footerActions={
+            <>
+            <button className={modalStyles.cancelButton} onClick={closeBuyModal}>Close</button>
+            </>
+        }
+        />   
+
+        <Modal3
+        isOpen={isSellModalOpen}
+        onClose={closeSellModal}
+        title="Transaction Successful!"
+        content={
+            <div>
+            <p>Successfully sold {selectedCoin?.name}!</p>
+            <p>You exited your position with a {profitOrLoss >= 0 ? 'profit' : 'loss'} of ${profitOrLoss.toFixed(2)}!</p>
+            </div>
+        }
+        footerActions={
+            <>
+            <button className={modalStyles.cancelButton} onClick={closeSellModal}>Close</button>
+            </>
+        }
+        />
+
+        
 
             <div style={styles.pageContainer} id='modal-root'>
                 <div style={styles.gradient1}></div>
@@ -365,17 +471,7 @@ export default function DummyPage({ title }) {
                                     </h1>
                                 </div>
                             <div style={styles.buttonGroup}>
-                                <button
-                                style={{
-                                    ...styles.button1,
-                                    ...(isHovered1 ? styles.button1Hover : {}),
-                                }}
-                                onMouseEnter={() => setIsHovered1(true)}
-                                onMouseLeave={() => setIsHovered1(false)}
-                                onClick={() =>handlePanelSwitch('panel1')}
                                 
-                                >My Portfolio</button>
-
                                 <button
                                 style={{
                                     ...styles.button1,
@@ -387,6 +483,18 @@ export default function DummyPage({ title }) {
                                 
                                 >Coin List</button>
 
+
+                                <button
+                                style={{
+                                    ...styles.button1,
+                                    ...(isHovered1 ? styles.button1Hover : {}),
+                                }}
+                                onMouseEnter={() => setIsHovered1(true)}
+                                onMouseLeave={() => setIsHovered1(false)}
+                                onClick={() =>handlePanelSwitch('panel1')}
+                                
+                                >Ongoing Investments</button>
+
                                 <button
                                 style={{
                                     ...styles.button1,
@@ -396,15 +504,15 @@ export default function DummyPage({ title }) {
                                 onMouseLeave={() => setIsHovered3(false)}
                                 onClick={() =>handlePanelSwitch('panel3')}
                                 
-                                >Order History</button>
+                                >Trade Log</button>
                             </div>
                         </div>
-                        <div style={styles.coinPanel}>
 
+                        <div style={styles.coinPanel}>
                             {activePanel === 'panel1' && <div style={styles.cardContainer}> 
                                 {investments.length === 0 ? (
                                     // Display this message if there are no investments
-                                    <p style={styles.noInvestmentsMessage}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</p>
+                                    <p style={styles.header2}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</p>
                                 ) : (
                                     // Map through investments and display a card for each
                                     investments.map((investment, index) => (
@@ -510,11 +618,57 @@ export default function DummyPage({ title }) {
                                 </div>
                             </div> }
 
-                            {activePanel === 'panel3' && <div style={styles.emptyPanel}>
-                                <h1 style={styles.header2}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</h1>
-                            </div>
-                            }
-
+                            {activePanel === 'panel3' && (
+                                <>
+                                    {orderHistory.length > 0 ? (
+                                        <div style={styles.tableContainer}>
+                                            <table style={styles.table}>
+                                                <thead>
+                                                    <tr>
+                                                        <th style={styles.tableHeader}>Coin Name</th>
+                                                        <th style={styles.tableHeader}>Symbol</th>
+                                                        <th style={styles.tableHeader}>Quantity</th>
+                                                        <th style={styles.tableHeader}>Price at Entry (PHP)</th>
+                                                        <th style={styles.tableHeader}>Price at Exit (PHP)</th>
+                                                        <th style={styles.tableHeader}>% Profit</th>
+                                                        <th style={styles.tableHeader}>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {orderHistory.map((order, index) => (
+                                                        <tr key={index}>
+                                                            <td style={styles.tableCell}>
+                                                                {order.coinName}
+                                                                <img 
+                                                                    src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${order.coinId}.png`} 
+                                                                    alt={`${order.coinName} logo`} 
+                                                                    style={styles.logo} 
+                                                                />
+                                                            </td>
+                                                            <td style={styles.tableCell}>{order.symbol}</td>
+                                                            <td style={styles.tableCell}>{order.quantity}</td>
+                                                            <td style={styles.tableCell}>₱{formatNumberWithCommas(order.priceAtEntry.toFixed(2))}</td>
+                                                            <td style={styles.tableCell}>₱{formatNumberWithCommas(order.priceAtExit.toFixed(2))}</td>
+                                                            <td style={styles.tableCell}>
+                                                                <span style={order.profitPercent >= 0 ? styles.changePositive : styles.changeNegative}>
+                                                                    {order.profitPercent.toFixed(2)}%
+                                                                </span>
+                                                            </td>
+                                                            <td style={styles.tableCell}>{new Date(order.date).toLocaleDateString()}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ) : (
+                                        <div style={styles.emptyPanel}>
+                                            <h1 style={styles.header2}>
+                                                You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!
+                                            </h1>
+                                        </div>
+                                    )}
+                                </>
+                            )}
 
                         </div>
                     </div>
@@ -582,7 +736,7 @@ export default function DummyPage({ title }) {
                                 <br />
                                 <div style={styles.cardButtonGroup}>
                                     <button style={styles.Button2} onClick={handleEntry}>
-                                        Entry
+                                        Enter
                                     </button>
                                     <button style={styles.Button3} onClick={() => openSpecificModal('modal2')}>
                                         Exit
@@ -623,9 +777,6 @@ export default function DummyPage({ title }) {
                 </div>
 
                 {/* for lose and error modal previews */}
-
-                <button style={styles.button1} onClick={openLoseModal}>Open Lose Modal</button>
-                <button style={styles.button1} onClick={openErrorModal}>Open Error Modal</button>
                 <div style={styles.tableContainer}>
                     
                  </div>
@@ -711,7 +862,7 @@ const styles = {
                         fontFamily: 'Sora',
                         fontWeight: '700',
                         color:'white',
-                        width: '150px',
+                        width: '180px',
                         height: '35px',
                         border: '2px solid white',
                         borderRadius: '30px',
@@ -1149,6 +1300,7 @@ const styles = {
             height: '35px',
             alignSelf: 'center',
             justifySelf: 'center',
+            margin: 'auto'
         },
 
         logoLarge: {
