@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Layout from '../Layout';
 import { RiCoinsFill } from "react-icons/ri";
 import { FaBoxOpen } from "react-icons/fa";
-import { IoMdTrendingDown, IoMdTrendingUp } from 'react-icons/io';
+import { IoMdTrendingDown, IoMdTrendingUp, IoMdHelpCircleOutline } from 'react-icons/io';
 import gradient1 from '@/img/gradient-1.png';
 import Modal from '@/components/Layout/modal';
 import Modal2 from '@/components/Layout/modal2';
@@ -11,6 +11,7 @@ import React, {useState, useEffect} from 'react';
 import modalStyles from '@/styles/modal.module.css';
 import TradingViewWidget from './TradingViewWidget'; // Adjust the path accordingly
 import widgetData from '@/data/widgetData'; 
+import TutorialModal from '@/components/Layout/TutorialModal.js';
 
 
 
@@ -84,9 +85,15 @@ export default function DummyPage({ title }) {
     const openSellModal = () => setIsSellModalOpen(true);
     const closeSellModal = () => setIsSellModalOpen(false);
 
-        //Sell Modal
+    //Sell Modal
     const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
     const closeInvestmentModal = () => setIsInvestmentModalOpen(false);
+
+    //Tutorial Modal
+    const [isTutorModalOpen, setIsTutorModalOpen] = useState(false);
+    const openTutorModal = () => setIsTutorModalOpen(true);
+    const closeTutorModal = () => setIsTutorModalOpen(false);
+
     
     //GAME LOGIC!!!
 
@@ -473,16 +480,25 @@ export default function DummyPage({ title }) {
                 <div style={styles.gradient1}></div>
                 <div style={styles.topContainer}>
                     <div style={styles.leftPanel}>
-                            <h1 style={styles.titleHeader}>Virtual Trading</h1>
+                            <h1 style={styles.titleHeader}>Virtual Trading</h1> 
+                            
                         <div style={styles.topGroup}>
                         <div style={styles.dummyCashContainer}>
                             <h1 style={styles.header1}>Available Dummy Cash</h1>
+                            
                                 <h1 style={styles.header2}>
-                                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dummyCash)}
-                                    </h1>
-                                </div>
+                                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dummyCash)}
+                                </h1>
+                               
+                         </div>
                             <div style={styles.buttonGroup}>
-                                
+                            
+                            <button style={styles.howToPlay} onClick={openTutorModal}>
+                                How to Play <IoMdHelpCircleOutline style={styles.tutorialIcon} />
+                            </button>
+
+                            <TutorialModal isOpen={isTutorModalOpen} onClose={closeTutorModal} />
+                            
                                 <button
                                 style={{
                                     ...styles.button1,
@@ -870,12 +886,12 @@ const styles = {
                 },
 
                     button1:{
-                        fontSize: '14px',
+                        fontSize: '12px',
                         fontFamily: 'Sora',
                         fontWeight: '700',
                         color:'white',
-                        width: '180px',
-                        height: '35px',
+                        width: '135px',
+                        height: '40px',
                         border: '2px solid white',
                         borderRadius: '30px',
                         margin: '5px',
@@ -1371,6 +1387,28 @@ const styles = {
             backgroundColor: '#0B162B',
             margin: '5px',
         },
+
+        howToPlay:{
+            display: 'flex',
+            fontSize: '12px',
+            fontFamily: 'Sora',
+            fontWeight: '700',
+            color:'#0B162B',
+            width: '130px',
+            height: '40px',
+            border: '2px solid white',
+            borderRadius: '30px',
+            backgroundColor: '#DEE2E6',
+            margin: '5px',
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+
+        tutorialIcon:{
+            fontSize: '30px',
+            marginLeft: '5px',
+        }
     
         
     };
