@@ -1,23 +1,50 @@
+// LoginPage.js
 import React, { useState } from 'react';
-import { useRouter } from 'next/router'; 
+import { useRouter } from 'next/router';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
+import { signIn } from 'next-auth/react';
 import logo from '@/img/logo.png';
 
 export default function LoginPage() {
-  const router = useRouter(); 
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleGoogleSignIn = () => {
+    signIn('google'); // Initiates the Google login using next-auth
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Save token to localStorage
+        localStorage.setItem('token', data.token);
+        // Redirect to the homepage after successful login
+        router.push('/');
+      } else {
+        setError(data.error || 'Failed to log in.');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -28,8 +55,10 @@ export default function LoginPage() {
         </div>
         <h3 style={styles.title}>Login</h3>
 
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
         <div style={styles.content}>
-          <button type="button" style={styles.googleButton}>
+          <button type="button" style={styles.googleButton} onClick={handleGoogleSignIn}>
             <FcGoogle style={styles.googleIcon} />
             Continue with Google
           </button>
@@ -102,7 +131,7 @@ const styles = {
   },
   logoContainer: {
     marginBottom: '2rem',
-    cursor: 'pointer', 
+    cursor: 'pointer',
   },
   logo: {
     display: 'block',

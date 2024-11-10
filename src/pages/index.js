@@ -11,8 +11,8 @@ export default function HomePage() {
       <DummyPage title="Home Page" />
       <Footer />
 
-      
+
     </div>
-    
-  );  
+
+  );
 }

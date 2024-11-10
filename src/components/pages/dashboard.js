@@ -10,7 +10,7 @@ import gcrypto from '@/img/gcrypto2.png';
 import coinsph from '@/img/coinsph2.png';
 import gradient1 from '@/img/gradient-1.png'
 import gradient2 from '@/img/gradient-2half.png'
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 
 export default function HeroPage() {
     const handleRegister = () => {
@@ -26,9 +26,9 @@ export default function HeroPage() {
         fontWeight: 'bold',
         position: 'relative',
         transition: 'text-shadow 0.3s ease-in-out',
-        textShadow: isHovered 
-        ? '0 0 1px white, 0 0 10px white, 0 0 15px white' // Reduced glow effect
-        : 'none',
+        textShadow: isHovered
+            ? '0 0 1px white, 0 0 10px white, 0 0 15px white' // Reduced glow effect
+            : 'none',
     };
 
     return (
@@ -67,7 +67,7 @@ export default function HeroPage() {
                 <div className={styles.heroContainer2}>
                     <div className={styles.contentContainer}>
                         <h1 className={styles.title2}>Login now to <br /> Learn <br />
-                            <span 
+                            <span
                                 style={glowStyle}
                                 onMouseEnter={() => setIsHovered(true)}
                                 onMouseLeave={() => setIsHovered(false)}
