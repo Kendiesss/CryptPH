@@ -12,6 +12,8 @@ import modalStyles from '@/styles/modal.module.css';
 import TradingViewWidget from './TradingViewWidget'; // Adjust the path accordingly
 import widgetData from '@/data/widgetData'; 
 import TutorialModal from '@/components/Layout/TutorialModal.js';
+import styles from '@/styles/vtrading.module.css';
+
 
 
 
@@ -20,7 +22,7 @@ const Card = ({ children }) => {
 
     return (
         <div
-            style={{
+            className={{
                 ...styles.card,
                 ...(isHovered ? styles.cardHover : {})
             }}
@@ -476,34 +478,31 @@ export default function DummyPage({ title }) {
 
         
 
-            <div style={styles.pageContainer} id='modal-root'>
-                <div style={styles.gradient1}></div>
-                <div style={styles.topContainer}>
-                    <div style={styles.leftPanel}>
-                            <h1 style={styles.titleHeader}>Virtual Trading</h1> 
+            <div className={styles.pageContainer} id='modal-root'>
+                <img  src={gradient1.src} className={styles.gradient1}></img>
+                <div className={styles.topContainer}>
+                    <div className={styles.leftPanel}>
+                            <h1 className={styles.titleHeader}>Virtual Trading</h1> 
                             
-                        <div style={styles.topGroup}>
-                        <div style={styles.dummyCashContainer}>
-                            <h1 style={styles.header1}>Available Dummy Cash</h1>
+                        <div className={styles.topGroup}>
+                        <div className={styles.dummyCashContainer}>
+                            <h1 className={styles.header1}>Available Dummy Cash</h1>
                             
-                                <h1 style={styles.header2}>
-                                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(dummyCash)}
+                                <h1 className={styles.header2}>
+                                    {new Intl.NumberFormat('en-US', { className: 'currency', currency: 'USD' }).format(dummyCash)}
                                 </h1>
                                
                          </div>
-                            <div style={styles.buttonGroup}>
+                            <div className={styles.buttonGroup}>
                             
-                            <button style={styles.howToPlay} onClick={openTutorModal}>
-                                How to Play <IoMdHelpCircleOutline style={styles.tutorialIcon} />
+                            <button className={styles.howToPlay} onClick={openTutorModal}>
+                                How to Play <IoMdHelpCircleOutline className={styles.tutorialIcon} />
                             </button>
 
                             <TutorialModal isOpen={isTutorModalOpen} onClose={closeTutorModal} />
                             
                                 <button
-                                style={{
-                                    ...styles.button1,
-                                    ...(isHovered2 ? styles.button1Hover : {}),
-                                }}
+                                 className={`${styles.button1} ${isHovered2 ? styles.button1Hover : ''}`}
                                 onMouseEnter={() => setIsHovered2(true)}
                                 onMouseLeave={() => setIsHovered2(false)}
                                 onClick={() =>handlePanelSwitch('panel2')}
@@ -512,10 +511,7 @@ export default function DummyPage({ title }) {
 
 
                                 <button
-                                style={{
-                                    ...styles.button1,
-                                    ...(isHovered1 ? styles.button1Hover : {}),
-                                }}
+                                className={`${styles.button1} ${isHovered1 ? styles.button1Hover : ''}`}
                                 onMouseEnter={() => setIsHovered1(true)}
                                 onMouseLeave={() => setIsHovered1(false)}
                                 onClick={() =>handlePanelSwitch('panel1')}
@@ -523,10 +519,7 @@ export default function DummyPage({ title }) {
                                 >Ongoing Investments</button>
 
                                 <button
-                                style={{
-                                    ...styles.button1,
-                                    ...(isHovered3 ? styles.button1Hover : {}),
-                                }}
+                                 className={`${styles.button1} ${isHovered3 ? styles.button1Hover : ''}`}
                                 onMouseEnter={() => setIsHovered3(true)}
                                 onMouseLeave={() => setIsHovered3(false)}
                                 onClick={() =>handlePanelSwitch('panel3')}
@@ -535,56 +528,56 @@ export default function DummyPage({ title }) {
                             </div>
                         </div>
 
-                        <div style={styles.coinPanel}>
-                            {activePanel === 'panel1' && <div style={styles.cardContainer}> 
+                        <div className={styles.coinPanel}>
+                            {activePanel === 'panel1' && <div className={styles.cardContainer}> 
                                 {investments.length === 0 ? (
                                     // Display this message if there are no investments
-                                    <p style={styles.header2}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</p>
+                                    <p className={styles.header2}>You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!</p>
                                 ) : (
                                     // Map through investments and display a card for each
                                     investments.map((investment, index) => (
                                         <Card key={investment.id || index}>
-                                            <h1 style={styles.header3}>{investment.name}</h1>
-                                            <span style={styles.smallcard}>{investment.symbol}</span>
+                                            <h1 className={styles.header3}>{investment.name}</h1>
+                                            <span className={styles.smallcard}>{investment.symbol}</span>
                                             <img 
                                                 src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
                                                 alt={`${investment.name} logo`} 
-                                                style={styles.coinPlaceHolder} 
+                                                className={styles.coinPlaceHolder} 
                                             />
-                                            <div style={styles.priceGroup}>
-                                                <h1 style={styles.header2}>₱{investment.pricePHP.toFixed(2)}</h1>
-                                                <h1 style={styles.header1}>Current Price (PHP)</h1>
+                                            <div className={styles.priceGroup}>
+                                                <h1 className={styles.header2}>₱{investment.pricePHP.toFixed(2)}</h1>
+                                                <h1 className={styles.header1}>Current Price (PHP)</h1>
                                             </div>
-                                            <div style={styles.priceGroup}>
-                                                <h1 style={styles.header2}>{investment.totalCost.toFixed(2)}</h1>
-                                                <h1 style={styles.header1}>Total Cost</h1>
+                                            <div className={styles.priceGroup}>
+                                                <h1 className={styles.header2}>{investment.totalCost.toFixed(2)}</h1>
+                                                <h1 className={styles.header1}>Total Cost</h1>
                                             </div>
-                                            <div style={styles.profitGroup}>
-                                                <span style={styles.smallcard2}>
-                                                    {investment.profit >= 0 ? <IoMdTrendingUp style={styles.trendingUp} /> : <IoMdTrendingDown style={styles.trendingDown} />}
+                                            <div className={styles.profitGroup}>
+                                                <span className={styles.smallcard2}>
+                                                    {investment.profit >= 0 ? <IoMdTrendingUp className={styles.trendingUp} /> : <IoMdTrendingDown className={styles.trendingDown} />}
                                                     {investment.profit.toFixed(1)}%
                                                 </span>
-                                                <h1 style={styles.header1}>% Profit</h1>
+                                                <h1 className={styles.header1}>% Profit</h1>
                                             </div>
                                         </Card>
                                     ))
                                 )}
                             </div>}
 
-                            {activePanel === 'panel2' && <div style={styles.tableContainer}>
-                                <div>
-                                    <table style={styles.table}>
+                            {activePanel === 'panel2' && <div>
+                                <div className={styles.tableContainer}>
+                                    <table className={styles.table}>
                                         <thead>
                                         <tr>
-                                            <th style={styles.tableHeader}>Coin Name</th>
-                                            <th style={styles.tableHeader}>Symbol</th>
-                                            <th style={styles.tableHeader}>Price (PHP)</th>
-                                            <th style={styles.tableHeader}>1h Change (%)</th>
-                                            <th style={styles.tableHeader}>24h Change (%)</th>
-                                            <th style={styles.tableHeader}>7d Change (%)</th>
-                                            <th style={styles.tableHeader}>Volume (24h)</th>
-                                            <th style={styles.tableHeader}>Market Cap (in Trillions)</th>
-                                            <th style={styles.tableHeader}>Action</th>
+                                            <th className={styles.tableHeader}>Coin Name</th>
+                                            <th className={styles.tableHeader}>Symbol</th>
+                                            <th className={styles.tableHeader}>Price (PHP)</th>
+                                            <th className={styles.tableHeader}>1h Change (%)</th>
+                                            <th className={styles.tableHeader}>24h Change (%)</th>
+                                            <th className={styles.tableHeader}>7d Change (%)</th>
+                                            <th className={styles.tableHeader}>Volume (24h)</th>
+                                            <th className={styles.tableHeader}>Market Cap (in Trillions)</th>
+                                            <th className={styles.tableHeader}>Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -596,36 +589,36 @@ export default function DummyPage({ title }) {
 
                                             return (
                                             <tr key={id}>
-                                                <td style={styles.tableCell}>
+                                                <td className={styles.tableCell}>
                                                     {coin.name} 
                                                     <img 
                                                         src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${coin.id}.png`} 
                                                         alt={`${coin.name} logo`} 
-                                                        style={styles.logo} 
+                                                        className={styles.logo} 
                                                     />
                                                 </td>
-                                                <td style={styles.tableCell}>{coin.symbol}</td>
-                                                <td style={styles.tableCell}>₱{pricePHP}</td>
-                                                <td style={styles.tableCell}>
-                                                    <span style={coin.quote.USD.percent_change_1h < 0 ? styles.changeNegative : styles.changePositive}>
+                                                <td className={styles.tableCell}>{coin.symbol}</td>
+                                                <td className={styles.tableCell}>₱{pricePHP}</td>
+                                                <td className={styles.tableCell}>
+                                                    <span className={coin.quote.USD.percent_change_1h < 0 ? styles.changeNegative : styles.changePositive}>
                                                         {coin.quote.USD.percent_change_1h.toFixed(2)}%
                                                     </span>
                                                 </td>
-                                                <td style={styles.tableCell}>
-                                                    <span style={coin.quote.USD.percent_change_24h < 0 ? styles.changeNegative : styles.changePositive}>
+                                                <td className={styles.tableCell}>
+                                                    <span className={coin.quote.USD.percent_change_24h < 0 ? styles.changeNegative : styles.changePositive}>
                                                         {coin.quote.USD.percent_change_24h.toFixed(2)}%
                                                     </span>
                                                 </td>
-                                                <td style={styles.tableCell}>
-                                                    <span style={coin.quote.USD.percent_change_7d < 0 ? styles.changeNegative : styles.changePositive}>
+                                                <td className={styles.tableCell}>
+                                                    <span className={coin.quote.USD.percent_change_7d < 0 ? styles.changeNegative : styles.changePositive}>
                                                         {coin.quote.USD.percent_change_7d.toFixed(2)}%
                                                     </span>
                                                 </td>
-                                                <td style={styles.tableCell}>₱{volume24hPHP}</td>
-                                                <td style={styles.tableCell}>₱{marketCapT} T</td>
+                                                <td className={styles.tableCell}>₱{volume24hPHP}</td>
+                                                <td className={styles.tableCell}>₱{marketCapT} T</td>
 
-                                                <td style={styles.tableCell}>
-                                                <button style={styles.button4} onClick={() => handleViewClick(coin)}>SELECT</button>
+                                                <td className={styles.tableCell}>
+                                                <button className={styles.button4} onClick={() => handleViewClick(coin)}>SELECT</button>
                                                 </td>
                                             </tr>
                                             );
@@ -633,63 +626,66 @@ export default function DummyPage({ title }) {
                                         </tbody>
                                     </table>
 
-                                    <div className={styles.pagination}>
-                                        <button style={styles.button4} onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+                                    
+                                </div>
+
+                                <div className={styles.pagination}>
+                                        <button className={styles.button4} onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
                                         Previous
                                         </button>
                                         <span>Page {currentPage} of {totalPages}</span>
-                                        <button style={styles.button4} onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+                                        <button className={styles.button4} onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
                                         Next
                                         </button>
-                                    </div>
                                 </div>
-                            </div> }
+                            </div>
+                             }
 
                             {activePanel === 'panel3' && (
                                 <>
                                     {orderHistory.length > 0 ? (
-                                        <div style={styles.tableContainer}>
-                                            <table style={styles.table}>
+                                        <div className={styles.tableContainer}>
+                                            <table className={styles.table}>
                                                 <thead>
                                                     <tr>
-                                                        <th style={styles.tableHeader}>Coin Name</th>
-                                                        <th style={styles.tableHeader}>Symbol</th>
-                                                        <th style={styles.tableHeader}>Quantity</th>
-                                                        <th style={styles.tableHeader}>Price at Entry (PHP)</th>
-                                                        <th style={styles.tableHeader}>Price at Exit (PHP)</th>
-                                                        <th style={styles.tableHeader}>% Profit</th>
-                                                        <th style={styles.tableHeader}>Date</th>
+                                                        <th className={styles.tableHeader}>Coin Name</th>
+                                                        <th className={styles.tableHeader}>Symbol</th>
+                                                        <th className={styles.tableHeader}>Quantity</th>
+                                                        <th className={styles.tableHeader}>Price at Entry (PHP)</th>
+                                                        <th className={styles.tableHeader}>Price at Exit (PHP)</th>
+                                                        <th className={styles.tableHeader}>% Profit</th>
+                                                        <th className={styles.tableHeader}>Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {orderHistory.map((order, index) => (
                                                         <tr key={index}>
-                                                            <td style={styles.tableCell}>
+                                                            <td className={styles.tableCell}>
                                                                 {order.coinName}
                                                                 <img 
                                                                     src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${order.coinId}.png`} 
                                                                     alt={`${order.coinName} logo`} 
-                                                                    style={styles.logo} 
+                                                                    className={styles.logo} 
                                                                 />
                                                             </td>
-                                                            <td style={styles.tableCell}>{order.symbol}</td>
-                                                            <td style={styles.tableCell}>{order.quantity}</td>
-                                                            <td style={styles.tableCell}>₱{formatNumberWithCommas(order.priceAtEntry.toFixed(2))}</td>
-                                                            <td style={styles.tableCell}>₱{formatNumberWithCommas(order.priceAtExit.toFixed(2))}</td>
-                                                            <td style={styles.tableCell}>
-                                                                <span style={order.profitPercent >= 0 ? styles.changePositive : styles.changeNegative}>
+                                                            <td className={styles.tableCell}>{order.symbol}</td>
+                                                            <td className={styles.tableCell}>{order.quantity}</td>
+                                                            <td className={styles.tableCell}>₱{formatNumberWithCommas(order.priceAtEntry.toFixed(2))}</td>
+                                                            <td className={styles.tableCell}>₱{formatNumberWithCommas(order.priceAtExit.toFixed(2))}</td>
+                                                            <td className={styles.tableCell}>
+                                                                <span className={order.profitPercent >= 0 ? styles.changePositive : styles.changeNegative}>
                                                                     {order.profitPercent.toFixed(2)}%
                                                                 </span>
                                                             </td>
-                                                            <td style={styles.tableCell}>{new Date(order.date).toLocaleDateString()}</td>
+                                                            <td className={styles.tableCell}>{new Date(order.date).toLocaleDateString()}</td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
                                         </div>
                                     ) : (
-                                        <div style={styles.emptyPanel}>
-                                            <h1 style={styles.header2}>
+                                        <div className={styles.emptyPanel}>
+                                            <h1 className={styles.header2}>
                                                 You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!
                                             </h1>
                                         </div>
@@ -700,26 +696,26 @@ export default function DummyPage({ title }) {
                         </div>
                     </div>
 
-                  <div style={styles.rightCard}>
+                  <div className={styles.rightCard}>
                     {selectedCoin ? (
                         <>
-                            <div style={styles.upperGroup}>
+                            <div className={styles.upperGroup}>
                             <img 
                                 src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${selectedCoin.id}.png`} 
                                 alt={`${selectedCoin.name} logo`} 
-                                style={styles.logoLarge} 
+                                className={styles.logoLarge} 
                             />
-                                <div style={styles.leftUpper}>
-                                    <h1 style={styles.header4}>${formatNumberWithCommas(coinPrice.toFixed(2))}</h1>
-                                    <h1 style={styles.header5}>{selectedCoin.name}</h1>
+                                <div className={styles.leftUpper}>
+                                    <h1 className={styles.header4}>${formatNumberWithCommas(coinPrice.toFixed(2))}</h1>
+                                    <h1 className={styles.header5}>{selectedCoin.name}</h1>
                                 </div>
-                                <span style={styles.smallRightcard}>
+                                <span className={styles.smallRightcard}>
                                     {selectedCoin.quote.USD.percent_change_1h >= 0 ? (
-                                        <IoMdTrendingUp style={styles.trendingUp} />
+                                        <IoMdTrendingUp className={styles.trendingUp} />
                                     ) : (
-                                        <IoMdTrendingDown style={styles.trendingDown} />
+                                        <IoMdTrendingDown className={styles.trendingDown} />
                                     )}
-                                    <span style={{
+                                    <span className={{
                                         color: selectedCoin.quote.USD.percent_change_1h >= 0 ? 'green' : 'red'
                                     }}>
                                         {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
@@ -727,33 +723,33 @@ export default function DummyPage({ title }) {
                                 </span>
                             </div>
 
-                            <div style={styles.widgetContainer}>
-                                {symbol && <TradingViewWidget style={styles.widget1} symbol={symbol} />}
+                            <div className={styles.widgetContainer}>
+                                {symbol && <TradingViewWidget className={styles.widget1} symbol={symbol} />}
                             </div>
 
-                            <div style={styles.middleGroup}>    
-                                <div style={styles.flexContainer}>
-                                    <span style={styles.dataGroup}>
-                                        <h3 style={styles.header7}>Market Cap</h3>
-                                        <h1 style={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.market_cap / 1e12).toFixed(2))} T</h1>
+                            <div className={styles.middleGroup}>    
+                                <div className={styles.flexContainer}>
+                                    <span className={styles.dataGroup}>
+                                        <h3 className={styles.header7}>Market Cap</h3>
+                                        <h1 className={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.market_cap / 1e12).toFixed(2))} T</h1>
                                     </span>
-                                    <span style={styles.dataGroup}>
-                                        <h3 style={styles.header7}>24h Volume</h3>
-                                        <h1 style={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.volume_24h * 56).toFixed(2))}</h1>
+                                    <span className={styles.dataGroup}>
+                                        <h3 className={styles.header7}>24h Volume</h3>
+                                        <h1 className={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.volume_24h * 56).toFixed(2))}</h1>
                                     </span>
-                                    <span style={styles.dataGroup}>
-                                        <h3 style={styles.header7}>Circulating Supply</h3>
-                                        <h1 style={styles.header8}>{formatNumberWithCommas(selectedCoin.circulating_supply)}</h1>
+                                    <span className={styles.dataGroup}>
+                                        <h3 className={styles.header7}>Circulating Supply</h3>
+                                        <h1 className={styles.header8}>{formatNumberWithCommas(selectedCoin.circulating_supply)}</h1>
                                     </span>
                                 </div>
 
-                                <div style={styles.qtyGroup}>
-                                    <label style={styles.header2} htmlFor="quantity">Coin Quantity</label><br />
+                                <div className={styles.qtyGroup}>
+                                    <label className={styles.header2} htmlFor="quantity">Coin Quantity</label><br />
                                     <input 
                                         type="number" 
                                         id="quantity" 
                                         name="quantity" 
-                                        style={styles.inputField} 
+                                        className={styles.inputField} 
                                         placeholder="Enter quantity" 
                                         min="0"
                                         value={quantity} // Controlled input
@@ -761,51 +757,51 @@ export default function DummyPage({ title }) {
                                     />
                                 </div>
                                 <br />
-                                <div style={styles.cardButtonGroup}>
-                                    <button style={styles.Button2} onClick={handleEntry}>
+                            </div>
+                            <div className={styles.cardButtonGroup}>
+                                    <button className={styles.Button2} onClick={handleEntry}>
                                         Enter
                                     </button>
-                                    <button style={styles.Button3} onClick={() => openSpecificModal('modal2')}>
+                                    <button className={styles.Button3} onClick={() => openSpecificModal('modal2')}>
                                         Exit
                                     </button>
-                                </div>
                             </div>
                         </>
                     ) : (
                         <div className="flex items-center justify-center h-screen p-8 ">
                             <p className="text-center text-lg p-4 rounded">
-                                <RiCoinsFill style={styles.logoLarge2}/>
+                                <RiCoinsFill className={styles.logoLarge2}/>
                                 Select a coin to view its details.
                             </p>
                         </div>
                     )}
                 </div>
                 </div>
-                <div style={styles.bottomContainer}>
-                    <h1 style={styles.header3}>Total</h1>
-                    <div style={styles.totalRightPanel}>
-                        <div style={styles.totalPriceGroup}>
-                            <h1 style={styles.header6}>Average Price</h1>
-                            <h1 style={styles.header2}>0.0</h1> 
+                <div className={styles.bottomContainer}>
+                    <h1 className={styles.header3}>Total</h1>
+                    <div className={styles.totalRightPanel}>
+                        <div className={styles.totalPriceGroup}>
+                            <h1 className={styles.header6}>Average Price</h1>
+                            <h1 className={styles.header2}>0.0</h1> 
                         </div>
-                        <div style={styles.totalPriceGroup}>
-                            <h1 style={styles.header6}>Total Cost</h1>
-                            <h1 style={styles.header2}>0.0</h1> 
+                        <div className={styles.totalPriceGroup}>
+                            <h1 className={styles.header6}>Total Cost</h1>
+                            <h1 className={styles.header2}>0.0</h1> 
                         </div>
-                        <div style={styles.profitGroup2}>
-                            <h1 style={styles.header6}>Total Cost</h1>
-                            <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                        <div className={styles.profitGroup2}>
+                            <h1 className={styles.header6}>Total Cost</h1>
+                            <span className={styles.smallcard2}><IoMdTrendingDown className={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
                             
                         </div>
-                        <div style={styles.profitGroup2}>
-                            <h1 style={styles.header6}>% Profit</h1>
-                            <span style={styles.smallcard2}><IoMdTrendingDown style={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
+                        <div className={styles.profitGroup2}>
+                            <h1 className={styles.header6}>% Profit</h1>
+                            <span className={styles.smallcard2}><IoMdTrendingDown className={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
                         </div>
                     </div>
                 </div>
 
                 {/* for lose and error modal previews */}
-                <div style={styles.tableContainer}>
+                <div className={styles.tableContainer}>
                     
                  </div>
            </div>
@@ -813,602 +809,3 @@ export default function DummyPage({ title }) {
     )
 }
 
-const styles = {
-
-    
-
-    pageContainer:{
-        display:'flex',
-        flexDirection:'column',
-        marginLeft: '6rem',
-        marginTop: '2rem',
-    },
-
-    topContainer:{
-        display:'flex',
-        flexDirection:'row',
-        marginBottom: '1rem',
-    },
-
-        leftPanel:{
-            display:'flex',
-            flexDirection:'column',
-            margin: '1rem',
-        },
-
-            titleHeader:{
-                fontSize: '35px',
-                fontFamily: 'Sora',
-                fontWeight: '900',
-                marginBottom: '1rem',
-            },
-
-            topGroup:{
-                height: '100px',
-                width: '950px',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-            },
-
-                dummyCashContainer:{
-                    width: '215px',
-                    height: '80px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    border: '2px solid white',
-                    borderRadius: '20px',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                    padding: '10px',
-                },
-
-                    header1:{
-                        fontSize: '12px',
-                        fontFamily: 'Sora',
-                        fontWeight: '700',
-                        color: '#4A4A5A',
-                    },
-
-                    header2:{
-                        fontSize: '18px',
-                        fontFamily: 'Sora',
-                        fontWeight: '900',
-                        color: 'white',
-                        margin: '5px',
-                    },
-
-                buttonGroup:{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    padding: '10px',
-                },
-
-                    button1:{
-                        fontSize: '12px',
-                        fontFamily: 'Sora',
-                        fontWeight: '700',
-                        color:'white',
-                        width: '135px',
-                        height: '40px',
-                        border: '2px solid white',
-                        borderRadius: '30px',
-                        margin: '5px',
-                        transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
-                    },
-
-                    button1Hover: {
-                        boxShadow: '0 0 15px 5px rgba(255, 255, 255, 0.8)', 
-                        backgroundColor: 'white',
-                        color: '#0B162B',
-                        transform: 'scale(1.05)',
-                    },
-
-            cardContainer:{
-                display: 'flex',
-                flexDirection: 'column',
-            },
-
-                card:{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '950px',
-                    height: '80px',
-                    border: '2px solid white',
-                    borderRadius: '20px',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    margin: '5px',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                },
-
-                cardHover: {
-                    boxShadow: '0 0 15px rgba(255, 255, 255, 0.8)', 
-                    transform: 'scale(1.05)', 
-                },
-
-                    header3:{
-                        fontSize: '20px',
-                        fontFamily: 'Sora',
-                        fontWeight: '900',
-                        color: 'white',
-                        margin: '10px',
-                    },
-
-                    smallcard: {
-                        height: 'auto',
-                        width: '50px',
-                        backgroundColor: '#462E38',
-                        padding: '1px',
-                        borderRadius: '10px',
-                        fontFamily: 'Sora',
-                        fontWeight: '500',
-                        fontSize: '12px',
-                        textAlign: 'center',
-                        justifyContent: 'center',
-                    },
-
-                    coinPlaceHolder:{
-                        color: 'yellow',
-                        padding: '5px',
-                        width: '50px',
-                        height: '50px',
-                    },
-
-                    priceGroup: {
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    },
-
-                    smallcard2: {
-                        display: 'flex',
-                        flexDirection: 'row',
-                        height: 'auto',
-                        width: '50px',
-                        backgroundColor: '#462E38',
-                        color: '#CD5C5C',
-                        padding: '1px',
-                        borderRadius: '10px',
-                        fontFamily: 'Sora',
-                        fontWeight: '500',
-                        fontSize: '12px',
-                        textAlign: 'center',
-                        justifyContent: 'center',
-                        margin: '5px',
-                    },
-
-                    trendingDown:{
-                        color: 'red',
-                        margin: '3px',
-                        fontWeight: 'bold',
-                    },
-
-                    trendingUp:{
-                        color: 'green',
-                        margin: '3px',
-                        fontWeight: 'bold',
-                    },
-
-        rightCard:{
-        margin: '1rem',
-        display:'flex',
-        flexDirection:'column',
-        height: '675px',
-        width: '450px',
-        border: '1px solid white',
-        borderRadius: '20px',
-        },
-
-            upperGroup:{
-                display:'flex',
-                flexDirection:'row',
-                justifyContent: 'space-between',
-                padding: '2rem',
-                height:'auto',
-                width:'auto',
-            },
-
-                leftUpper:{
-                    display:'flex',
-                    flexDirection:'column',
-                    justifyContent: 'center',
-                    alignItems:'left',
-                },
-
-                    header4:{
-                        fontFamily: 'Sora',
-                        fontWeight: '900',
-                        fontSize: '25px',
-                    },
-
-                    header5:{
-                        fontFamily: 'Sora',
-                        fontWeight: '500',
-                        fontSize: '18px',
-                    },
-
-                smallRightcard:{
-                    display: 'flex',
-                        flexDirection: 'row',
-                        height: '35px',
-                        width: '100px',
-                        backgroundColor: '#462E38',
-                        color: '#CD5C5C',
-                        padding: '1px',
-                        borderRadius: '10px',
-                        fontFamily: 'Sora',
-                        fontWeight: '500',
-                        fontSize: '20px',
-                        textAlign: 'center',
-                        justifyContent: 'center',
-                        margin: '5px',
-                },
-
-            middleGroup:{
-                display:'flex',
-                flexDirection:'column',
-                justifyContent: 'left',
-                paddingLeft: '2rem',
-                height:'auto',
-                width:'auto',
-            },
-
-            flexContainer:{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'left', /* Even spacing between items */
-                alignItems: 'left', /* Center items vertically */
-                backgroundColor: 'whitesmoke',
-                marginRight: '1rem',
-                marginBottom: '2rem',
-                borderRadius: '1rem',
-                padding: '1rem',
-              },
-
-              dataGroup:{
-                width: '18rem',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                
-              },
-
-              header7:{
-                fontSize: '12px',
-                fontFamily: 'Sora',
-                fontWeight: '500',
-                color: '#0B162B',
-            },
-
-            header8:{
-                fontSize: '16px',
-                fontFamily: 'Sora',
-                fontWeight: '800',
-                color: '#0B162B',
-            },
-
-            qtyGroup:{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'left',
-                justifyContent: 'space-between',
-                marginRight: '1rem',
-            },
-
-            inputField:{
-                borderRadius: '1rem',
-                color: 'black',
-                fontSize: '14px',
-                textAlign: 'center',
-            },
-                 
-                cardButtonGroup:{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    marginTop: '1rem',
-                    padding: '1rem',
-                },
-    
-                    Button2: {
-                        display: 'flex',
-                        alignItems: 'center',
-                        margin: '5px',
-                        backgroundColor: '#42B8A4',
-                        borderRadius: '15px',
-                        width: '150px',
-                        height: '40px',
-                        justifyContent: 'center', // Align items to the left
-                        padding: '20px',
-                        fontFamily: 'Sora',
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        color: 'white',
-                        transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
-                    },
-
-                    Button2Hover: {
-                        boxShadow: '0 0 15px 5px rgba(255, 255, 255, 0.8)', 
-                        transform: 'scale(1.05)',
-                    },
-
-                    Button3: {
-                        display: 'flex',
-                        alignItems: 'center',
-                        margin: '5px',
-                        backgroundColor: '#F4594E',
-                        borderRadius: '15px',
-                        width: '150px',
-                        height: '40px',
-                        justifyContent: 'center', // Align items to the left
-                        padding: '20px',
-                        fontFamily: 'Sora',
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        color: 'white',
-                        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                    },
-
-                    Button3Hover: {
-                        boxShadow: '0 0 15px 5px rgba(255, 255, 255, 0.8)', 
-                        transform: 'scale(1.05)',
-                    },
-            
-            coinCardContainer:{
-                display:'flex',
-                flexDirection:'column',
-                justifyContent: 'center',
-                marginTop: '1rem',
-            },
-
-                CoinCard:{
-                    display:'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    height: '80px',
-                    width: '350px',
-                    border: '2px solid white',
-                    borderRadius: '20px',
-                    marginBottom: '1rem',
-                    transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                },
-
-                CoinCardHover: {
-                    boxShadow: '0 0 15px rgba(255, 255, 255, 0.8)', 
-                    transform: 'scale(1.05)', 
-                },
-
-                innerCoinCard:{
-                    display:'flex',
-                    flexDirection:'row',
-                    justifyContent:'center',
-                    padding:'10px',
-                    alignItems:'center',
-                    margin: '5px',
-                },
-
-    bottomContainer:{
-        display: 'flex',
-        flexDirection: 'row',
-        margin: '10px',
-        height: '100px',
-        width: '1400px',
-        border: '1px solid white',
-        borderRadius: '20px',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '20px',
-    },
-
-        totalRightPanel:{
-            display:'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems:'center',
-            padding: '5px',
-        },
-
-        totalPriceGroup: {
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '20px',
-        },
-
-        header6:{
-            fontSize: '14px',
-            fontFamily: 'Sora',
-            fontWeight: '700',
-            color: '#4A4A5A',
-            padding: '1px',
-            margin: '1px',
-        },
-
-        profitGroup2:{
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-
-        gradient1: {
-            position: 'absolute',
-            top: '30%', 
-            left: '-35%',
-            width: '70%',
-            height: '125%',
-            backgroundImage: `url(${gradient1.src})`,
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'left',
-            zIndex: -1, 
-        },
-
-        //table
-
-        tableContainer: {
-            marginTop: '1px',
-            width: '960px',
-            overflowX: 'auto', // Allows for horizontal scrolling on smaller screens
-            borderRadius: '25px',
-        },
-        table: {
-            width: '100%',
-            borderCollapse: 'collapse',
-            border: '1px solid white',
-        },
-        tableHeader: {
-            backgroundColor: '#E9ECEF',
-            fontSize: '0.8em',
-            textAlign: 'center',
-            padding: '10px',
-            borderBottom: '1px solid #ddd',
-            fontFamily: 'Sora',
-            fontWeight: '900',
-            padding: '10px',
-            color: '#0B162B',
-           
-        },
-        tableCell: {
-            padding: '5px',
-            height: '6rem',
-            borderBottom: '1px solid #ddd',
-            fontFamily: 'Sora',
-            fontWeight: '700',
-            fontSize: '0.8em',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            backgroundColor: '#F8F9FA',
-            color: 'black',
-        },
-
-        changePositive: {
-            width: '1rem',
-            color: 'green',
-            backgroundColor: '#E9ECEF',
-            padding: '10px',
-            fontWeight: '500',
-            borderRadius: '1rem',
-            border: '0.5px solid white',
-        },
-        changeNegative: {
-            width: '1rem',
-            color: 'red',
-            backgroundColor: '#E9ECEF',
-            padding: '10px',
-            fontWeight: '500',
-            borderRadius: '1rem',
-            border: '0.5px solid white',
-        },
-
-        pagination: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: '20px 0',
-        },
-          
-        paginationButton: {
-            margin: '0 5px',
-            padding: '10px',
-            cursor: 'pointer',
-        },
-
-        noInvestmentsMessage: {
-            textAlign: 'center',
-            fontSize: '1.2rem',
-            color: 'white', // Light gray or any color you prefer
-            marginTop: '20px',
-        },
-
-        logo:{
-            width: '35px',
-            height: '35px',
-            alignSelf: 'center',
-            justifySelf: 'center',
-            margin: 'auto'
-        },
-
-        logoLarge: {
-            width: '80px',
-            height: '80px',
-            alignSelf: 'center',
-            justifySelf: 'center',
-            padding: '1rem',
-        },
-
-        logoLarge2: {
-            fontSize: '10rem',
-            alignSelf: 'center',
-            justifySelf: 'center',
-            padding: '1rem',
-        },
-
-        widgetContainer:{
-            height: '10rem',
-            margin: '0 1rem 2rem 1rem',
-        },
-
-        widget1:{
-            position: 'relative',
-            width: '100%', 
-            height: '100%', 
-            padding: '2%',
-        },
-
-        tvButton:{
-            height: '50px',
-            width: '300px',
-            alignSelf: 'center',
-            marginBottom: '1rem',
-            fontFamily: 'Sora',
-            fontSize: '11px',
-            fontWeight: '700',
-            color:'white',
-            border: '1px solid white',
-            borderRadius: '30px',
-        },
-
-        button4:{
-            fontSize: '14px',
-            fontFamily: 'Sora',
-            fontWeight: '700',
-            color:'white',
-            width: '100px',
-            height: '35px',
-            border: '2px solid white',
-            borderRadius: '30px',
-            backgroundColor: '#0B162B',
-            margin: '5px',
-        },
-
-        howToPlay:{
-            display: 'flex',
-            fontSize: '12px',
-            fontFamily: 'Sora',
-            fontWeight: '700',
-            color:'#0B162B',
-            width: '130px',
-            height: '40px',
-            border: '2px solid white',
-            borderRadius: '30px',
-            backgroundColor: '#DEE2E6',
-            margin: '5px',
-            transition: 'transform 0.3s ease, box-shadow 0.3s ease', 
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-
-        tutorialIcon:{
-            fontSize: '30px',
-            marginLeft: '5px',
-        }
-    
-        
-    };
