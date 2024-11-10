@@ -242,7 +242,7 @@
 @media (max-width: 1200px) {
     .pageContainer {
         flex-direction: column;
-        margin-left: 2rem;
+        margin-left: 5rem;
         margin-right: 2rem;
     }
 
@@ -262,6 +262,13 @@
 }
 
 @media (max-width: 768px) {
+
+    .pageContainer {
+        flex-direction: column;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
     .headlineLarge {
         font-size: 32px;
     }
