@@ -8,22 +8,22 @@ const TutorialModal = ({ isOpen, onClose }) => {
   const sections = [
     {
       title: 'Welcome to CryptPH!',
-      icon: <IoMdHelpCircleOutline size={48} color="#007bff" />,
+      icon: <IoMdHelpCircleOutline className={styles.icon} color="#007bff" />,
       content: `CryptPH is a virtual trading game where you can invest in various cryptocurrencies using a virtual budget that helps you increase your knowledge about Cryptocurrencies and Trading. Let's get started!`
     },
     {
       title: 'Step 1: Choosing a Coin',
-      icon: <IoMdCash size={48} color="#28a745" />,
+      icon: <IoMdCash className={styles.icon}  color="#28a745" />,
       content: `In order to get started, click the Coin List button to view the list of available coins, and click SELECT to view its details, including price, market cap, and trends. Once you find a coin you're interested in, decide on the quantity you'd like to buy based on your available cash balance.`
     },
     {
       title: 'Step 2: Monitoring & Exiting',
-      icon: <IoMdTrendingUp size={48} color="#ffc107" />,
+      icon: <IoMdTrendingUp className={styles.icon} color="#ffc107" />,
       content: `Track your portfolio in real-time. Use the Ongoing Investments button to view your currently invested coins and decide when to exit a position by analyzing the data presented. Selling a coin will add the value back to your cash balance.Go aim for those profits!`
     },
     {
       title: 'Congratulations!',
-      icon: <IoMdCheckmarkCircleOutline size={48} color="#17a2b8" />,
+      icon: <IoMdCheckmarkCircleOutline className={styles.icon} color="#17a2b8" />,
       content: `You've completed the tutorial! Start exploring the game, choose from a wide variety of virtual coins, and see how much you can grow your virtual portfolio. You can view your Trade Log to see your previous investments on whether you profited or not.`
     }
   ];

@@ -114,6 +114,10 @@
   background-color: #0056b3;
 }
 
+.icon{
+  font-size: 8rem;
+}
+
 .navButton:disabled {
   background-color: #ddd;
   color: #888;
@@ -183,4 +187,6 @@
     margin: 5px 0;
 
   }
+
+
 }
