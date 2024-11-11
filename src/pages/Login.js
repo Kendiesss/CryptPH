@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
+import jwt from 'jsonwebtoken';
 import { signIn } from 'next-auth/react';
 import logo from '@/img/logo.png';
 
@@ -18,11 +19,12 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = () => {
-    signIn('google'); // Initiates the Google login using next-auth
+    signIn("google", { callbackUrl: "/" });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
     try {
       const res = await fetch('/api/auth/login', {
@@ -34,10 +36,21 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        // Save token to localStorage
-        localStorage.setItem('token', data.token);
-        // Redirect to the homepage after successful login
-        router.push('/');
+        const { token } = data;
+
+        // Store the token (e.g., in localStorage)
+        localStorage.setItem('token', token);
+
+        // Decode the token to get the user's role
+        const decodedToken = jwt.decode(token);
+        const userRole = decodedToken.role;
+
+        // Redirect based on role
+        if (userRole === 'admin') {
+          router.push('/admin-dashboard'); // Redirect admins to the admin dashboard
+        } else {
+          router.push('/'); // Redirect regular users to the user dashboard
+        }
       } else {
         setError(data.error || 'Failed to log in.');
       }

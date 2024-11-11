@@ -34,9 +34,9 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Password incorrect" }); // Temp: specific error
         }
 
-        // Create JWT token
+        // Create JWT token with user role included
         const token = jwt.sign(
-            { userId: user._id },
+            { userId: user._id, role: user.role }, // Include the user's role in the token
             process.env.JWT_SECRET,
             { expiresIn: '1h' } // Token expiry
         );

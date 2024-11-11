@@ -17,7 +17,13 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    validate: {
+      validator: function (value) {
+        // Require password if the authProvider is 'local'
+        return this.authProvider !== 'local' || (value && value.length > 0);
+      },
+      message: 'Password is required for local accounts',
+    },
   },
   role: {
     type: String,
@@ -26,20 +32,16 @@ const userSchema = new mongoose.Schema({
   image: {
     type: String,
   },
-  authProviderId: {
-    type: String,
-    default: null, // Default to null if the user signs up without a provider
-  },
   authProvider: {
     type: String,
-    enum: ['local', 'google', 'facebook'], // Enum to restrict provider values
+    enum: ['local', 'google'],
     default: 'local',
   },
-}, { timestamps: true }); // Automatically manage createdAt and updatedAt fields
+}, { timestamps: true });
 
-// Middleware to hash password before saving
+// Middleware to hash password before saving, only if password is present
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || !this.password) return next();
 
   try {
     const bcrypt = require('bcryptjs');

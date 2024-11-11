@@ -18,12 +18,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    // Create new user with plain password, which will be hashed by the pre-save hook
+    // Create new user with authProvider set to "local" for email/password registration
     const newUser = new User({
       firstName,
       lastName,
       email,
-      password, // Pass the plain password; the pre-save hook will hash it
+      password,       // Pass the plain password; the pre-save hook will hash it
+      authProvider: "local",  // Set authProvider to "local" for email/password users
     });
     await newUser.save();
 

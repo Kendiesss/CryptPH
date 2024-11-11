@@ -1,12 +1,17 @@
 // pages/api/auth/[...nextauth].js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
 export default NextAuth({
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -19,10 +24,8 @@ export default NextAuth({
         // Find user in database by email
         const user = await User.findOne({ email: credentials.email });
         if (user && await bcrypt.compare(credentials.password, user.password)) {
-          // Return a limited user object for the session
-          return { id: user._id, name: `${user.firstName} ${user.lastName}`, email: user.email };
+          return { id: user._id, name: `${user.firstName} ${user.lastName}`, email: user.email, role: user.role };
         }
-        // Return null if authentication fails
         return null;
       }
     })
@@ -32,15 +35,43 @@ export default NextAuth({
   },
   callbacks: {
     async session({ session, token }) {
-      // Attach the user details from token to session
-      session.user = token.user;
+      // Attach the role from the token to the session
+      session.user = {
+        ...session.user,
+        role: token.user?.role || "user",
+      };
       return session;
     },
-    async jwt({ token, user }) {
-      // Add user object to token on initial login
+    async jwt({ token, user, account, profile }) {
+      await dbConnect();
+
+      if (account && account.provider === "google") {
+        let dbUser = await User.findOne({ email: profile.email });
+
+        if (!dbUser) {
+          dbUser = await User.create({
+            firstName: profile.given_name || profile.name.split(" ")[0],
+            lastName: profile.family_name || profile.name.split(" ")[1] || "",
+            email: profile.email,
+            password: null,
+            authProvider: "google",
+            role: "user", // Default role, you may want to customize this
+          });
+        }
+
+        token.user = {
+          id: dbUser._id,
+          name: `${dbUser.firstName} ${dbUser.lastName}`,
+          email: dbUser.email,
+          image: profile.picture,
+          role: dbUser.role, // Include the role
+        };
+      }
+
       if (user) {
         token.user = user;
       }
+
       return token;
     }
   },
