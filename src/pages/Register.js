@@ -10,17 +10,41 @@ function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('First Name:', firstName);
-    console.log('Last Name:', lastName);
-    console.log('Email:', email);
-    console.log('Password:', password);
+    setError('');
+    setSuccess('');
+
+    // Client-side validation for empty fields
+    if (!firstName || !lastName || !email || !password) {
+      setError('All fields are required');
+      return;
+    }
+
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, email, password }),
+    });
+
+    if (res.ok) {
+      setSuccess("Registration successful! Redirecting to login...");
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPassword('');
+      setTimeout(() => router.push('/login'), 2000);
+    } else {
+      const data = await res.json();
+      setError(data.error || "Failed to register.");
+    }
   };
 
   return (
@@ -30,6 +54,9 @@ function RegisterPage() {
           <img src={logo.src} alt="Logo" style={styles.logo} />
         </div>
         <h3 style={styles.title}>Register</h3>
+
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {success && <p style={{ color: 'green' }}>{success}</p>}
 
         <div style={styles.content}>
           <div style={styles.inputBox}>
@@ -78,10 +105,7 @@ function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <span
-              style={styles.eyeIcon}
-              onClick={togglePasswordVisibility}
-            >
+            <span style={styles.eyeIcon} onClick={togglePasswordVisibility}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
