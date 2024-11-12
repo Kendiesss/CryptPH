@@ -1,10 +1,11 @@
 // pages/reset-password.js
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import styles from '@/styles/reset-password.module.css';
 
 export default function ResetPassword() {
     const router = useRouter();
-    const { token } = router.query; // Get the token from the URL
+    const { token } = router.query;
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
@@ -29,7 +30,7 @@ export default function ResetPassword() {
             if (res.ok) {
                 setSuccessMessage("Password reset successful. Redirecting to login...");
                 setTimeout(() => {
-                    router.push(data.redirect); // Use the redirect path from the API
+                    router.push(data.redirect);
                 }, 2000);
             } else {
                 setErrorMessage(data.error || "Failed to reset password.");
@@ -40,29 +41,37 @@ export default function ResetPassword() {
         }
     };
 
-
     return (
-        <div>
-            <h2>Reset Password</h2>
-            {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
-            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="password"
-                    placeholder="New Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Confirm New Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                />
-                <button type="submit">Reset Password</button>
-            </form>
-        </div>
+            <div className={styles.pageContainer}>
+                <div className={styles.leftPanel}>
+                    <h1 className={styles.header1}>Reset your Password</h1>
+                    <p className={styles.body1}>
+                        Enter your new password below and confirm it.
+                    </p>
+
+                    {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
+                    {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+
+                    <form onSubmit={handleSubmit} className={styles.form}>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="New Password"
+                            className={styles.input}
+                            required
+                        />
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Confirm New Password"
+                            className={styles.input}
+                            required
+                        />
+                        <button type="submit" className={styles.submitButton}>Reset Password</button>
+                    </form>
+                </div>
+            </div>
     );
 }
