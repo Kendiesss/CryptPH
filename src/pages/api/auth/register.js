@@ -28,9 +28,10 @@ export default async function handler(req, res) {
     });
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    // Send a success response with a clear status and message
+    res.status(201).json({ success: true, message: "User registered successfully" });
   } catch (error) {
-    console.error(error);
+    console.error("Error during user registration:", error);
     res.status(500).json({ error: "An error occurred. Please try again." });
   }
 }

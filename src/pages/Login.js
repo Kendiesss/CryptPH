@@ -1,18 +1,26 @@
 // LoginPage.js
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
-import jwt from 'jsonwebtoken';
-import { signIn } from 'next-auth/react';
-import logo from '@/img/logo.png';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import jwt from "jsonwebtoken";
+import { signIn } from "next-auth/react";
+import logo from "@/img/logo.png";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [resetSuccess, setResetSuccess] = useState(false);
+
+  useEffect(() => {
+    // Check for resetSuccess query parameter
+    if (router.query.resetSuccess === "true") {
+      setResetSuccess(true);
+    }
+  }, [router.query.resetSuccess]);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -24,12 +32,12 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
@@ -37,38 +45,41 @@ export default function LoginPage() {
 
       if (res.ok) {
         const { token } = data;
+        localStorage.setItem("token", token);
 
-        // Store the token (e.g., in localStorage)
-        localStorage.setItem('token', token);
-
-        // Decode the token to get the user's role
         const decodedToken = jwt.decode(token);
         const userRole = decodedToken.role;
 
-        // Redirect based on role
-        if (userRole === 'admin') {
-          router.push('/admin-dashboard'); // Redirect admins to the admin dashboard
+        if (userRole === "admin") {
+          router.push("/admin-dashboard");
         } else {
-          router.push('/'); // Redirect regular users to the user dashboard
+          router.push("/");
         }
       } else {
-        setError(data.error || 'Failed to log in.');
+        setError(data.error || "Failed to log in.");
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setError('An error occurred. Please try again.');
+      console.error("Login error:", error);
+      setError("An error occurred. Please try again.");
     }
   };
 
   return (
     <div style={styles.login}>
       <form style={styles.loginForm} onSubmit={handleSubmit}>
-        <div style={styles.logoContainer} onClick={() => router.push('/')}>
+        <div style={styles.logoContainer} onClick={() => router.push("/")}>
           <img src={logo.src} alt="Logo" style={styles.logo} />
         </div>
         <h3 style={styles.title}>Login</h3>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {/* Success Message */}
+        {resetSuccess && (
+          <p style={{ color: "green" }}>
+            Password reset successful. Please log in with your new password.
+          </p>
+        )}
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
         <div style={styles.content}>
           <button type="button" style={styles.googleButton} onClick={handleGoogleSignIn}>
@@ -90,7 +101,7 @@ export default function LoginPage() {
 
           <div style={styles.inputBox}>
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               id="login-pass"
               required
               style={styles.input}
@@ -98,17 +109,14 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <span
-              style={styles.eyeIcon}
-              onClick={togglePasswordVisibility}
-            >
+            <span style={styles.eyeIcon} onClick={togglePasswordVisibility}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
         </div>
 
         <div style={styles.forgotPassword}>
-          <a href="#" style={styles.forgotLink}>Forgot Password?</a>
+          <a href="/forgotpassword" style={styles.forgotLink}>Forgot Password?</a>
         </div>
 
         <button type="submit" style={styles.submitButton}>Login</button>

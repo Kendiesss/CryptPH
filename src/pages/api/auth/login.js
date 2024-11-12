@@ -19,30 +19,35 @@ export default async function handler(req, res) {
         console.log("User found:", user); // Debug: log user
 
         if (!user) {
-            return res.status(400).json({ error: "User not found" }); // Temp: specific error
+            console.log("Login attempt with non-existent email:", email);
+            return res.status(400).json({ error: "User not found" });
         }
-
-        // Log the passwords for debugging
-        console.log("Password provided:", password);             // Log the plaintext password
-        console.log("Stored password (hash):", user.password);   // Log the hashed password in DB
 
         // Check password
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log("Password match result:", isMatch); // Debug: log password match result
+        console.log("Password provided:", password);
+        console.log("Stored password (hash):", user.password);
+        console.log("Password match result:", isMatch);
 
         if (!isMatch) {
-            return res.status(400).json({ error: "Password incorrect" }); // Temp: specific error
+            console.log("Incorrect password attempt for user:", email);
+            return res.status(400).json({ error: "Password incorrect" });
         }
 
-        // Create JWT token with user role included
-        const token = jwt.sign(
-            { userId: user._id, role: user.role }, // Include the user's role in the token
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' } // Token expiry
-        );
-        console.log("Generated Token:", token); // Debug: log token generation
+        // Generate JWT token
+        if (!process.env.JWT_SECRET) {
+            console.error("JWT_SECRET is not defined in environment variables.");
+            return res.status(500).json({ error: "Server configuration error. Please try again later." });
+        }
 
-        // Send token in response
+        const token = jwt.sign(
+            { userId: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+        console.log("Generated JWT Token:", token);
+
+        // Send the token in response
         res.status(200).json({ message: "Login successful", token });
     } catch (error) {
         console.error("Login error:", error);

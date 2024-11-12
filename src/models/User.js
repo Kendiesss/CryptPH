@@ -37,7 +37,16 @@ const userSchema = new mongoose.Schema({
     enum: ['local', 'google'],
     default: 'local',
   },
+  resetPasswordToken: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null,
+  },
 }, { timestamps: true });
+
 
 // Middleware to hash password before saving, only if password is present
 userSchema.pre('save', async function (next) {

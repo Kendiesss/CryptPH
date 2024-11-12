@@ -11,5 +11,5 @@ export default function Profile() {
       <DummyPage title="Forgot Password" />
       <Footer />
     </div>
-  );  
+  );
 }

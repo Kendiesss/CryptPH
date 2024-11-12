@@ -11,7 +11,6 @@ function RegisterPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -20,33 +19,31 @@ function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setSuccess('');
 
-    // Client-side validation for empty fields
     if (!firstName || !lastName || !email || !password) {
       setError('All fields are required');
       return;
     }
 
-    const res = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName, email, password }),
-    });
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, password }),
+      });
 
-    if (res.ok) {
-      setSuccess("Registration successful! Redirecting to login...");
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setPassword('');
-      setTimeout(() => router.push('/login'), 2000);
-    } else {
       const data = await res.json();
-      setError(data.error || "Failed to register.");
+
+      if (data.success) {
+        router.push('/login');  // Redirect directly to login on successful registration
+      } else {
+        setError(data.error || "Failed to register.");
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      setError('An error occurred. Please try again.');
     }
   };
-
   return (
     <div style={styles.register}>
       <form style={styles.registerForm} onSubmit={handleSubmit}>
@@ -56,7 +53,6 @@ function RegisterPage() {
         <h3 style={styles.title}>Register</h3>
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        {success && <p style={{ color: 'green' }}>{success}</p>}
 
         <div style={styles.content}>
           <div style={styles.inputBox}>
