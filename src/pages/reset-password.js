@@ -22,14 +22,15 @@ export default function ResetPassword() {
             const res = await fetch("/api/auth/reset-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ token, password }), // Send plain token and new password
+                body: JSON.stringify({ token, password }),
             });
 
             const data = await res.json();
             if (res.ok) {
                 setSuccessMessage("Password reset successful. Redirecting to login...");
-                // Wait for a short delay, then redirect
-                setTimeout(() => router.push('/Login'), 2000); // Use hardcoded redirect to /login
+                setTimeout(() => {
+                    router.push(data.redirect); // Use the redirect path from the API
+                }, 2000);
             } else {
                 setErrorMessage(data.error || "Failed to reset password.");
             }
@@ -38,6 +39,7 @@ export default function ResetPassword() {
             setErrorMessage("An error occurred. Please try again.");
         }
     };
+
 
     return (
         <div>
