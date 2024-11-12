@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const { token, password } = req.body;
 
     try {
-        // Find user by reset token and ensure it has not expired
+        // Find user by reset token and check if it hasn't expired
         const user = await User.findOne({
             resetPasswordToken: { $exists: true },
             resetPasswordExpires: { $gt: Date.now() }
@@ -28,12 +28,8 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Invalid or expired token" });
         }
 
-        // Hash the new password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        // Update user password and clear reset fields
-        user.password = hashedPassword;
+        // Set the new password directly and let the `pre-save` hook handle hashing
+        user.password = password;
         user.resetPasswordToken = null;
         user.resetPasswordExpires = null;
         await user.save();
