@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
+// src/pages/Header.js
+
+import React, { useState, useEffect } from 'react';
 import { FaRegBell, FaUserCircle } from "react-icons/fa";
+import { useRouter } from 'next/router';
+import { jwt_decode } from 'jwt-decode';
 
 export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [bellDropdownOpen, setBellDropdownOpen] = useState(false);
-  
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log("Token found:", token); // Debug: Check if token is retrieved
+
+    if (token) {
+      try {
+        const decoded = jwt_decode(token);
+        console.log("Decoded token:", decoded); // Debug: Check decoded token
+        setUser(decoded);
+      } catch (error) {
+        console.error("Error decoding token:", error); // Log decoding errors
+      }
+    }
+  }, []);
 
   const toggleUserDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -16,6 +36,13 @@ export default function Header() {
     setDropdownOpen(false); // Close user dropdown if open
   };
 
+  const handleSignOut = () => {
+    // Remove token from localStorage and reset user state
+    localStorage.removeItem('token');
+    setUser(null);
+    router.push('/login'); // Redirect to login page
+  };
+
   return (
     <header style={styles.header}>
       <div style={styles.container}>
@@ -23,16 +50,20 @@ export default function Header() {
         <div className="user-dropdown" onClick={toggleUserDropdown} style={styles.userDropdown}>
           <div className="user" style={styles.user}>
             <FaUserCircle style={styles.userIcon} />
-            <div style={styles.username}>Username</div>
+            <div style={styles.username}>{user ? user.name : 'Username'}</div>
           </div>
         </div>
       </div>
-      
+
       {dropdownOpen && (
         <div className="dropdown-menu" style={styles.dropdownMenu}>
           <ul style={styles.menuList}>
             <li style={styles.menuItem}><a href="/Profile">Profile</a></li>
-            <li style={styles.menuItem}><a href="/Login">Login</a></li>
+            {!user ? (
+              <li style={styles.menuItem}><a href="/Login">Login</a></li>
+            ) : (
+              <li style={styles.menuItem} onClick={handleSignOut}>Sign Out</li>
+            )}
           </ul>
         </div>
       )}
@@ -47,6 +78,7 @@ export default function Header() {
     </header>
   );
 }
+
 const styles = {
   header: {
     backgroundColor: '#0B162B',

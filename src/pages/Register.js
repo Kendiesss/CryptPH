@@ -11,17 +11,47 @@ function RegisterPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  const validatePassword = (password) => {
+    const errors = [];
+
+    if (password.length < 8) {
+      errors.push('at least 8 characters');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('an uppercase letter');
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push('a lowercase letter');
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push('a number');
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      errors.push('a special character');
+    }
+
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     if (!firstName || !lastName || !email || !password) {
       setError('All fields are required');
+      return;
+    }
+
+    const passwordErrors = validatePassword(password);
+    if (passwordErrors.length > 0) {
+      setError(`Password must contain ${passwordErrors.join(', ')}.`);
       return;
     }
 
@@ -35,7 +65,15 @@ function RegisterPage() {
       const data = await res.json();
 
       if (data.success) {
-        router.push('/login');  // Redirect directly to login on successful registration
+        setSuccess('Registration successful! Redirecting to login...');
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPassword('');
+
+        setTimeout(() => {
+          router.push('/Login');
+        }, 2000);
       } else {
         setError(data.error || "Failed to register.");
       }
@@ -44,6 +82,7 @@ function RegisterPage() {
       setError('An error occurred. Please try again.');
     }
   };
+
   return (
     <div style={styles.register}>
       <form style={styles.registerForm} onSubmit={handleSubmit}>
@@ -53,6 +92,7 @@ function RegisterPage() {
         <h3 style={styles.title}>Register</h3>
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
+        {success && <p style={{ color: 'green' }}>{success}</p>}
 
         <div style={styles.content}>
           <div style={styles.inputBox}>

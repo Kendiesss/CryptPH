@@ -23,7 +23,7 @@ export default function MenuBarMobile({ setter }) {
                 <Link href="/" className="mx-auto">
                     <img src={logo.src} alt="Company Logo" width={70} height={70} /> {/* Increased logo size */}
                 </Link>
-                <Link className="text-3xl text-white" href="/login">
+                <Link className="text-3xl text-white" href="/Login">
                     <FaUser /> {/* User icon */}
                 </Link>
             </div>

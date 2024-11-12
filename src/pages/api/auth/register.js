@@ -11,6 +11,21 @@ export default async function handler(req, res) {
 
   const { firstName, lastName, email, password } = req.body;
 
+  // Server-side password validation with detailed feedback
+  const passwordErrors = [];
+  if (password.length < 8) passwordErrors.push("at least 8 characters");
+  if (!/[A-Z]/.test(password)) passwordErrors.push("an uppercase letter");
+  if (!/[a-z]/.test(password)) passwordErrors.push("a lowercase letter");
+  if (!/\d/.test(password)) passwordErrors.push("a number");
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(password)) passwordErrors.push("a special character");
+
+  if (passwordErrors.length > 0) {
+    console.log("Password validation failed:", passwordErrors.join(", "));
+    return res.status(400).json({
+      error: `Password must contain ${passwordErrors.join(", ")}.`,
+    });
+  }
+
   try {
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -23,12 +38,11 @@ export default async function handler(req, res) {
       firstName,
       lastName,
       email,
-      password,       // Pass the plain password; the pre-save hook will hash it
-      authProvider: "local",  // Set authProvider to "local" for email/password users
+      password,
+      authProvider: "local",
     });
     await newUser.save();
 
-    // Send a success response with a clear status and message
     res.status(201).json({ success: true, message: "User registered successfully" });
   } catch (error) {
     console.error("Error during user registration:", error);

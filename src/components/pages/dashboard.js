@@ -1,8 +1,8 @@
-// @/components/HeroPage.js
+// @/components/dashboard.js
 
 import Head from 'next/head';
 import Layout from '../Layout';
-import styles from '@/styles/dashboard.module.css'; // Importing CSS module
+import styles from '@/styles/dashboard.module.css';
 import logo from '@/img/logo.png';
 import hero2 from '@/img/hero2.png';
 import maya from '@/img/maya2.png';
@@ -10,34 +10,52 @@ import gcrypto from '@/img/gcrypto2.png';
 import coinsph from '@/img/coinsph2.png';
 import gradient1 from '@/img/gradient-1.png'
 import gradient2 from '@/img/gradient-2half.png'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function HeroPage() {
+    const router = useRouter();
+    const [isHovered, setIsHovered] = useState(false);
+    const [user, setUser] = useState(null); // Track logged-in user info
+    const [showSignOut, setShowSignOut] = useState(false);
+
+    // Retrieve user info from local storage on mount
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decoded = jwt_decode(token);
+                setUser(decoded); // Assuming the token contains user info like the name
+            } catch (error) {
+                console.error("Failed to decode token:", error);
+            }
+        }
+    }, []);
+
     const handleRegister = () => {
-        console.log('Register button clicked');
-        window.location.href = '/learn';
+        router.push('/learn');
     };
 
-    const [isHovered, setIsHovered] = useState(false);
+    const handleSignOut = () => {
+        localStorage.removeItem('token');
+        setUser(null); // Clear user info
+        router.push('/login'); // Redirect to login page
+    };
 
     const glowStyle = {
-        color: '#fff', // Base text color
+        color: '#fff',
         fontSize: '5rem',
         fontWeight: 'bold',
         position: 'relative',
         transition: 'text-shadow 0.3s ease-in-out',
         textShadow: isHovered
-            ? '0 0 1px white, 0 0 10px white, 0 0 15px white' // Reduced glow effect
+            ? '0 0 1px white, 0 0 10px white, 0 0 15px white'
             : 'none',
     };
 
     return (
         <Layout pageTitle="Home">
-            <Head>
-                {/* <link rel="preconnect" href="https://fonts.googleapis.com"/>
-                <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
-                <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet"/> */}
-            </Head>
+            <Head></Head>
             <div className={styles.pageContainer}>
                 <img src={logo.src} className={styles.logo} />
                 <div className={styles.heroContainer}>
@@ -81,7 +99,26 @@ export default function HeroPage() {
                         >
                             Register Now
                         </button>
-                        <h1 className={styles.signInLink}>Have an Existing Account? <a href="/Login" className={styles.link}><u>Click here</u> </a> to sign in.</h1>
+                        {!user ? (
+                            <h1 className={styles.signInLink}>Have an Existing Account? <a href="/Login" className={styles.link}><u>Click here</u> </a> to sign in.</h1>
+                        ) : (
+                            <div className={styles.userContainer}>
+                                <button
+                                    className={styles.userButton}
+                                    onClick={() => setShowSignOut(!showSignOut)}
+                                >
+                                    <span><FaUser /> {user.name}</span>
+                                </button>
+                                {showSignOut && (
+                                    <button
+                                        className={styles.signOutButton}
+                                        onClick={handleSignOut}
+                                    >
+                                        Sign Out
+                                    </button>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
