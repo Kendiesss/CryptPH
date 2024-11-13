@@ -16,6 +16,7 @@ import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import styles from '@/styles/manageContents.module.css';
+import withAdminAuth from '@/pages/api/auth/withAdminAuth';
 
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 
@@ -324,7 +325,7 @@ const AddModal = ({ show, onClose, onSave }) => {
 };
 
 
-export default function HeroPage() {
+const HeroPage = () => {
 
     const [sortState, setSortState] = useState({
         name: '',
@@ -665,3 +666,5 @@ export default function HeroPage() {
         </Layout>
     );    
 }
+
+export default withAdminAuth(HeroPage);

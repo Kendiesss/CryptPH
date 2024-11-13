@@ -1,11 +1,15 @@
 // src/pages/Header.js
 
 import React, { useState, useEffect } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 import { FaRegBell, FaUserCircle } from "react-icons/fa";
 import { useRouter } from 'next/router';
-import { jwt_decode } from 'jwt-decode';
+import jwt from 'jsonwebtoken';// Correct import
+
 
 export default function Header() {
+
+  const { data: session } = useSession(); 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [bellDropdownOpen, setBellDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
@@ -17,9 +21,8 @@ export default function Header() {
 
     if (token) {
       try {
-        const decoded = jwt_decode(token);
-        console.log("Decoded token:", decoded); // Debug: Check decoded token
-        setUser(decoded);
+        const decoded = jwt.decode(token); // Use jwt.decode() to decode without verification
+        setUser(decoded); // Set user from decoded token payload
       } catch (error) {
         console.error("Error decoding token:", error); // Log decoding errors
       }
@@ -37,9 +40,9 @@ export default function Header() {
   };
 
   const handleSignOut = () => {
-    // Remove token from localStorage and reset user state
     localStorage.removeItem('token');
-    setUser(null);
+    setUser(null); // Clear user info
+    signOut(); // Use next-auth's signOut function to log the user out
     router.push('/login'); // Redirect to login page
   };
 
@@ -49,8 +52,16 @@ export default function Header() {
         <FaRegBell style={styles.bellIcon} onClick={toggleBellDropdown} />
         <div className="user-dropdown" onClick={toggleUserDropdown} style={styles.userDropdown}>
           <div className="user" style={styles.user}>
-            <FaUserCircle style={styles.userIcon} />
-            <div style={styles.username}>{user ? user.name : 'Username'}</div>
+          {session?.user?.image ? (
+          <img
+            src={session.user.image}
+            alt="User Profile"
+            style={{ ...styles.userIcon, width: '30px', height: '30px', borderRadius: '30px', }} // Adjust size here
+          />
+            ) : (
+              <FaUserCircle style={styles.userIcon} />
+            )}
+            <div style={styles.username}>{session?.user?.name || user?.fname|| 'Login'}</div>
           </div>
         </div>
       </div>
@@ -59,10 +70,10 @@ export default function Header() {
         <div className="dropdown-menu" style={styles.dropdownMenu}>
           <ul style={styles.menuList}>
             <li style={styles.menuItem}><a href="/Profile">Profile</a></li>
-            {!user ? (
-              <li style={styles.menuItem}><a href="/Login">Login</a></li>
-            ) : (
+            {session || user? (
               <li style={styles.menuItem} onClick={handleSignOut}>Sign Out</li>
+            ) : (
+              <li style={styles.menuItem}> <a href="/Login">Sign In</a></li>
             )}
           </ul>
         </div>

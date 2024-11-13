@@ -1,6 +1,7 @@
 // @/components/dashboard.js
 
 import Head from 'next/head';
+import jwt from 'jsonwebtoken';
 import Layout from '../Layout';
 import styles from '@/styles/dashboard.module.css';
 import logo from '@/img/logo.png';
@@ -17,22 +18,26 @@ export default function HeroPage() {
     const router = useRouter();
     const [isHovered, setIsHovered] = useState(false);
     const [user, setUser] = useState(null); // Track logged-in user info
-    const [showSignOut, setShowSignOut] = useState(false);
 
-    // Retrieve user info from local storage on mount
     useEffect(() => {
         const token = localStorage.getItem('token');
+        console.log("Token found:", token); // Debug: Check if token is retrieved
+    
         if (token) {
-            try {
-                const decoded = jwt_decode(token);
-                setUser(decoded); // Assuming the token contains user info like the name
-            } catch (error) {
-                console.error("Failed to decode token:", error);
-            }
+          try {
+            const decoded = jwt.decode(token); // Use jwt.decode() to decode without verification
+            setUser(decoded); // Set user from decoded token payload
+          } catch (error) {
+            console.error("Error decoding token:", error); // Log decoding errors
+          }
         }
-    }, []);
+      }, []);
 
     const handleRegister = () => {
+        router.push('/register');
+    };
+
+    const handleLearn = () => {
         router.push('/learn');
     };
 
@@ -91,6 +96,7 @@ export default function HeroPage() {
                                 onMouseLeave={() => setIsHovered(false)}
                             >Crypto Trading.</span>
                         </h1>
+                        {!user ? (
                         <button
                             className={styles.ctaButton}
                             onClick={handleRegister}
@@ -99,25 +105,20 @@ export default function HeroPage() {
                         >
                             Register Now
                         </button>
+                         ) : (
+                            <button
+                            className={styles.ctaButton}
+                            onClick={handleLearn}
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+                        >
+                            Start Learning
+                        </button>
+                         )}
                         {!user ? (
                             <h1 className={styles.signInLink}>Have an Existing Account? <a href="/Login" className={styles.link}><u>Click here</u> </a> to sign in.</h1>
                         ) : (
-                            <div className={styles.userContainer}>
-                                <button
-                                    className={styles.userButton}
-                                    onClick={() => setShowSignOut(!showSignOut)}
-                                >
-                                    <span><FaUser /> {user.name}</span>
-                                </button>
-                                {showSignOut && (
-                                    <button
-                                        className={styles.signOutButton}
-                                        onClick={handleSignOut}
-                                    >
-                                        Sign Out
-                                    </button>
-                                )}
-                            </div>
+                            <h1 className={styles.signInLink}>Want to try our Virtual Trading? <a href="/virtual-trading" className={styles.link}><u>Click here.</u></a></h1>
                         )}
                     </div>
                 </div>

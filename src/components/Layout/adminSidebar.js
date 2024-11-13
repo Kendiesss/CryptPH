@@ -1,7 +1,8 @@
 // @/components/Layout/Sidebar.js
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSession, signOut } from 'next-auth/react';
 import { SlHome } from 'react-icons/sl'
 import { FiBarChart, FiBook, FiDatabase  } from "react-icons/fi";
 import { MdOutlineNewspaper } from "react-icons/md";
@@ -9,25 +10,44 @@ import { FiLogOut } from "react-icons/fi";
 import { FaExchangeAlt } from "react-icons/fa";
 import { FaUsersCog } from "react-icons/fa";
 import logo from '@/img/logo.png'
+import jwt from 'jsonwebtoken';// Correct import
 
 export default function Sidebar() {
     const router = useRouter();
     const [isHovered, setIsHovered] = useState(false);
+    const { data: session } = useSession(); 
+    const [user, setUser] = useState(null);
 
-    // Define our base class
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        console.log("Token found:", token); // Debugging
+
+        if (token) {
+            try {
+                const decoded = jwt.decode(token);
+                if (decoded && decoded.exp > Date.now() / 1000) {
+                    setUser(decoded);
+                } else {
+                    console.log("Token expired");
+                }
+            } catch (error) {
+                console.error("Error decoding token:", error);
+            }
+        }
+    }, []);
+
     const className = `bg-[#0B162B] border-r border-white transition-[width] ease-in-out duration-500 
     fixed top-0 bottom-0 left-0 z-40 ${isHovered ? "w-[250px]" : "w-[60px]"} 
-    ${isHovered || isHovered ? 'block' : 'hidden'} md:block`; // Hide on mobile size
+    ${isHovered || isHovered ? 'block' : 'hidden'} md:block`;
 
-    // Clickable menu items
-    const MenuItem = ({ icon, name, route }) => {
-        // Highlight menu item based on currently displayed route
+    const MenuItem = ({ icon, name, route, onClick }) => {
         const colorClass = router.pathname === route ? "text-white" : "text-white/50 hover:text-white";
 
         return (
             <Link
                 href={route}
                 className={`flex items-center gap-3 px-4 py-3 ${colorClass} ${isHovered ? "justify-start" : "justify-center"}`}
+                onClick={onClick} 
             >
                 <div className="text-xl">
                     {icon}
@@ -41,6 +61,12 @@ export default function Sidebar() {
         );
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setUser(null); 
+        signOut({ callbackUrl: '/' });
+    };
+
     return (
         <div
             className={className}
@@ -50,7 +76,6 @@ export default function Sidebar() {
             <div className="flex flex-col items-center h-full">
                 <div className="p-4">
                     <Link href="/">
-                        {/*eslint-disable-next-line*/}
                         <img src={logo.src} alt="Company Logo" className={`${isHovered ? "block" : "hidden"}`} width={150} height={150} />
                     </Link>
                 </div>
@@ -61,10 +86,18 @@ export default function Sidebar() {
                     <MenuItem name="Charts" route="/charts" icon={<FiBarChart />} />
                     <MenuItem name="News" route="/news" icon={<MdOutlineNewspaper />} />
                     <MenuItem name="Learn" route="/learn" icon={<FiBook />} />
-                    <MenuItem name="Virtual Trading" route="/virtual-trading" icon={<FaExchangeAlt />} />
-                    <MenuItem name="Logout" route="/" icon={<FiLogOut />} />
+                    {session || user ? (
+                        <>
+                            <MenuItem name="Virtual Trading" route="/virtual-trading" icon={<FaExchangeAlt />} />
+                            <button className="flex items-center gap-3 px-4 py-3 text-white" onClick={handleLogout}>
+                                <FiLogOut />
+                                {isHovered && <div>Logout</div>}
+                            </button>
+                        </>
+                    ) : (
+                        <MenuItem name="Virtual Trading" route="/Login" icon={<FaExchangeAlt />} />
+                    )}
                 </div>
-                <div className="mt-auto p-4"></div>
             </div>
         </div>
     );

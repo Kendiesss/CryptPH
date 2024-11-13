@@ -39,6 +39,8 @@ export default NextAuth({
       session.user = {
         ...session.user,
         role: token.user?.role || "user",
+        firstName: token.user?.firstName,  // Add firstName
+        lastName: token.user?.lastName,    // Add lastName
       };
       return session;
     },
