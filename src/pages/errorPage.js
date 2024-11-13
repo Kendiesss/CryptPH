@@ -1,5 +1,5 @@
 import React from 'react'
-import DummyPage from '@/components/pages/errorpage'
+import DummyPage from '@/components/pages/errorPage'
 import Footer from './Footer';
 import Header from './Header2';
 
