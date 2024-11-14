@@ -6,9 +6,7 @@ import Header from './Header2';
 export default function ErrorPage() {
     return (
         <div>
-          <Header/>
           <DummyPage title="ErrorPage" />
-          <Footer />
         </div>
       );
     }
