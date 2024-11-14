@@ -1,6 +1,14 @@
 import dbConnect from '@/lib/db'; // Adjust path as necessary
 import News from '@/models/News'; // Your news model
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '15mb', // Increase size limit
+    },
+  },
+};
+
 export default async function handler(req, res) {
   await dbConnect();
 
