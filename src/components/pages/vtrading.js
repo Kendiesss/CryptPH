@@ -171,9 +171,8 @@ export default function DummyPage({ title }) {
             setInvestedCoin(newInvestment); // Track the current investment
 
             // Save investments to localStorage
-            localStorage.setItem('investments', JSON.stringify(updatedInvestments));
-            localStorage.setItem('dummyCash', JSON.stringify(updatedDummyCash));
-
+            sessionStorage.setItem('dummyCash', JSON.stringify(updatedDummyCash));
+            sessionStorage.setItem('investments', JSON.stringify(updatedInvestments));
 
             setIsBuyModalOpen(true);
             // alert(`Successfully invested $${investmentAmount.toFixed(2)} in ${selectedCoin.name}!`);
@@ -211,7 +210,7 @@ export default function DummyPage({ title }) {
             setDummyCash(newDummyCash);
     
             // Save the new dummy cash balance to localStorage
-            localStorage.setItem('dummyCash', JSON.stringify(newDummyCash));
+            sessionStorage.setItem('dummyCash', JSON.stringify(newDummyCash));
     
             // Show exit alert (integrated into the modal)
             setIsSellModalOpen(true);
@@ -221,7 +220,7 @@ export default function DummyPage({ title }) {
             setInvestments(updatedInvestments);
     
             // Save the updated investments list to localStorage
-            localStorage.setItem('investments', JSON.stringify(updatedInvestments));
+            sessionStorage.setItem('investments', JSON.stringify(updatedInvestments));
     
             // Reset the invested coin state
             setInvestedCoin(null);
@@ -241,8 +240,8 @@ export default function DummyPage({ title }) {
     
         // Load investments and dummyCash from localStorage on page load
         useEffect(() => {
-            const savedInvestments = localStorage.getItem('investments');
-            const savedDummyCash = localStorage.getItem('dummyCash');
+            const savedInvestments = sessionStorage.getItem('investments');
+            const savedDummyCash = sessionStorage.getItem('dummyCash');
             
             if (savedInvestments) {
                 setInvestments(JSON.parse(savedInvestments)); // Restore the investments

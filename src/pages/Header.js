@@ -39,12 +39,13 @@ export default function Header() {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('token');
-    setUser(null); // Clear user info
-    signOut(); // Use next-auth's signOut function to log the user out
-    router.push('/login'); // Redirect to login page
-  };
-
+    localStorage.removeItem('token'); // Remove token from local storage
+    setUser(null);                   // Clear user info
+    sessionStorage.clear();
+    signOut({ callbackUrl: '/Login' }); // Use next-auth's signOut with a callback URL
+    };
+  
+    
   return (
     <header style={styles.header}>
       <div style={styles.container}>
@@ -64,7 +65,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      
+
       {dropdownOpen && (
         <div className="dropdown-menu" style={styles.dropdownMenu}>
           <ul style={styles.menuList}>

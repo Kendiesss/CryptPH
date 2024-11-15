@@ -3,9 +3,11 @@ import { FaRegBell, FaUserCircle } from "react-icons/fa";
 import logo from '@/img/logo.png';
 import { useSession, signOut } from 'next-auth/react';
 import jwt from 'jsonwebtoken';// Correct import
+import { useRouter } from 'next/router';
 
 export default function Header() {
 
+  const router = useRouter(); 
   const { data: session } = useSession(); 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [bellDropdownOpen, setBellDropdownOpen] = useState(false);
@@ -36,10 +38,10 @@ export default function Header() {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem('token');
-    setUser(null); // Clear user info
-    signOut(); // Use next-auth's signOut function to log the user out
-    router.push('/login'); // Redirect to login page
+  localStorage.removeItem('token'); // Remove token from local storage
+  setUser(null);                   // Clear user info
+  sessionStorage.clear();
+  signOut({ callbackUrl: '/Login' }); // Use next-auth's signOut with a callback URL
   };
 
   useEffect(() => {
