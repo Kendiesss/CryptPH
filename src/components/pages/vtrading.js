@@ -14,9 +14,7 @@ import TradingViewWidget from './TradingViewWidget'; // Adjust the path accordin
 import widgetData from '@/data/widgetData'; 
 import TutorialModal from '@/components/Layout/TutorialModal.js';
 import styles from '@/styles/vtrading.module.css';
-
-
-
+import withAdminAuth from '@/pages/api/auth/withAdminAuth';
 
 const Card = ({ children }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -35,7 +33,7 @@ const Card = ({ children }) => {
     );
 };
 
-export default function DummyPage({ title }) {
+function DummyPage({ title }) {
 
     const [symbol, setSymbol] = useState(null);
     const [selectedCoin, setSelectedCoin] = useState(null);
@@ -220,7 +218,7 @@ export default function DummyPage({ title }) {
             setInvestments(updatedInvestments);
     
             // Save the updated investments list to localStorage
-            sessionStorage.setItem('investments', JSON.stringify(updatedInvestments));
+            sess.setItem('investments', JSON.stringify(updatedInvestments));
     
             // Reset the invested coin state
             setInvestedCoin(null);
@@ -871,3 +869,4 @@ export default function DummyPage({ title }) {
     )
 }
 
+export default withAdminAuth(DummyPage);
