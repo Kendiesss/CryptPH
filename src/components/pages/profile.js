@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import styles from '@/styles/profile.module.css';  // Import the CSS module
 import { useSession, signOut } from 'next-auth/react';
 import jwt from 'jsonwebtoken';// Correct import
+import withAdminAuth from '@/pages/api/auth/withAdminAuth';
 
 const EditProfileModal = ({ show, onClose, onSave }) => {
 
@@ -25,7 +26,7 @@ const EditProfileModal = ({ show, onClose, onSave }) => {
     };
 };
 
-export default function DummyPage({ title }) {
+function DummyPage({ title }) {
 
     const router = useRouter();
     const [isHovered1, setIsHovered1] = useState(false);
@@ -67,7 +68,7 @@ export default function DummyPage({ title }) {
                     <img
                         src={session.user.image}
                         alt="User Profile"
-                        className={{ ...styles.profilePhoto, width: '200px', height: '200px', borderRadius: '100px', }} // Adjust size here
+                        className={{ ...styles.profilePhoto, width: '200px', height: '200px', borderRadius: '100%', }} // Adjust size here
                     />
                     ) : (
                         <FaUser></FaUser>
@@ -100,3 +101,5 @@ export default function DummyPage({ title }) {
         </Layout>
     );
 }
+
+export default withAdminAuth(DummyPage);
