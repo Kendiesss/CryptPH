@@ -34,7 +34,7 @@ export default function HeroPage() {
       }, []);
 
     const handleRegister = () => {
-        router.push('/register');
+        router.push('/Register');
     };
 
     const handleLearn = () => {
