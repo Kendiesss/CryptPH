@@ -213,7 +213,7 @@ export default function DummyPage({ title }) {
             const newDummyCash = dummyCash + currentValue;
             setDummyCash(newDummyCash);
     
-            // Save the new dummy cash balance to localStorage
+            // Save the new dummy cash balance to sessionStorage
             sessionStorage.setItem('dummyCash', JSON.stringify(newDummyCash));
     
             // Show exit alert (integrated into the modal)
@@ -223,8 +223,8 @@ export default function DummyPage({ title }) {
             const updatedInvestments = investments.filter((inv) => inv.id !== investedCoin.id);
             setInvestments(updatedInvestments);
     
-            // Save the updated investments list to localStorage
-            sess.setItem('investments', JSON.stringify(updatedInvestments));
+            // Save the updated investments list to sessionStorage
+            sessionStorage.setItem('investments', JSON.stringify(updatedInvestments));
     
             // Reset the invested coin state
             setInvestedCoin(null);
@@ -232,15 +232,17 @@ export default function DummyPage({ title }) {
             // Close the modal after exiting (optional)
             closeModal();
     
-            // If the new dummy cash is 0 or less, open the lose modal
+            // Check if the new dummy cash is zero or less, open the lose modal if true
             if (newDummyCash <= 0) {
                 openLoseModal(); // Show the lose modal
             }
         } else {
+            // If no investment is active, close the modal and open the investment modal
             setIsInvestmentModalOpen(true);
-            closeModal(); // Close the modal if no investment is active
+            closeModal();
         }
     };
+    
     
         // Load investments and dummyCash from localStorage on page load
         useEffect(() => {
