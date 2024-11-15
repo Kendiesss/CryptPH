@@ -7,6 +7,7 @@ import gradient1 from '@/img/gradient-1.png';
 import Modal from '@/components/Layout/modal';
 import Modal2 from '@/components/Layout/modal2';
 import Modal3 from '@/components/Layout/modal3';
+import RestartModal from '@/components/Layout/RestartModal';
 import React, {useState, useEffect} from 'react';
 import modalStyles from '@/styles/modal.module.css';
 import TradingViewWidget from './TradingViewWidget'; // Adjust the path accordingly
@@ -96,7 +97,11 @@ export default function DummyPage({ title }) {
     const openTutorModal = () => setIsTutorModalOpen(true);
     const closeTutorModal = () => setIsTutorModalOpen(false);
 
-    
+    // Correcting the typo and ensuring consistent naming
+    const [isRestartModalOpen, setIsRestartModalOpen] = useState(false);
+    const openRestartModal = () => setIsRestartModalOpen(true);
+    const closeRestartModal = () => setIsRestartModalOpen(false);
+
     //GAME LOGIC!!!
 
     const [investedCoin, setInvestedCoin] = useState(null); // Stores invested coin details
@@ -140,7 +145,9 @@ export default function DummyPage({ title }) {
         const investmentAmount = quantity * currentPrice;
     
         if (quantity > 0 && investmentAmount <= dummyCash) {
-            setDummyCash(dummyCash - investmentAmount);
+
+            const updatedDummyCash = dummyCash - investmentAmount;
+            setDummyCash(updatedDummyCash);
             setInvestment(investment + investmentAmount);
             setCoinQuantity(coinQuantity + quantity);
             setEntryPrice(currentPrice);
@@ -159,8 +166,14 @@ export default function DummyPage({ title }) {
             };
     
             // Add the new investment to the list and track as the current investment
-            setInvestments([...investments, newInvestment]);
+            const updatedInvestments = ([...investments, newInvestment]);
+            setInvestments(updatedInvestments);
             setInvestedCoin(newInvestment); // Track the current investment
+
+            // Save investments to localStorage
+            localStorage.setItem('investments', JSON.stringify(updatedInvestments));
+            localStorage.setItem('dummyCash', JSON.stringify(updatedDummyCash));
+
 
             setIsBuyModalOpen(true);
             // alert(`Successfully invested $${investmentAmount.toFixed(2)} in ${selectedCoin.name}!`);
@@ -171,54 +184,85 @@ export default function DummyPage({ title }) {
             setIsErrorModalOpen(true);
         }
     };
-    
-    
+
+
     const handleExit = () => {
         if (investedCoin) {
-          const currentValue = investedCoin.quantity * coinPrice;
-          const profitOrLoss = currentValue - investedCoin.totalCost;
-          const profitPercent = ((currentValue - investedCoin.totalCost) / investedCoin.totalCost) * 100;
-      
-          // Add to order history
-          const exitedInvestment = {
-            coinName: investedCoin.coinName,
-            symbol: investedCoin.symbol,
-            quantity: investedCoin.quantity,
-            priceAtEntry: investedCoin.totalCost / investedCoin.quantity,
-            priceAtExit: coinPrice,
-            profitPercent: profitPercent,
-            date: new Date(),
-            coinId: investedCoin.id,
-          };
-      
-          setOrderHistory((prevHistory) => [...prevHistory, exitedInvestment]);
-      
-          // Update dummy cash balance
-          const newDummyCash = dummyCash + currentValue;
-          setDummyCash(newDummyCash);
-      
-          // Show exit alert (integrated into the modal)
-          setIsSellModalOpen(true);
-      
-          // Remove the exited investment from the investments array
-          setInvestments((prevInvestments) =>
-            prevInvestments.filter((inv) => inv.id !== investedCoin.id)
-          );
-      
-          // Reset the invested coin state
-          setInvestedCoin(null);
-          closeModal(); // Close the modal after exiting (optional)
-      
-          if (newDummyCash <= 0) {
-            openLoseModal(); // Show the lose modal
-          }
+            const currentValue = investedCoin.quantity * coinPrice;
+            const profitOrLoss = currentValue - investedCoin.totalCost;
+            const profitPercent = ((currentValue - investedCoin.totalCost) / investedCoin.totalCost) * 100;
+    
+            // Add to order history
+            const exitedInvestment = {
+                coinName: investedCoin.coinName,
+                symbol: investedCoin.symbol,
+                quantity: investedCoin.quantity,
+                priceAtEntry: investedCoin.totalCost / investedCoin.quantity,
+                priceAtExit: coinPrice,
+                profitPercent: profitPercent,
+                date: new Date(),
+                coinId: investedCoin.id,
+            };
+    
+            setOrderHistory((prevHistory) => [...prevHistory, exitedInvestment]);
+    
+            // Update dummy cash balance
+            const newDummyCash = dummyCash + currentValue;
+            setDummyCash(newDummyCash);
+    
+            // Save the new dummy cash balance to localStorage
+            localStorage.setItem('dummyCash', JSON.stringify(newDummyCash));
+    
+            // Show exit alert (integrated into the modal)
+            setIsSellModalOpen(true);
+    
+            // Remove the exited investment from the investments array
+            const updatedInvestments = investments.filter((inv) => inv.id !== investedCoin.id);
+            setInvestments(updatedInvestments);
+    
+            // Save the updated investments list to localStorage
+            localStorage.setItem('investments', JSON.stringify(updatedInvestments));
+    
+            // Reset the invested coin state
+            setInvestedCoin(null);
+    
+            // Close the modal after exiting (optional)
+            closeModal();
+    
+            // If the new dummy cash is 0 or less, open the lose modal
+            if (newDummyCash <= 0) {
+                openLoseModal(); // Show the lose modal
+            }
         } else {
             setIsInvestmentModalOpen(true);
             closeModal(); // Close the modal if no investment is active
         }
-      };
+    };
     
+        // Load investments and dummyCash from localStorage on page load
+        useEffect(() => {
+            const savedInvestments = localStorage.getItem('investments');
+            const savedDummyCash = localStorage.getItem('dummyCash');
+            
+            if (savedInvestments) {
+                setInvestments(JSON.parse(savedInvestments)); // Restore the investments
+            }
 
+            if (savedDummyCash) {
+                setDummyCash(JSON.parse(savedDummyCash)); // Restore dummyCash
+            }
+        }, []);
+
+
+          const confirmRestart = () => {
+            // Here you could reset everything as needed
+            setDummyCash(100000);  // Reset dummy cash
+            setInvestments([]);    // Clear investments
+            setOrderHistory([]);   // Clear order history
+            setInvestedCoin(null); // Reset invested coin state
+            closeRestartModal();
+          };
+        
 
     //currency conversion
     const convertCurrency = (amount) => {
@@ -476,8 +520,20 @@ export default function DummyPage({ title }) {
         }
         />
 
-        
+        <RestartModal
+            isOpen={isRestartModalOpen}
+            onClose={closeRestartModal}
+            title="Transaction Unsuccessful!"
+            content={<p>Do you want to restart your progress?</p>}
+            footerActions={
+            <>
+                <button className={modalStyles.cancelButton} onClick={closeRestartModal}>Close</button>
+                <button className={modalStyles.confirmButton} onClick={confirmRestart} >Confirm</button>
+            </>
+            }
+        />
 
+      
             <div className={styles.pageContainer} id='modal-root'>
                 <img  src={gradient1.src} className={styles.gradient1}></img>
                 <div className={styles.topContainer}>
@@ -525,7 +581,14 @@ export default function DummyPage({ title }) {
                                 onClick={() =>handlePanelSwitch('panel3')}
                                 
                                 >Trade Log</button>
+                            
+                            <button className={styles.howToPlay} onClick={openRestartModal}>Restart</button>
+
+                          
+
                             </div>
+
+
                         </div>
 
                         <div className={styles.coinPanel}>
