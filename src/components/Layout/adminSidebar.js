@@ -9,6 +9,7 @@ import { MdOutlineNewspaper } from "react-icons/md";
 import { FiLogOut } from "react-icons/fi";
 import { FaExchangeAlt } from "react-icons/fa";
 import { FaUsersCog } from "react-icons/fa";
+import { AiOutlineDashboard } from "react-icons/ai";
 import logo from '@/img/logo.png'
 import jwt from 'jsonwebtoken';// Correct import
 
@@ -79,7 +80,8 @@ export default function Sidebar() {
                     </Link>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <MenuItem name="Home" route="/admin-dashboard" icon={<SlHome />} />
+                    <MenuItem name="Home" route="/" icon={<SlHome />} />
+                    <MenuItem name="Dashboard" route="/admin-dashboard" icon={<AiOutlineDashboard />} />
                     <MenuItem name="Manage Contents" route="/manageContents" icon={<FiDatabase />} />
                     <MenuItem name="Manage Users" route="/manageUsers" icon={<FaUsersCog />} />
                     <MenuItem name="Charts" route="/charts" icon={<FiBarChart />} />
