@@ -3,8 +3,9 @@ import React from 'react';
 import DummyPage from '@/components/pages/profile';
 import Footer from './Footer';
 import Header from './Header2';
+import withAdminAuth from '@/pages/api/auth/withAdminAuth';
 
-export default function Profile() {
+function Profile() {
   return (
     <div>
       <Header />
@@ -13,3 +14,5 @@ export default function Profile() {
     </div>
   );  
 }
+
+export default withAdminAuth(Profile);

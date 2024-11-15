@@ -14,7 +14,9 @@ import TradingViewWidget from './TradingViewWidget'; // Adjust the path accordin
 import widgetData from '@/data/widgetData'; 
 import TutorialModal from '@/components/Layout/TutorialModal.js';
 import styles from '@/styles/vtrading.module.css';
-import withAdminAuth from '@/pages/api/auth/withAdminAuth';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import jwt from 'jsonwebtoken';
 
 const Card = ({ children }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -33,7 +35,11 @@ const Card = ({ children }) => {
     );
 };
 
-function DummyPage({ title }) {
+export default function DummyPage({ title }) {
+
+    //Accessibility
+    const { data: session, status } = useSession(); // Get session data
+    const router = useRouter();
 
     const [symbol, setSymbol] = useState(null);
     const [selectedCoin, setSelectedCoin] = useState(null);
@@ -869,4 +875,3 @@ function DummyPage({ title }) {
     )
 }
 
-export default withAdminAuth(DummyPage);

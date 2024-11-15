@@ -3,11 +3,9 @@ import Layout from '../Layout';
 import gradient1 from '@/img/gradient-1.png';
 import { FaUser } from "react-icons/fa";
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import styles from '@/styles/profile.module.css';  // Import the CSS module
 import { useSession, signOut } from 'next-auth/react';
 import jwt from 'jsonwebtoken';// Correct import
-import withAdminAuth from '@/pages/api/auth/withAdminAuth';
 
 const EditProfileModal = ({ show, onClose, onSave }) => {
 
@@ -26,9 +24,8 @@ const EditProfileModal = ({ show, onClose, onSave }) => {
     };
 };
 
-function DummyPage({ title }) {
+export default function DummyPage({ title }) {
 
-    const router = useRouter();
     const [isHovered1, setIsHovered1] = useState(false);
     const [isHovered2, setIsHovered2] = useState(false);
     const { data: session } = useSession();
@@ -48,8 +45,8 @@ function DummyPage({ title }) {
       }, []);
 
 
-    const forgotpwd = () => {
-        router.push('/reset-password');
+      const forgotpwd = () => {
+
     };
 
     
@@ -68,7 +65,7 @@ function DummyPage({ title }) {
                     <img
                         src={session.user.image}
                         alt="User Profile"
-                        className={{ ...styles.profilePhoto, width: '200px', height: '200px', borderRadius: '100%', }} // Adjust size here
+                        className={{ ...styles.profilePhoto, width: '200px', height: '200px', borderRadius: '100px', }} // Adjust size here
                     />
                     ) : (
                         <FaUser></FaUser>
@@ -101,5 +98,3 @@ function DummyPage({ title }) {
         </Layout>
     );
 }
-
-export default withAdminAuth(DummyPage);
