@@ -82,15 +82,18 @@ export default function Header() {
       {dropdownOpen && (
         <div className="dropdown-menu" style={styles.dropdownMenu}>
           <ul style={styles.menuList}>
-            <li style={styles.menuItem}><a href="/Profile">Profile</a></li>
-            {session || user? (
-              <li style={styles.menuItem} onClick={handleSignOut}>Sign Out</li>
+            {session || user ? (
+              <>
+                <li style={styles.menuItem}><a href="/Profile">Profile</a></li>
+                <li style={styles.menuItem} onClick={handleSignOut}>Sign Out</li>
+              </>
             ) : (
-              <li style={styles.menuItem}> <a href="/Login">Sign In</a></li>
+              <li style={styles.menuItem}><a href="/Login">Sign In</a></li>
             )}
           </ul>
         </div>
       )}
+
       
       {bellDropdownOpen && (
         <div className="dropdown-menu" style={styles.dropdownMenu}>
