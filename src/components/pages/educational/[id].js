@@ -22,6 +22,7 @@ export default function NewsDetailPage() {
     const [newsItems, setNewsItems] = useState([]); 
     const [loading, setLoading] = useState(true); 
     const [error, setError] = useState(null); 
+    const [showPopup, setShowPopup] = useState(false);
 
     useEffect(() => {
         const fetchNewsItem = async () => {
@@ -59,6 +60,23 @@ export default function NewsDetailPage() {
     
         fetchNews();
     }, [id]); // Include id in the dependency array
+
+    const handleShareClick = () => {
+        // Copy the current URL to the clipboard
+        navigator.clipboard.writeText(window.location.href)
+            .then(() => {
+                // Show the success message
+                setShowPopup(true);
+                
+                // Hide the popup after 3 seconds
+                setTimeout(() => {
+                    setShowPopup(false);
+                }, 3000);
+            })
+            .catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+    };
 
     if (loading) {
         return <p>Loading...</p>;
@@ -106,12 +124,18 @@ export default function NewsDetailPage() {
                     </div>
 
                     <div className={styles.lowerPanel}>
-                        <div className={styles.button2}>
-                            Share
+                        <button className={styles.button2} onClick={handleShareClick}>
+                            Copy Link
                             <span className={styles.iconWrapper}>
                                 <FaShare className={styles.icon} />
                             </span>
-                        </div>
+                        </button>
+                        
+                        {showPopup && (
+                            <div className={styles.popup}>
+                                Copied Link Successfully!
+                            </div>
+                        )}
                     </div>
                 </div>
 

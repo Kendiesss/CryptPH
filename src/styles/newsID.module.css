@@ -11,7 +11,7 @@
     background-color: white;
     width: 1000px;
     min-height: 1000px;
-    z-index: -1;
+    z-index: 0;
     border-radius: 30px;
 }
 
@@ -116,7 +116,7 @@
 .newsBody {
     font-family: 'Sora'; 
     font-size: 18px; 
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.6; 
     text-align: justify; 
     color: #0B162B;
@@ -145,6 +145,7 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    z-index: 1;
 }
 
 .rightPanel {
@@ -236,6 +237,31 @@
     margin-top: 10px;
     width: 100%;
     transition: background-color 0.3s;
+}
+
+.popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #0B162B;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    z-index: 9999;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    font-family: "Sora", sans-serif;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /* Media Queries for Responsiveness */
