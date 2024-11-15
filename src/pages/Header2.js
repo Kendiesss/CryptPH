@@ -14,7 +14,6 @@ export default function Header() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log("Token found:", token); // Debug: Check if token is retrieved
 
     if (token) {
       try {
@@ -73,7 +72,7 @@ export default function Header() {
             ) : (
               <FaUserCircle style={styles.userIcon} />
             )}
-            <div style={styles.username}>Username</div>
+            <div style={styles.username}>{session?.user?.name || user?.fname|| 'Login'}</div>
           </div>
         </div>
       </div>

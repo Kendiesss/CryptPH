@@ -20,8 +20,7 @@ export default function Sidebar() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        console.log("Token found:", token); // Debugging
-
+        
         if (token) {
             try {
                 const decoded = jwt.decode(token);

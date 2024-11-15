@@ -20,7 +20,6 @@ export default function Layout({ pageTitle, children }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token'); // Get token from localStorage
-    console.log("Token found:", token); 
 
     if (token) {
         try {

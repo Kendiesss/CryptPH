@@ -6,6 +6,7 @@ import MenuBarMobile from './MenuBarMobile';
 import AdminSidebar from './adminSidebar'; // Import admin sidebar
 import AdminMenuBar from './adminMenuBar'; // Import admin mobile menu
 import { useSession } from 'next-auth/react';
+import jwt from 'jsonwebtoken'; 
 
 export default function Layout({ pageTitle, children }) {
   // Concatenate page title (if exists) to site title
@@ -14,10 +15,23 @@ export default function Layout({ pageTitle, children }) {
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false); // Track mobile menu state
- 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        const decoded = jwt.decode(token); // Use jwt.decode() to decode without verification
+        setUser(decoded); // Set user from decoded token payload
+      } catch (error) {
+        console.error("Error decoding token:", error); // Log decoding errors
+      }
+    }
+  }, []);
 
   const { data: session } = useSession();
-  const role = session?.user?.role || 'user';
+  const role = session?.user?.role || user?.role || 'user';
 
   return (
     <>

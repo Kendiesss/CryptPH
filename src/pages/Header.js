@@ -17,8 +17,7 @@ export default function Header() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log("Token found:", token); // Debug: Check if token is retrieved
-
+    
     if (token) {
       try {
         const decoded = jwt.decode(token); // Use jwt.decode() to decode without verification

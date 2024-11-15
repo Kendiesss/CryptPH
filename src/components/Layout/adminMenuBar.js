@@ -17,7 +17,6 @@ export default function MenuBarMobile({ setter }) {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        console.log("Token found:", token); // Debug: Check if token is retrieved
 
         if (token) {
             try {
