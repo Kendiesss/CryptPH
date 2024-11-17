@@ -23,10 +23,7 @@ const Card = ({ children }) => {
 
     return (
         <div
-            className={{
-                ...styles.card,
-                ...(isHovered ? styles.cardHover : {})
-            }}
+            className={`${styles.card} ${isHovered ? styles.cardHover : ''}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >

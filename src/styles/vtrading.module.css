@@ -694,6 +694,10 @@
         max-width: 95%;
         align-self: center;
     }
+
+    .card{
+        max-width: 115%;
+    }
 }
 @media (max-width: 1200px) {
     .pageContainer {
@@ -897,6 +901,11 @@
 /* For 480px screens */
 @media (max-width: 480px) {
 
+    .header2{
+        font-size: 15px;
+        text-align: center;
+    }
+
     .topContainer {
         flex-direction: column;
     }
@@ -920,6 +929,7 @@
     
     .cardContainer {
         width: 100%;
+        margin-top: 5rem;
     }
     .rightCard {
         flex-direction: column;
@@ -949,6 +959,10 @@
         height: fit-content;
         align-self: center;
     }
+
+    .totalRightPanel{
+        flex-direction: column;
+    }
     .coinCardContainer {
         width: 100%;
     }
@@ -965,9 +979,15 @@
         position: relative;
     }
 
-    
+    .tableContainer{
+        margin-top: 5rem;
+    }
 
-    
+    .emptyPanel{
+        margin-top: 5rem;
+    }
+
+
 }
   
 
