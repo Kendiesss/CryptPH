@@ -190,14 +190,13 @@ export default function DummyPage({ title }) {
                             </div>
                         )}
                     </div>
-                    <h1 className={styles.header1}>Latest News in CryptPH</h1>
+                    {/* <h1 className={styles.header1}>Latest News in CryptPH</h1>
                     <div className={styles.newsCardContainer}>
                         <div className={styles.newsCard}>
                             <h1 className={styles.newsHeader}>Lorem ipsum dolor sit amet...</h1>
                             <p className={styles.p1}>10 days ago</p>
                         </div>
-                        {/* Add more news cards here */}
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className={styles.rightPanel}>
