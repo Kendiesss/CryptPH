@@ -38,8 +38,22 @@ export default function DummyPage({ title }) {
     const { data: session, status } = useSession(); // Get session data
     const router = useRouter();
 
+
+    useEffect(() => {
+        const storedCoinData = sessionStorage.getItem('selectedCoin');
+        if (storedCoinData) {
+            setSelectedCoin(JSON.parse(storedCoinData));
+        }
+    }, []);
+
     const [symbol, setSymbol] = useState(null);
-    const [selectedCoin, setSelectedCoin] = useState(null);
+    const [selectedCoin, setSelectedCoin] = useState({
+        id: null,
+        name: '',
+        symbol: '',
+        logo: '',
+        quote: { USD: { price: 0, percent_change_1h: 0 } }
+    });
     const [isHovered1, setIsHovered1] = useState(false);
     const [isHovered2, setIsHovered2] = useState(false);
     const [isHovered3, setIsHovered3] = useState(false);
@@ -136,9 +150,7 @@ export default function DummyPage({ title }) {
     const [exchangeRate, setExchangeRate] = useState(1); // Conversion rate (1 USD = 1 PHP initially)
 
 
-
-
-    const coinPrice = selectedCoin ? selectedCoin.quote.USD.price : 0; // Coin price without conversion
+    const coinPrice = selectedCoin?.quote?.USD?.price ?? 0;
 
     const handleEntry = () => {
         const quantity = parseFloat(document.getElementById('quantity').value);
@@ -300,15 +312,38 @@ export default function DummyPage({ title }) {
 
     const handleViewClick = (coin) => {
         setSelectedCoin(coin); // Update the selected coin state
+        
+        // Store the selected coin in sessionStorage to persist the selection
+        sessionStorage.setItem(
+            'selectedCoin',
+            JSON.stringify({
+                id: coin.id,
+                name: coin.name,
+                symbol: coin.symbol,
+                logo: `https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`,
+                price: coin.quote.USD.price,
+                percentChange1h: coin.quote.USD.percent_change_1h,
+                percentChange24h: coin.quote.USD.percent_change_24h,
+                percentChange7d: coin.quote.USD.percent_change_7d,
+                percentChange30d: coin.quote.USD.percent_change_30d,
+            })
+        );
     
+        // Check for an existing investment for this coin
         const existingInvestment = investments.find(inv => inv.id === coin.id);
         setInvestedCoin(existingInvestment || null); // Set the current investment if it exists
-
+    
+        // Set the symbol if found in widgetData
         const match = widgetData.find(item => item.id === coin.id);
         setSymbol(match ? match.symbol : null);
     };
+    
 
     const formatNumberWithCommas = (number) => {
+        // Check if the number is valid
+        if (isNaN(number) || number === null || number === undefined) {
+            return 'N/A';  // Or any other fallback value you want
+        }
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     };
 
@@ -760,47 +795,66 @@ export default function DummyPage({ title }) {
 
                         </div>
                     </div>
-
-                  <div className={styles.rightCard}>
-                    {selectedCoin ? (
+                    <div className={styles.rightCard}>
+                    {selectedCoin.id === null ? (
+                        <div className="flex items-center justify-center h-screen p-8">
+                            <p className="text-center text-lg p-4 rounded">
+                                <RiCoinsFill className={styles.logoLarge2} />
+                                Select a coin to view its details.
+                            </p>
+                        </div>
+                    ) : (
                         <>
                             <div className={styles.upperGroup}>
-                            <img 
-                                src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${selectedCoin.id}.png`} 
-                                alt={`${selectedCoin.name} logo`} 
-                                className={styles.logoLarge} 
-                            />
+                                <img 
+                                    src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${selectedCoin.id}.png`} 
+                                    alt={`${selectedCoin.name} logo`} 
+                                    className={styles.logoLarge} 
+                                />
                                 <div className={styles.leftUpper}>
                                     <h1 className={styles.header4}>${formatNumberWithCommas(coinPrice.toFixed(2))}</h1>
                                     <h1 className={styles.header5}>{selectedCoin.name}</h1>
                                 </div>
                                 <span className={styles.smallRightcard}>
-                                    {selectedCoin.quote.USD.percent_change_1h >= 0 ? (
+                                    {selectedCoin?.quote?.USD?.percent_change_1h >= 0 ? (
                                         <IoMdTrendingUp className={styles.trendingUp} />
                                     ) : (
                                         <IoMdTrendingDown className={styles.trendingDown} />
                                     )}
-                                    <span className={{
-                                        color: selectedCoin.quote.USD.percent_change_1h >= 0 ? 'green' : 'red'
-                                    }}>
-                                        {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
+                                    <span 
+                                        style={{
+                                            color: selectedCoin?.quote?.USD?.percent_change_1h >= 0 ? 'green' : 'red'
+                                        }}
+                                    >
+                                        {selectedCoin?.quote?.USD?.percent_change_1h?.toFixed(2) ?? 'N/A'}%
                                     </span>
                                 </span>
                             </div>
 
+                            {/* Ensure the widget is shown only when symbol is set */}
                             <div className={styles.widgetContainer}>
-                                {symbol && <TradingViewWidget className={styles.widget1} symbol={symbol} />}
+                                {selectedCoin.id !== null && selectedCoin.symbol && (
+                                    <TradingViewWidget className={styles.widget1} symbol={selectedCoin.symbol} />
+                                )}
                             </div>
 
                             <div className={styles.middleGroup}>    
                                 <div className={styles.flexContainer}>
                                     <span className={styles.dataGroup}>
                                         <h3 className={styles.header7}>Market Cap</h3>
-                                        <h1 className={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.market_cap / 1e12).toFixed(2))} T</h1>
+                                        <h1 className={styles.header8}>
+                                            {selectedCoin?.quote?.USD?.market_cap
+                                                ? `${formatNumberWithCommas((selectedCoin.quote.USD.market_cap / 1e12).toFixed(2))} T`
+                                                : 'N/A'}
+                                        </h1>
                                     </span>
                                     <span className={styles.dataGroup}>
                                         <h3 className={styles.header7}>24h Volume</h3>
-                                        <h1 className={styles.header8}>{formatNumberWithCommas((selectedCoin.quote.USD.volume_24h * 56).toFixed(2))}</h1>
+                                        <h1 className={styles.header8}>
+                                            {selectedCoin?.quote?.USD?.volume_24h
+                                                ? `${formatNumberWithCommas((selectedCoin.quote.USD.volume_24h / 1e12).toFixed(2))} T`
+                                                : 'N/A'}
+                                        </h1>
                                     </span>
                                     <span className={styles.dataGroup}>
                                         <h3 className={styles.header7}>Circulating Supply</h3>
@@ -823,22 +877,16 @@ export default function DummyPage({ title }) {
                                 </div>
                                 <br />
                             </div>
+
                             <div className={styles.cardButtonGroup}>
-                                    <button className={styles.Button2} onClick={handleEntry}>
-                                        Enter
-                                    </button>
-                                    <button className={styles.Button3} onClick={() => openSpecificModal('modal2')}>
-                                        Exit
-                                    </button>
+                                <button className={styles.Button2} onClick={handleEntry}>
+                                    Enter
+                                </button>
+                                <button className={styles.Button3} onClick={() => openSpecificModal('modal2')}>
+                                    Exit
+                                </button>
                             </div>
                         </>
-                    ) : (
-                        <div className="flex items-center justify-center h-screen p-8 ">
-                            <p className="text-center text-lg p-4 rounded">
-                                <RiCoinsFill className={styles.logoLarge2}/>
-                                Select a coin to view its details.
-                            </p>
-                        </div>
                     )}
                 </div>
                 </div>

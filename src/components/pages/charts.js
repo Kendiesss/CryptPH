@@ -84,7 +84,6 @@ export default function DummyPage({ title }) {
                 
                 prevPriceRef.current = newPrice;
                 setSelectedCoin(data[selectedCoinId]);
-                // setSelectedCoin(data[selectedCoinId]); // Keep the selected coin updated
             }
 
         } catch (error) {
@@ -106,34 +105,38 @@ export default function DummyPage({ title }) {
 
 
     useEffect(() => {
-        // Load the TradingView chart when the component mounts
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/tv.js';
-        script.async = true;
-        script.onload = () => {
-            new TradingView.widget({
-                "autosize": true,
-                "symbol": "BINANCE:BTCUSDT", // Adjust the crypto pair as necessary
-                "interval": "D", // Daily interval
-                "timezone": "Etc/UTC",
-                "theme": "dark",
-                "style": "1", // Candlestick chart
-                "locale": "en",
-                "toolbar_bg": "#f1f3f6",
-                "enable_publishing": false,
-                "hide_side_toolbar": false,
-                "hide_top_toolbar": false,
-                "withdateranges": true,
-                "allow_symbol_change": true,
-                "container_id": "tradingview_advanced"
-            });
-        };
-        document.body.appendChild(script);
-        return () => {
-            // Cleanup script when component unmounts
-            document.body.removeChild(script);
-        };
-    }, []);
+        if (selectedCoin) {
+            // Load the TradingView chart when the component mounts
+            const script = document.createElement('script');
+            script.src = 'https://s3.tradingview.com/tv.js';
+            script.async = true;
+            script.onload = () => {
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": `BINANCE:${selectedCoin.symbol}USD`, // Dynamically set the symbol based on selected coin
+                    "interval": "D", // Daily interval
+                    "timezone": "Etc/UTC",
+                    "theme": "dark",
+                    "style": "1", // Candlestick chart
+                    "locale": "en",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "hide_side_toolbar": false,
+                    "hide_top_toolbar": false,
+                    "withdateranges": true,
+                    "allow_symbol_change": true,
+                    "container_id": "tradingview_advanced"
+                });
+            };
+            document.body.appendChild(script);
+            
+            return () => {
+                // Cleanup script when component unmounts
+                document.body.removeChild(script);
+            };
+        }
+    }, [selectedCoin]);  // Dependency on selectedCoin to reload chart when coin changes
+    
     
 
 
@@ -143,10 +146,51 @@ export default function DummyPage({ title }) {
 
     const handleCoinSelect = (event) => {
         const selectedId = event.target.value;
-        setSelectedCoinId(selectedId); // Store the selected coin ID
-        const selectedCoin = cryptoData[selectedId];
-        setSelectedCoin(selectedCoin);
+        setSelectedCoinId(selectedId);
+        const selectedCoinData = cryptoData[selectedId];
+        setSelectedCoin(selectedCoinData);
+    
+        // Store the selected coin data in sessionStorage
+        if (selectedCoinData) {
+            sessionStorage.setItem(
+                'selectedCoin',
+                JSON.stringify({
+                    id: selectedId,
+                    name: selectedCoinData.name,
+                    symbol: selectedCoinData.symbol,
+                    logo: `https://s2.coinmarketcap.com/static/img/coins/64x64/${selectedId}.png`,
+                    price: selectedCoinData.quote.USD.price,
+                    percentChange1h: selectedCoinData.quote.USD.percent_change_1h,
+                    percentChange24h: selectedCoinData.quote.USD.percent_change_24h,
+                    percentChange7d: selectedCoinData.quote.USD.percent_change_7d,
+                    percentChange30d: selectedCoinData.quote.USD.percent_change_30d,
+                })
+            );
+        }
     };
+
+    useEffect(() => {
+        // Retrieve the stored coin data from sessionStorage
+        const storedCoinData = sessionStorage.getItem('selectedCoin');
+        if (storedCoinData) {
+            const parsedCoin = JSON.parse(storedCoinData);
+            setSelectedCoinId(parsedCoin.id);
+            setSelectedCoin({
+                ...parsedCoin,
+                quote: {
+                    USD: {
+                        price: parsedCoin.price,
+                        percent_change_1h: parsedCoin.percentChange1h,
+                        percent_change_24h: parsedCoin.percentChange24h,
+                        percent_change_7d: parsedCoin.percentChange7d,
+                        percent_change_30d: parsedCoin.percentChange30d,
+                    }
+                }
+            });
+        }
+    }, []);
+    
+    
     
 
 
@@ -155,48 +199,45 @@ export default function DummyPage({ title }) {
             <div className={styles.pageContainer}>
                 <div className={styles.leftPanel}>
                     <div className={styles.dropDownGroup}>
-                    <select className={styles.dropdown} onChange={handleCoinSelect}>
+                    <select 
+                        className={styles.dropdown} 
+                        onChange={handleCoinSelect} 
+                        value={selectedCoinId || ''}
+                    >
                         <option value="">Select a coin</option>
-                            {Object.keys(cryptoData).map((key) => (
-                                <option key={key} value={key}>
-                                    {cryptoData[key].symbol} - {cryptoData[key].name}
-                                </option>
-                            ))}
-                        </select>
-                        {selectedCoin && (
-                            <div className={styles.cryptoDataGroup}>
-                                <img
-                                    src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${selectedCoinId}.png`}
-                                    alt={selectedCoin.name}
-                                    style={{ maxWidth: "30px", height: "30px", marginRight: "10px" }}
-                                />
-                               <h1
-                                    className={priceChanged ? styles.priceChangeAnimation : ''}
-                                >
-                                    ${selectedCoin.quote.USD.price.toFixed(2)}
-                                </h1>
-                                <h1 
-                                    className={`${styles.cryptoData2} ${
-                                        selectedCoin.quote.USD.percent_change_1h >= 0
-                                            ? styles.positiveChange
-                                            : styles.negativeChange
-                                    }`}
-                                >
-                                    <span className={styles.arrowIcon}>
-                                        {selectedCoin.quote.USD.percent_change_1h >= 0 ? '📈' : '📉'}
-                                    </span>
-                                    {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
-                                </h1>
+                        {Object.keys(cryptoData).map((key) => (
+                            <option key={key} value={key}>
+                                {cryptoData[key].symbol} - {cryptoData[key].name}
+                            </option>
+                        ))}
+                    </select>
+                    {selectedCoin && (
+                        <div className={styles.cryptoDataGroup}>
+                            <img
+                                src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${selectedCoinId}.png`}
+                                alt={selectedCoin.name}
+                                style={{ maxWidth: "30px", height: "30px", marginRight: "10px" }}
+                            />
+                            <h1
+                                className={priceChanged ? styles.priceChangeAnimation : ''}
+                            >
+                                ${selectedCoin.quote.USD.price.toFixed(2)}
+                            </h1>
+                            <h1 
+                                className={`${styles.cryptoData2} ${
+                                    selectedCoin.quote.USD.percent_change_1h >= 0
+                                        ? styles.positiveChange
+                                        : styles.negativeChange
+                                }`}
+                            >
+                                <span className={styles.arrowIcon}>
+                                    {selectedCoin.quote.USD.percent_change_1h >= 0 ? '📈' : '📉'}
+                                </span>
+                                {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
+                            </h1>
                             </div>
                         )}
                     </div>
-                    {/* <h1 className={styles.header1}>Latest News in CryptPH</h1>
-                    <div className={styles.newsCardContainer}>
-                        <div className={styles.newsCard}>
-                            <h1 className={styles.newsHeader}>Lorem ipsum dolor sit amet...</h1>
-                            <p className={styles.p1}>10 days ago</p>
-                        </div>
-                    </div> */}
                 </div>
 
                 <div className={styles.rightPanel}>
