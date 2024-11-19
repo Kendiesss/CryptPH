@@ -103,17 +103,149 @@ export default function DummyPage({ title }) {
         };
     }, [selectedCoinId]); // Change dependency to selectedCoinId
 
-
+    const idToSymbolMap = {
+        "1": "COINBASE:BTCUSD",
+        "2": "CRYPTO:LTCUSD",
+        "52": "CRYPTO:XRPUSD",
+        "74": "COINBASE:DOGEUSD",
+        "512": "COINBASE:XLMUSD",
+        "825": "COINBASE:USDTUSD",
+        "1027": "CRYPTO:ETHUSD",
+        "1518": "COINBASE:MKRUSD",
+        "1697": "COINBASE:BATUSD",
+        "1831": "CRYPTO:BCHUSD",
+        "1839": "BINANCE:BNBUSD",
+        "1958": "TRADENATION:TRONUSD",
+        "1966": "COINBASE:MANAUSD",
+        "1975": "CRYPTO:LINKUSD",
+        "2010": "CRYPTO:ADAUSD",
+        "2011": "BITFINEX:XTZUSD",
+        "2130": "BITSTAMP:ENJUSD",
+        "2280": "CRYPTO:FILUSD",
+        "2586": "BITFINEX:SNXUSD",
+        "2634": "BITFINEX:XDCUS",
+        "2943": "CRYPTO:RPLUSD",
+        "3155": "GEMINI:QNTUSD",
+        "3408": "BITSTAMP:USDCUSD",
+        "3635": "CRYPTO:CROUSD",
+        "3794": "BINANCE:ATOMUSD",
+        "3890": "BITFINEX:MATICUSD",
+        "4030": "CRYPTO:ALGOUSD",
+        "4066": "BITFINEX:CHZUSD",
+        "4642": "CRYPTO:HBARUSD",
+        "4705": "GEMINI:PAXGUSD",
+        "5176": "BITFINEX:XAUTUSD",
+        "5279": "CRYPTO:SOLOUSD",
+        "5426": "CRYPTO:SOLUSD",
+        "5567": "COINBASE:CGLDUSD",
+        "5692": "CRYPTO:COMPUSD",
+        "5805": "CRYPTO:AVAXUSD",
+        "5824": "CRYPTO:SLPUSD",
+        "5994": "CRYPTO:SHIBUS",
+        "6210": "CRYPTO:SANDUSD",
+        "6535": "CRYPTO:NEARUSD",
+        "6636": "BINANCE:DOTUSD",
+        "6758": "COINBASE:SUSHIUSD",
+        "6783": "BINANCE:AXSUSD",
+        "7080": "CRYPTO:GALAUSD",
+        "7083": "CRYPTO:UNIUSD",
+        "7278": "CRYPTO:AAVEUSD",
+        "7429": "CRYPTO:LQTYUSD",
+        "7725": "CRYPTO:TRUUSD",
+        "8000": "COINBASE:LDOUSD",
+        "8766": "CRYPTO:ALICEUSD",
+        "9444": "COINBASE:KNCUSD",
+        "9481": "CRYPTO:PENDLEUSD",
+        "9720": "CRYPTO:LATUSD",
+        "10603": "CRYPTO:IMXUSD",
+        "10688": "CRYPTO:YGGUSD",
+        "10804": "CRYPTO:FLOKIUSD",
+        "10903": "CRYPTO:C98USD",
+        "11212": "KRAKEN:ATLASUSD",
+        "11213": "CRYPTO:POLISUSD",
+        "11419": "CRYPTO:TONUSD",
+        "11840": "COINBASE:OPUSD",
+        "11841": "COINBASE:ARBUSD",
+        "11857": "KRAKEN:GMXUSD",
+        "13383": "BYBIT:CBXUSDT",
+        "14101": "COINBASE:RONINUSD",
+        "14783": "COINBASE:MAGICUSD",
+        "16399": "POLONIEX:COREUMUSDT",
+        "17081": "HTX:FANCUSDT",
+        "17450": "CRYPTO:LOOKSUSD",
+        "18876": "COINBASE:APEUSD",
+        "18895": "CRYPTO:MBXUSD",
+        "20947": "CRYPTO:SUIUSD",
+        "21106": "BINANCE:RDNTUSD",
+        "21259": "COINBASE:ZETAUSD",
+        "21533": "CRYPTO:LISTAUSD",
+        "21916": "GATEIO:ISKUSDT",
+        "22059": "CRYPTO:VENOM2USD",
+        "22765": "MEXC:ALUSDT",
+        "22850": "COINBASE:HONEYUSD",
+        "23095": "COINBASE:BONKUSD",
+        "23121": "CRYPTO:BLURUSD",
+        "23351": "BITGET:CRETAUSDT",
+        "23635": "BINANCE:BNXUSD",
+        "23707": "GATEIO:HXDUSD",
+        "24478": "CRYPTOCAP:PEPE",
+        "24911": "CRYPTO:TURBOUSD",
+        "25028": "CRYPTO:ORDIUSD",
+        "26081": "CRYPTO:FDUSDUSD",
+        "27009": "CRYPTO:UNIBOTUSD",
+        "27565": "CRYPTO:ARKMUSD",
+        "27772": "KRAKEN:PYUSDUSBA",
+        "27872": "CRYPTO:TRUMPMUSD",
+        "28066": "CRYPTO:BANANAGUSD",
+        "28081": "COINEX:SPXUSD",
+        "28299": "BITFINEX:TOKENUSD",
+        "28301": "BINANCE:MEMEUSDT",
+        "28683": "CRYPTO:1000SATSUS",
+        "28752": "CRYPTO:WIFUSD",
+        "28829": "CRYPTO:MAVIAUSD",
+        "28850": "CRYPTO:NOTUSD",
+        "29335": "CRYPTO:PIXELSUSD",
+        "29555": "KRAKEN:PORTALUSD",
+        "29676": "CRYPTO:AEVOUSD",
+        "29743": "CRYPTO:BRETT2USD",
+        "29814": "CRYPTO:ETHFIUSD",
+        "29835": "COINBASE:IOUSD",
+        "29870": "CRYPTO:BOMEUSD",
+        "30096": "CRYPTO:DEGEN4USD",
+        "30126": "CRYPTO:MEWUSD",
+        "30171": "CRYPTO:ENAUSD",
+        "30315": "CRYPTO:OMNINUSD",
+        "30449": "CRYPTO:TNSRUSD",
+        "30494": "CRYPTO:EIGENUSD",
+        "30843": "CRYPTO:REZUSD",
+        "30933": "MEXC:DOGUSDT",
+        "30969": "OKX:RUNECOINUSDT",
+        "31165": "GATEIO:MCGUSDT",
+        "31234": "GATEIO:HRTUSDT",
+        "31510": "CRYPTO:MOTHERUSD",
+        "31668": "COINEX:BDCUSDT",
+        "31683": "KRAKEN:AIRUSD",
+        "31704": "COINBASE:PIRATEUSD",
+        "32195": "CRYPTO:HMSTRUSD",
+        "32521": "CRYPTO:NEIRO3USD",
+        "32698": "CRYPTO:DOGS2USD",
+        "32717": "CRYPTO:SUNDOGUSD",
+        "32724": "GATEIO:CATUSDT",
+        "32984": "KUCOIN:UNIOUSDT",
+        "33093": "CRYPTO:MOODENGUSD",
+        "33440": "CRYPTO:GOATSEUSD",
+        "33570": "COINEX:GNONUSDT"
+    };
+    
     useEffect(() => {
         if (selectedCoin) {
-            // Load the TradingView chart when the component mounts
             const script = document.createElement('script');
             script.src = 'https://s3.tradingview.com/tv.js';
             script.async = true;
             script.onload = () => {
                 new TradingView.widget({
                     "autosize": true,
-                    "symbol": `BINANCE:${selectedCoin.symbol}USD`, // Dynamically set the symbol based on selected coin
+                    "symbol": idToSymbolMap[selectedCoinId], // Dynamically set the symbol based on selected coin ID
                     "interval": "D", // Daily interval
                     "timezone": "Etc/UTC",
                     "theme": "dark",
@@ -147,6 +279,7 @@ export default function DummyPage({ title }) {
     const handleCoinSelect = (event) => {
         const selectedId = event.target.value;
         setSelectedCoinId(selectedId);
+    
         const selectedCoinData = cryptoData[selectedId];
         setSelectedCoin(selectedCoinData);
     
@@ -157,7 +290,7 @@ export default function DummyPage({ title }) {
                 JSON.stringify({
                     id: selectedId,
                     name: selectedCoinData.name,
-                    symbol: selectedCoinData.symbol,
+                    symbol: idToSymbolMap[selectedId], // Use the map to get the symbol
                     logo: `https://s2.coinmarketcap.com/static/img/coins/64x64/${selectedId}.png`,
                     price: selectedCoinData.quote.USD.price,
                     percentChange1h: selectedCoinData.quote.USD.percent_change_1h,
@@ -168,6 +301,7 @@ export default function DummyPage({ title }) {
             );
         }
     };
+    
 
     useEffect(() => {
         // Retrieve the stored coin data from sessionStorage
