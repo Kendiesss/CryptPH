@@ -5,20 +5,20 @@ import learn from '@/img/learn.png';
 import { FaPlay } from "react-icons/fa";
 import gradient1 from '@/img/gradient-1.png';
 import gradient2 from '@/img/gradient-2half.png';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
+import styles from '@/styles/learn.module.css'; 
+import { ClipLoader } from 'react-spinners';
 import Link from 'next/link';
-import styles from '@/styles/learn.module.css'; // Importing the CSS module
 
 const Card = ({ image, title, description }) => {
     const [isHovered, setIsHovered] = useState(false);
 
-   const stripHtmlAndTruncate = (str = "", length = 200) => {
-    if (!str) return "";  // Return an empty string if str is undefined or null
-    const cleanString = str.replace(/<\/?[^>]+(>|$)/g, ""); // Removes HTML tags
-    if (cleanString.length <= length) return cleanString;
-    return cleanString.substring(0, length) + "..."; // Truncates and adds ellipsis
-};
-
+    const stripHtmlAndTruncate = (str = "", length = 200) => {
+        if (!str) return "";  // Return an empty string if str is undefined or null
+        const cleanString = str.replace(/<\/?[^>]+(>|$)/g, ""); // Removes HTML tags
+        if (cleanString.length <= length) return cleanString;
+        return cleanString.substring(0, length) + "..."; // Truncates and adds ellipsis
+    };
 
     return (
         <div
@@ -42,7 +42,16 @@ const Card = ({ image, title, description }) => {
 
 export default function HeroPage() {
     const [newsItems, setNewsItems] = useState([]);
-    const [showAll, setShowAll] = useState(false); // New state to control "See all" functionality
+    const [showAll, setShowAll] = useState(false); 
+    const [loading, setLoading] = useState(true);  
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);  
+        }, 2000); //FALSE DELAY
+
+        return () => clearTimeout(timer);
+    }, []);
 
     useEffect(() => {
         const fetchNews = async () => {
@@ -58,12 +67,10 @@ export default function HeroPage() {
         fetchNews();
     }, []);
 
-    const displayedItems = showAll ? newsItems : newsItems.slice(0, 8); // Show only a limited number unless "See all" is clicked
-   
+    const displayedItems = showAll ? newsItems : newsItems.slice(0, 4); 
 
     return (
         <Layout pageTitle="Learn">
-            <Head></Head>
             <div className={styles.pageContainer}>
                 <div className={styles.mainContainer}>
                     <div className={styles.heroContainer}>
@@ -79,33 +86,41 @@ export default function HeroPage() {
                     <div className={styles.gradient2} style={{ backgroundImage: `url(${gradient2.src})` }}></div>
 
                     <div className={styles.coursesContainer}>
-                        <div className={styles.coursesHeader}>
-                            <h1 className={styles.sectionTitle}>Popular Articles</h1>
-                            <h1 
-                                className={styles.sectionText} 
-                                onClick={() => setShowAll(!showAll)} 
+                    <div className={styles.coursesHeader}>
+                        <h1 className={styles.sectionTitle}>Popular Articles</h1>
+                        {/*SPINNER WHEN CONTENT LOADS*/}
+                        {!loading && (
+                            <h1
+                                className={styles.sectionText}
+                                onClick={() => setShowAll(!showAll)}
                                 style={{ cursor: 'pointer' }}
                             >
                                 {showAll ? 'Show less' : 'See all'} <span className={styles.arrow}>→</span>
                             </h1>
-                        </div>
-
+                        )}
+                    </div>
                         <div className={styles.cardGrid}>
-                        {displayedItems.length > 0 ? (
-                                displayedItems.map((newsItem) => (
-                                    <Link key={newsItem._id} href={`/educational/${newsItem._id}`} passHref>
-                                        <div className={styles.cardWrapper}>
-                                            <Card
-                                                image={newsItem.image}
-                                                title={newsItem.title}
-                                                description={newsItem.description}
-                                            />
-                                        </div>
-                                    </Link>
-                                ))
-                            ) : (
-                                <p>Loading articles...</p>
-                            )}
+                        {loading ? (
+                        <div className={styles.spinnerWrapper}>
+                            <ClipLoader size={50} color="#3498db" loading={loading} />
+                        </div>
+                    ) : (
+                        displayedItems.length > 0 ? (
+                            displayedItems.map((newsItem) => (
+                                <Link key={newsItem._id} href={`/educational/${newsItem._id}`} passHref>
+                                    <div className={styles.cardWrapper}>
+                                        <Card
+                                            image={newsItem.image}
+                                            title={newsItem.title}
+                                            description={newsItem.description}
+                                        />
+                                    </div>
+                                </Link>
+                            ))
+                        ) : (
+                            <p>No articles available at the moment.</p>
+                        )
+                    )}
                         </div>
                     </div>
                 </div>
