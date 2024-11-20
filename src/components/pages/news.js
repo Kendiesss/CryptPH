@@ -8,12 +8,16 @@ import Link from 'next/link';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
 import styles from '@/styles/news.module.css'; // Import the CSS module
 
-// Card component for individual news items
+
+const truncate = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+};
+
 const Card = ({ image, title, date }) => (
     <div className={styles.newsCardSmall}>
         <img src={image} className={styles.image2} alt={title} />
         <div className={styles.headlineGrp}>
-            <h1 className={styles.headlineSmall}>{title}</h1>
+            <h1 className={styles.headlineSmall}>{truncate(title, 50)}</h1>
             <h1 className={styles.datePublished}>
                 <span className={styles.iconWrapper}><FaClock className={styles.icon2} /></span>
                 {formatDate(date)}
@@ -45,8 +49,11 @@ export default function DummyPage({ title }) {
         fetchNews();
     }, []); 
 
+
+    
+
      // Limit the carousel to the top 5 news items
-     const topNewsItems = newsItems.slice(0, 5); // Show only the first 5 items in the carousel
+    const topNewsItems = newsItems.slice(0, 5); // Show only the first 5 items in the carousel
     const displayedItems = showAll ? newsItems : newsItems.slice(0, 12); //Show 12 news items at startup
 
     return (

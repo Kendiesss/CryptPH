@@ -151,7 +151,7 @@
     font-family: 'Sora';
     font-weight: 700;
     font-size: 22px;
-    text-align: center;
+    text-align: left;
 }
 
 .datePublished {
@@ -165,6 +165,8 @@
     border-radius: 30px;
     color: #0B162B;
     padding: 10px;
+    margin-left: 20px;
+    min-width: 140px;
 }
 
 .icon2 {

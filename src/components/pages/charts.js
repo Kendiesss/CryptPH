@@ -267,7 +267,7 @@ export default function DummyPage({ title }) {
                 document.body.removeChild(script);
             };
         }
-    }, [selectedCoin]);  // Dependency on selectedCoin to reload chart when coin changes
+    }, [selectedCoin]);  
     
     
 
