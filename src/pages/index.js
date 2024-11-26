@@ -5,7 +5,6 @@ import Footer from './Footer';
 import Header from './Header';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { SlSpeedometer } from 'react-icons/sl';
 
 
 export default function HomePage() {

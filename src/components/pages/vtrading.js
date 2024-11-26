@@ -171,7 +171,7 @@ export default function DummyPage({ title }) {
                 name: selectedCoin.name,
                 symbol: selectedCoin.symbol,
                 logo: selectedCoin.logo,
-                pricePHP: currentPrice * 56,       // Convert to PHP
+                pricePHP: currentPrice,  // Convert to PHP
                 quantity: quantity,
                 totalCost: investmentAmount,
                 averagePrice: currentPrice,
@@ -582,7 +582,7 @@ export default function DummyPage({ title }) {
                             <h1 className={styles.header1}>Available Dummy Cash</h1>
                             
                                 <h1 className={styles.header2}>
-                                    {new Intl.NumberFormat('en-US', { className: 'currency', currency: 'USD' }).format(dummyCash)}
+                                    ${new Intl.NumberFormat('en-US', { className: 'currency', currency: 'USD' }).format(dummyCash)}
                                 </h1>
                                
                          </div>
@@ -645,7 +645,7 @@ export default function DummyPage({ title }) {
                                                 className={styles.coinPlaceHolder} 
                                             />
                                             <div className={styles.priceGroup}>
-                                                <h1 className={styles.header2}>₱{investment.pricePHP.toFixed(2)}</h1>
+                                                <h1 className={styles.header2}>${investment.pricePHP.toFixed(2)}</h1>
                                                 <h1 className={styles.header1}>Current Price (PHP)</h1>
                                             </div>
                                             <div className={styles.priceGroup}>
@@ -683,9 +683,9 @@ export default function DummyPage({ title }) {
                                         <tbody>
                                         {currentItems.map((id) => {
                                             const coin = cryptoData[id];
-                                            const pricePHP = formatNumberWithCommas((coin.quote.USD.price * 56).toFixed(2)); // Adjust multiplier as needed
+                                            const pricePHP = formatNumberWithCommas((coin.quote.USD.price).toFixed(2)); // Adjust multiplier as needed
                                             const marketCapT = formatNumberWithCommas((coin.quote.USD.market_cap / 1e12).toFixed(2)); // Convert to trillions
-                                            const volume24hPHP = formatNumberWithCommas((coin.quote.USD.volume_24h * 56).toFixed(2));
+                                            const volume24hPHP = formatNumberWithCommas((coin.quote.USD.volume_24h).toFixed(2));
 
                                             return (
                                             <tr key={id}>
@@ -698,7 +698,7 @@ export default function DummyPage({ title }) {
                                                     />
                                                 </td>
                                                 <td className={styles.tableCell}>{coin.symbol}</td>
-                                                <td className={styles.tableCell}>₱{pricePHP}</td>
+                                                <td className={styles.tableCell}>${pricePHP}</td>
                                                 <td className={styles.tableCell}>
                                                     <span className={coin.quote.USD.percent_change_1h < 0 ? styles.changeNegative : styles.changePositive}>
                                                         {coin.quote.USD.percent_change_1h.toFixed(2)}%
@@ -751,8 +751,8 @@ export default function DummyPage({ title }) {
                                                         <th className={styles.tableHeader}>Coin Name</th>
                                                         <th className={styles.tableHeader}>Symbol</th>
                                                         <th className={styles.tableHeader}>Quantity</th>
-                                                        <th className={styles.tableHeader}>Price at Entry (PHP)</th>
-                                                        <th className={styles.tableHeader}>Price at Exit (PHP)</th>
+                                                        <th className={styles.tableHeader}>Price at Entry (USD)</th>
+                                                        <th className={styles.tableHeader}>Price at Exit (USD)</th>
                                                         <th className={styles.tableHeader}>% Profit</th>
                                                         <th className={styles.tableHeader}>Date</th>
                                                     </tr>

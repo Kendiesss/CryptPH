@@ -51,8 +51,22 @@ const faqs = [
 export default function DummyPage({ title }) {
     const [openFaq, setOpenFaq] = useState(null);
     const [cryptoData, setCryptoData] = useState([]);
-    const [selectedCoin, setSelectedCoin] = useState(null);
-    const [selectedCoinId, setSelectedCoinId] = useState(null); // Declare selectedCoinId here
+    const [selectedCoinId, setSelectedCoinId] = useState("1"); // Default to BTCUSD (ID: 1)
+    const [selectedCoin, setSelectedCoin] = useState({
+        id: "1",
+        name: "Bitcoin",
+        symbol: "BTC",
+        quote: {
+            USD: {
+                price: 0,
+                percent_change_1h: 0,
+                percent_change_24h: 0,
+                percent_change_7d: 0,
+                percent_change_30d: 0,
+            },
+        },
+    });
+
     const [error, setError] = useState(null);
     const [priceChanged, setPriceChanged] = useState(false);
     
@@ -71,25 +85,29 @@ export default function DummyPage({ title }) {
             const data = await response.json();
             setCryptoData(data);
             setError(null);
-
-            // Check if the previously selected coin is still available
-            if (selectedCoinId && data[selectedCoinId]) {
+    
+            // Set selectedCoin to BTCUSD if no coin is already selected
+            if (!selectedCoinId) {
+                const btcData = data["1"]; // BTCUSD data
+                setSelectedCoinId("1");
+                setSelectedCoin(btcData);
+            } else if (data[selectedCoinId]) {
                 const newPrice = data[selectedCoinId].quote.USD.price;
                 const prevPrice = prevPriceRef.current;
-
+    
                 if (prevPrice !== undefined && newPrice !== prevPrice) {
                     setPriceChanged(true);
                     setTimeout(() => setPriceChanged(false), 3000);
                 }
-                
+    
                 prevPriceRef.current = newPrice;
                 setSelectedCoin(data[selectedCoinId]);
             }
-
         } catch (error) {
             setError(error.message);
         }
     };
+    
 
     useEffect(() => {
         fetchData(); // Fetch data on component mount
@@ -236,6 +254,8 @@ export default function DummyPage({ title }) {
         "33440": "CRYPTO:GOATSEUSD",
         "33570": "COINEX:GNONUSDT"
     };
+
+    
     
     useEffect(() => {
         if (selectedCoin) {
