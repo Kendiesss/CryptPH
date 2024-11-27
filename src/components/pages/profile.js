@@ -5,10 +5,10 @@ import { FaUser } from "react-icons/fa";
 import React, { useState, useEffect } from 'react';
 import styles from '@/styles/profile.module.css';  // Import the CSS module
 import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import jwt from 'jsonwebtoken';// Correct import
 
 const EditProfileModal = ({ show, onClose, onSave }) => {
-
 
     const [userName, setUserName] = useState('');
     const [passwd, setpasswd] = useState('');
@@ -26,6 +26,7 @@ const EditProfileModal = ({ show, onClose, onSave }) => {
 
 export default function DummyPage({ title }) {
 
+    const router = useRouter();
     const [isHovered1, setIsHovered1] = useState(false);
     const [isHovered2, setIsHovered2] = useState(false);
     const { data: session } = useSession();
@@ -46,10 +47,8 @@ export default function DummyPage({ title }) {
 
 
       const forgotpwd = () => {
-
-    };
-
-    
+        router.push('/forgotpassword'); // Redirect to /reset-password
+        };
 
     return (
         <Layout pageTitle={title}>
@@ -83,14 +82,6 @@ export default function DummyPage({ title }) {
                             onClick={forgotpwd}
                         >
                             Reset Password
-                        </button>
-
-                        <button
-                            className={isHovered2 ? `${styles.button1} ${styles.button1Hover}` : styles.button1}
-                            onMouseEnter={() => setIsHovered2(true)}
-                            onMouseLeave={() => setIsHovered2(false)}
-                        >
-                            Report Bugs
                         </button>
                     </div>
                 </div>
