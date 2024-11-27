@@ -380,13 +380,72 @@ export default function DummyPage({ title }) {
                     <div id="tradingview_advanced" className={styles.tradingViewWidget}></div>
 
                     <div className={styles.historicalDataContainer}>
-                        {selectedCoin && (
-                            <>
-                                {/* Historical data cards */}
-                                {/* Render historical data as before */}
-                            </>
-                        )}
-                    </div>
+    {selectedCoin && (
+        <>
+            <div className={styles.hdataCard}>
+                <h1 className={styles.header3}>1h</h1>
+                <h1
+                    className={`${styles.cryptoData2} ${
+                        selectedCoin.quote.USD.percent_change_1h >= 0
+                            ? styles.positiveChange
+                            : styles.negativeChange
+                    }`}
+                >
+                    <span className={styles.arrowIcon}>
+                        {selectedCoin.quote.USD.percent_change_1h >= 0 ? '📈' : '📉'}
+                    </span>
+                    {selectedCoin.quote.USD.percent_change_1h.toFixed(2)}%
+                </h1>
+            </div>
+            <div className={styles.hdataCard}>
+                <h1 className={styles.header3}>24h</h1>
+                <h1
+                    className={`${styles.cryptoData2} ${
+                        selectedCoin.quote.USD.percent_change_24h >= 0
+                            ? styles.positiveChange
+                            : styles.negativeChange
+                    }`}
+                >
+                    <span className={styles.arrowIcon}>
+                        {selectedCoin.quote.USD.percent_change_24h >= 0 ? '📈' : '📉'}
+                    </span>
+                    {selectedCoin.quote.USD.percent_change_24h.toFixed(2)}%
+                </h1>
+            </div>
+            <div className={styles.hdataCard}>
+                <h1 className={styles.header3}>7d</h1>
+                <h1
+                    className={`${styles.cryptoData2} ${
+                        selectedCoin.quote.USD.percent_change_7d >= 0
+                            ? styles.positiveChange
+                            : styles.negativeChange
+                    }`}
+                >
+                    <span className={styles.arrowIcon}>
+                        {selectedCoin.quote.USD.percent_change_7d >= 0 ? '📈' : '📉'}
+                    </span>
+                    {selectedCoin.quote.USD.percent_change_7d.toFixed(2)}%
+                </h1>
+            </div>
+            <div className={styles.hdataCard}>
+                <h1 className={styles.header3}>30d</h1>
+                <h1
+                    className={`${styles.cryptoData2} ${
+                        selectedCoin.quote.USD.percent_change_30d >= 0
+                            ? styles.positiveChange
+                            : styles.negativeChange
+                    }`}
+                >
+                    <span className={styles.arrowIcon}>
+                        {selectedCoin.quote.USD.percent_change_30d >= 0 ? '📈' : '📉'}
+                    </span>
+                    {selectedCoin.quote.USD.percent_change_30d.toFixed(2)}%
+                </h1>
+            </div>
+        </>
+    )}
+</div>
+
 
                     {/* FAQ Section */}
                     <div className={styles.faqSection}>
