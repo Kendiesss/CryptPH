@@ -158,7 +158,7 @@ export default function DummyPage({ title }) {
         const investmentAmount = quantity * currentPrice;
     
         if (quantity > 0 && investmentAmount <= dummyCash) {
-
+    
             const updatedDummyCash = dummyCash - investmentAmount;
             setDummyCash(updatedDummyCash);
             setInvestment(investment + investmentAmount);
@@ -179,16 +179,15 @@ export default function DummyPage({ title }) {
             };
     
             // Add the new investment to the list and track as the current investment
-            const updatedInvestments = ([...investments, newInvestment]);
+            const updatedInvestments = [...investments, newInvestment];
             setInvestments(updatedInvestments);
             setInvestedCoin(newInvestment); // Track the current investment
-
-            // Save investments to localStorage
+    
+            // Save investments to sessionStorage
             sessionStorage.setItem('dummyCash', JSON.stringify(updatedDummyCash));
             sessionStorage.setItem('investments', JSON.stringify(updatedInvestments));
-
+    
             setIsBuyModalOpen(true);
-            // alert(`Successfully invested $${investmentAmount.toFixed(2)} in ${selectedCoin.name}!`);
         } else if (quantity <= 0) {
             alert('Please enter a valid quantity greater than 0.');
         } else {
@@ -196,15 +195,14 @@ export default function DummyPage({ title }) {
             setIsErrorModalOpen(true);
         }
     };
-
-
+    
     const handleExit = () => {
         if (investedCoin) {
             const currentValue = investedCoin.quantity * coinPrice;
             const profitOrLoss = currentValue - investedCoin.totalCost;
             const profitPercent = ((currentValue - investedCoin.totalCost) / investedCoin.totalCost) * 100;
     
-            // Add to order history
+            // Create the exited investment object
             const exitedInvestment = {
                 coinName: investedCoin.coinName,
                 symbol: investedCoin.symbol,
@@ -216,56 +214,58 @@ export default function DummyPage({ title }) {
                 coinId: investedCoin.id,
             };
     
-            setOrderHistory((prevHistory) => [...prevHistory, exitedInvestment]);
+            // Update the orderHistory state
+            setOrderHistory((prevHistory) => {
+                const updatedHistory = [...prevHistory, exitedInvestment];
+                sessionStorage.setItem('orderHistory', JSON.stringify(updatedHistory)); // Save updated history
+                return updatedHistory;
+            });
     
             // Update dummy cash balance
             const newDummyCash = dummyCash + currentValue;
             setDummyCash(newDummyCash);
-    
-            // Save the new dummy cash balance to sessionStorage
-            sessionStorage.setItem('dummyCash', JSON.stringify(newDummyCash));
-    
-            // Show exit alert (integrated into the modal)
-            setIsSellModalOpen(true);
+            sessionStorage.setItem('dummyCash', JSON.stringify(newDummyCash)); // Save updated cash balance
     
             // Remove the exited investment from the investments array
             const updatedInvestments = investments.filter((inv) => inv.id !== investedCoin.id);
             setInvestments(updatedInvestments);
-    
-            // Save the updated investments list to sessionStorage
-            sessionStorage.setItem('investments', JSON.stringify(updatedInvestments));
+            sessionStorage.setItem('investments', JSON.stringify(updatedInvestments)); // Save updated investments
     
             // Reset the invested coin state
             setInvestedCoin(null);
     
-            // Close the modal after exiting (optional)
-            closeModal();
+            // Open appropriate modals or handle endgame logic
+            setIsSellModalOpen(true); // Show exit alert modal
+            closeModal(); // Close active modal
     
-            // Check if the new dummy cash is zero or less, open the lose modal if true
             if (newDummyCash <= 0) {
-                openLoseModal(); // Show the lose modal
+                openLoseModal(); // Show lose modal
             }
         } else {
-            // If no investment is active, close the modal and open the investment modal
-            setIsInvestmentModalOpen(true);
+            setIsInvestmentModalOpen(true); // If no active investment
             closeModal();
         }
     };
     
+    // Load investments, orderHistory, and dummyCash from sessionStorage on page load
+    useEffect(() => {
+        const savedInvestments = sessionStorage.getItem('investments');
+        const savedDummyCash = sessionStorage.getItem('dummyCash');
+        const savedOrderHistory = sessionStorage.getItem('orderHistory');
     
-        // Load investments and dummyCash from localStorage on page load
-        useEffect(() => {
-            const savedInvestments = sessionStorage.getItem('investments');
-            const savedDummyCash = sessionStorage.getItem('dummyCash');
-            
-            if (savedInvestments) {
-                setInvestments(JSON.parse(savedInvestments)); // Restore the investments
-            }
-
-            if (savedDummyCash) {
-                setDummyCash(JSON.parse(savedDummyCash)); // Restore dummyCash
-            }
-        }, []);
+        if (savedInvestments) {
+            setInvestments(JSON.parse(savedInvestments)); // Restore the investments
+        }
+    
+        if (savedDummyCash) {
+            setDummyCash(JSON.parse(savedDummyCash)); // Restore dummyCash
+        }
+    
+        if (savedOrderHistory) {
+            setOrderHistory(JSON.parse(savedOrderHistory)); // Restore the order history
+        }
+    
+    }, []);
 
 
           const confirmRestart = () => {
