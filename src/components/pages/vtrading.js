@@ -40,7 +40,7 @@ export default function DummyPage({ title }) {
 
 
     useEffect(() => {
-        const storedCoinData = sessionStorage.getItem('selectedCoin');
+        const storedCoinData = localStorage.getItem('selectedCoin');
         if (storedCoinData) {
             setSelectedCoin(JSON.parse(storedCoinData));
         }
@@ -183,9 +183,9 @@ export default function DummyPage({ title }) {
             setInvestments(updatedInvestments);
             setInvestedCoin(newInvestment); // Track the current investment
     
-            // Save investments to sessionStorage
-            sessionStorage.setItem('dummyCash', JSON.stringify(updatedDummyCash));
-            sessionStorage.setItem('investments', JSON.stringify(updatedInvestments));
+            // Save investments to localStorage
+            localStorage.setItem('dummyCash', JSON.stringify(updatedDummyCash));
+            localStorage.setItem('investments', JSON.stringify(updatedInvestments));
     
             setIsBuyModalOpen(true);
         } else if (quantity <= 0) {
@@ -217,19 +217,19 @@ export default function DummyPage({ title }) {
             // Update the orderHistory state
             setOrderHistory((prevHistory) => {
                 const updatedHistory = [...prevHistory, exitedInvestment];
-                sessionStorage.setItem('orderHistory', JSON.stringify(updatedHistory)); // Save updated history
+                localStorage.setItem('orderHistory', JSON.stringify(updatedHistory)); // Save updated history
                 return updatedHistory;
             });
     
             // Update dummy cash balance
             const newDummyCash = dummyCash + currentValue;
             setDummyCash(newDummyCash);
-            sessionStorage.setItem('dummyCash', JSON.stringify(newDummyCash)); // Save updated cash balance
+            localStorage.setItem('dummyCash', JSON.stringify(newDummyCash)); // Save updated cash balance
     
             // Remove the exited investment from the investments array
             const updatedInvestments = investments.filter((inv) => inv.id !== investedCoin.id);
             setInvestments(updatedInvestments);
-            sessionStorage.setItem('investments', JSON.stringify(updatedInvestments)); // Save updated investments
+            localStorage.setItem('investments', JSON.stringify(updatedInvestments)); // Save updated investments
     
             // Reset the invested coin state
             setInvestedCoin(null);
@@ -247,25 +247,24 @@ export default function DummyPage({ title }) {
         }
     };
     
-    // Load investments, orderHistory, and dummyCash from sessionStorage on page load
+    // Load investments, orderHistory, and dummyCash from localStorage on page load
     useEffect(() => {
-        const savedInvestments = sessionStorage.getItem('investments');
-        const savedDummyCash = sessionStorage.getItem('dummyCash');
-        const savedOrderHistory = sessionStorage.getItem('orderHistory');
+        // Load from localStorage instead of localStorage
+        const savedInvestments = localStorage.getItem('investments');
+        const savedDummyCash = localStorage.getItem('dummyCash');
+        const savedOrderHistory = localStorage.getItem('orderHistory');
     
         if (savedInvestments) {
             setInvestments(JSON.parse(savedInvestments)); // Restore the investments
         }
-    
         if (savedDummyCash) {
             setDummyCash(JSON.parse(savedDummyCash)); // Restore dummyCash
         }
-    
         if (savedOrderHistory) {
             setOrderHistory(JSON.parse(savedOrderHistory)); // Restore the order history
         }
-    
     }, []);
+    
 
 
           const confirmRestart = () => {
@@ -313,8 +312,8 @@ export default function DummyPage({ title }) {
     const handleViewClick = (coin) => {
         setSelectedCoin(coin); // Update the selected coin state
         
-        // Store the selected coin in sessionStorage to persist the selection
-        sessionStorage.setItem(
+        // Store the selected coin in localStorage to persist the selection
+        localStorage.setItem(
             'selectedCoin',
             JSON.stringify({
                 id: coin.id,

@@ -80,7 +80,11 @@ export default function Sidebar() {
      // Handle logout
      const handleLogout = () => {
         localStorage.removeItem('token');
-        setUser(null); // Clear user info
+        sessionStorage.removeItem('user'); // Clear user-related session data
+    
+        setUser(null); 
+    
+    
         signOut({ callbackUrl: '/' }); // Redirect to home page after logout
     };
 
