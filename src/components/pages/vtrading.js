@@ -646,10 +646,10 @@ export default function DummyPage({ title }) {
                                             />
                                             <div className={styles.priceGroup}>
                                                 <h1 className={styles.header2}>${investment.pricePHP.toFixed(2)}</h1>
-                                                <h1 className={styles.header1}>Current Price (PHP)</h1>
+                                                <h1 className={styles.header1}>Current Price</h1>
                                             </div>
                                             <div className={styles.priceGroup}>
-                                                <h1 className={styles.header2}>{investment.totalCost.toFixed(2)}</h1>
+                                                <h1 className={styles.header2}>${investment.totalCost.toFixed(2)}</h1>
                                                 <h1 className={styles.header1}>Total Cost</h1>
                                             </div>
                                             <div className={styles.profitGroup}>
@@ -671,7 +671,7 @@ export default function DummyPage({ title }) {
                                         <tr>
                                             <th className={styles.tableHeader}>Coin Name</th>
                                             <th className={styles.tableHeader}>Symbol</th>
-                                            <th className={styles.tableHeader}>Price (PHP)</th>
+                                            <th className={styles.tableHeader}>Price</th>
                                             <th className={styles.tableHeader}>1h Change (%)</th>
                                             <th className={styles.tableHeader}>24h Change (%)</th>
                                             <th className={styles.tableHeader}>7d Change (%)</th>
@@ -714,8 +714,8 @@ export default function DummyPage({ title }) {
                                                         {coin.quote.USD.percent_change_7d.toFixed(2)}%
                                                     </span>
                                                 </td>
-                                                <td className={styles.tableCell}>₱{volume24hPHP}</td>
-                                                <td className={styles.tableCell}>₱{marketCapT} T</td>
+                                                <td className={styles.tableCell}>${volume24hPHP}</td>
+                                                <td className={styles.tableCell}>${marketCapT} T</td>
 
                                                 <td className={styles.tableCell}>
                                                 <button className={styles.button4} onClick={() => handleViewClick(coin)}>SELECT</button>
@@ -770,8 +770,8 @@ export default function DummyPage({ title }) {
                                                             </td>
                                                             <td className={styles.tableCell}>{order.symbol}</td>
                                                             <td className={styles.tableCell}>{order.quantity}</td>
-                                                            <td className={styles.tableCell}>₱{formatNumberWithCommas(order.priceAtEntry.toFixed(2))}</td>
-                                                            <td className={styles.tableCell}>₱{formatNumberWithCommas(order.priceAtExit.toFixed(2))}</td>
+                                                            <td className={styles.tableCell}>${formatNumberWithCommas(order.priceAtEntry.toFixed(2))}</td>
+                                                            <td className={styles.tableCell}>${formatNumberWithCommas(order.priceAtExit.toFixed(2))}</td>
                                                             <td className={styles.tableCell}>
                                                                 <span className={order.profitPercent >= 0 ? styles.changePositive : styles.changeNegative}>
                                                                     {order.profitPercent.toFixed(2)}%
@@ -890,7 +890,7 @@ export default function DummyPage({ title }) {
                     )}
                 </div>
                 </div>
-                <div className={styles.bottomContainer}>
+                {/* <div className={styles.bottomContainer}>
                     <h1 className={styles.header3}>Total</h1>
                     <div className={styles.totalRightPanel}>
                         <div className={styles.totalPriceGroup}>
@@ -911,7 +911,7 @@ export default function DummyPage({ title }) {
                             <span className={styles.smallcard2}><IoMdTrendingDown className={styles.trendingDown}></IoMdTrendingDown> -0.1</span>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* for lose and error modal previews */}
                 <div className={styles.tableContainer}>
