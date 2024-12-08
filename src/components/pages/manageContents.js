@@ -132,7 +132,6 @@ const EditModal = ({ show, onClose, newsItem, onSave }) => {
                         >
                             <option value="News">News</option>
                             <option value="Education">Educational Article</option>
-                            <option value="FAQ">FAQ</option>
                         </select>
                     </div>
                 </div>
@@ -187,6 +186,7 @@ const AddModal = ({ show, onClose, onSave }) => {
     const [author, setAuthor] = useState('');
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
+    
 
     if (!show) {
         return null;
@@ -275,7 +275,6 @@ const AddModal = ({ show, onClose, onSave }) => {
                                 <option value="">Select a category</option>
                                 <option value="News">News</option>
                                 <option value="Education">Educational Article</option>
-                                <option value="FAQ">FAQ</option>
                             </select>
                         </div>
                     </div>
@@ -358,6 +357,8 @@ const HeroPage = () => {
     const [isSearchActive, setIsSearchActive] = useState(false);
     const [isSearchHovered, setIsSearchHovered] = useState(false);
 
+    const [intervalId, setIntervalId] = useState(null); 
+
     //fetch news from db
 
     //fetch 
@@ -369,35 +370,56 @@ const HeroPage = () => {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
-                console.log('Fetched news data:', data); // Confirm data structure
-                setNewsData(data); // Assuming you have useState for newsData
-                setFilteredNewsData(data); // Initial set
+    
+                // Confirm the fetched data structure
+                console.log('Fetched news data:', data);
+    
+                // Sort the news by the "date" field in descending order (latest first)
+                const sortedData = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+                // Set the sorted data
+                setNewsData(sortedData); // Assuming you have useState for newsData
+                setFilteredNewsData(sortedData); // Initial set, sorted by date
             } catch (error) {
                 console.error('Error fetching news:', error);
-
             }
         };
     
         fetchNews();
 
-        // const intervalId = setInterval(() => {
-        //     fetchNews();
-        // }, 1500); //
+        const intervalId = setInterval(() => {
+            fetchNews();
+        }, 1500); //
 
-        // // Clear the interval on component unmount
-        // return () => clearInterval(intervalId);
+        // Clear the interval on component unmount
+        return () => clearInterval(intervalId);
     }, []);
+    
 
 
      // Handle search
      useEffect(() => {
+
+        if (intervalId) {
+            clearInterval(intervalId);
+        }
+
         const filteredData = newsData.filter(item =>
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.description.toLowerCase().includes(searchQuery.toLowerCase())
         );
         setFilteredNewsData(filteredData);
         setCurrentPage(1); // Reset to first page on new search
-    }, [searchQuery, newsData]);
+
+        const id = setInterval(() => {
+            fetchNews();
+        }, 1500);
+        setIntervalId(id);
+
+        // Cleanup function to clear the interval on search change
+        return () => clearInterval(id);
+
+    }, [searchQuery, newsData, intervalId]);
 
     // Handle pagination
     const handlePageChange = (pageNumber) => {
