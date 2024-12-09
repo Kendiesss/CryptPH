@@ -48,7 +48,7 @@ export default function HeroPage() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setLoading(false);  
-        }, 2000); //FALSE DELAY
+        }, 5000); //FALSE DELAY
 
         return () => clearTimeout(timer);
     }, []);
