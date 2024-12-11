@@ -7,6 +7,7 @@ import { Carousel } from 'react-responsive-carousel';
 import Link from 'next/link';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
 import styles from '@/styles/news.module.css'; // Import the CSS module
+import { ClipLoader } from 'react-spinners';
 
 
 const truncate = (text, maxLength) => {
@@ -34,6 +35,7 @@ const formatDate = (dateString) => {
 export default function DummyPage({ title }) {
     const [newsItems, setNewsItems] = useState([]); 
     const [showAll, setShowAll] = useState(false); //see all
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchNews = async () => {
@@ -43,14 +45,20 @@ export default function DummyPage({ title }) {
                 setNewsItems(data); 
             } catch (error) {
                 console.error("Error fetching news:", error);
+                setLoading(false); 
             }
         };
 
         fetchNews();
     }, []); 
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);  
+        }, 2000); //FALSE DELAY
 
-    
+        return () => clearTimeout(timer);
+    }, []);
 
      // Limit the carousel to the top 5 news items
     const topNewsItems = newsItems.slice(0, 5); // Show only the first 5 items in the carousel
@@ -91,13 +99,19 @@ export default function DummyPage({ title }) {
                         </Link>
                     </div>
                     <div className={styles.cardContainer}>
-                        {displayedItems.map((item) => (
-                            <Link key={item._id} href={`/news/${item._id}`} passHref>
-                                <div className={styles.cardWrapper}>
-                                    <Card image={item.image || pholder.src} title={item.title} date={item.date} />
-                                </div>
-                            </Link>
-                        ))}
+                        {loading ? (
+                            <div className={styles.spinnerWrapper}>
+                                <ClipLoader size={50} color="#3498db" loading={loading} />
+                            </div>
+                        ) : (
+                            displayedItems.map((item) => (
+                                <Link key={item._id} href={`/news/${item._id}`} passHref>
+                                    <div className={styles.cardWrapper}>
+                                        <Card image={item.image || pholder.src} title={item.title} date={item.date} />
+                                    </div>
+                                </Link>
+                            ))
+                        )}
                     </div>
                 </div>
             </div>

@@ -86,7 +86,7 @@ function HeroPage() {
               </div>
             </div>
             <div className={styles.adminNavigationSection}>
-              <h2 className={styles.adminNavigationTitle}>Navigate and Manage</h2>
+              <h2 className={styles.adminNavigationTitle}>Menu</h2>
               <div className={styles.adminButtonGroup}>
                 <button className={styles.adminButton}>
                     <Link href="/charts" passHref>
@@ -105,7 +105,7 @@ function HeroPage() {
                 </button>
                 <button className={styles.adminButton}>
                     <Link href="/manageUsers" passHref>
-                        <FaUsersCog className={styles.icon} /> Users
+                        <FaUsersCog className={styles.icon} /> Manage Users
                     </Link>
                 </button>
                 <button className={styles.adminButton}>
@@ -115,7 +115,7 @@ function HeroPage() {
                 </button>
                 <button className={styles.adminButton}>
                     <Link href="/manageContents" passHref>
-                        <FiDatabase className={styles.icon} /> Contents
+                        <FiDatabase className={styles.icon} /> Manage Contents
                     </Link>
                 </button>
               </div>
