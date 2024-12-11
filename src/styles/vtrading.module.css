@@ -1,1008 +1,1072 @@
-/* Active Tab */
-.active {
-    background-color: rgb(125, 125, 125); 
-    color: black; 
-    font-weight: bold; 
-  }
-  
-    .pageContainer{
+
+
+.pageContainer{
+    display: flex;
+    flex-direction: column;
+    margin-left:  6rem;
+    margin-top:  2rem;
+}
+
+.topContainer{
+    display: flex;
+    flex-direction: row;
+    margin-bottom:   1rem;
+}
+
+    .leftPanel{
         display: flex;
         flex-direction: column;
-        margin-left:  6rem;
-        margin-top:  2rem;
+        margin:  1rem;
     }
 
-    .topContainer{
-        display: flex;
-        flex-direction: row;
-        margin-bottom:   1rem;
-    }
-
-        .leftPanel{
-            display: flex;
-            flex-direction: column;
-            margin:  1rem;
+        .titleHeader{
+            font-size:  35px;
+            font-family:  "Sora", sans-serif;
+            font-weight:  900;
+            margin-bottom:   1rem;
         }
 
-            .titleHeader{
-                font-size:  35px;
-                font-family:  "Sora", sans-serif;
-                font-weight:  900;
-                margin-bottom:   1rem;
+        .topGroup{
+            height:  100px;
+            width:  950px;
+            display:  flex;
+            flex-direction:  row;
+            justify-content:  space-between;
+        }
+
+            .dummyCashContainer{
+                width:  215px;
+                height:  80px;
+                display:  flex;
+                flex-direction:  column;
+                border: 2px solid white;
+                border-radius:  20px;
+                justify-content:  center;
+                align-items:  flex-start;
+                padding:  10px;
             }
 
-            .topGroup{
-                height:  100px;
-                width:  950px;
+                .header1{
+                    font-size:  12px;
+                    font-family:  "Sora", sans-serif;
+                    font-weight:  700;
+                    color:   #4A4A5A;
+                }
+
+                .header2{
+                    font-size:  18px;
+                    font-family:  "Sora", sans-serif;
+                    font-weight:  900;
+                    color:   white;
+                    margin:  5px;
+                }
+
+            .buttonGroup{
                 display:  flex;
                 flex-direction:  row;
-                justify-content:  space-between;
+                justify-content:  center;
+                padding:  10px;
             }
 
-                .dummyCashContainer{
-                    width:  215px;
-                    height:  80px;
+                .button1{
+                    font-size:  12px;
+                    font-family:  "Sora", sans-serif;
+                    font-weight:  700;
+                    color: white;
+                    width:  135px;
+                    height:  40px;
+                    border: 2px solid white;
+                    border-radius:  30px;
+                    margin:  5px;
+                    transition:  transform 0.3s ease, box-shadow 0.3s ease; 
+                }
+
+                .button1Hover {
+                    box-shadow:  0 0 15px 5px rgba(255, 255, 255, 0.8); 
+                    background-color:  white;
+                    color:   #0B162B;
+                    transform:  scale(1.05);
+                }
+
+        .cardContainer{
+            display:  flex;
+            flex-direction:  column;
+        }
+
+            .card{
+                display:  flex;
+                flex-direction:  row;
+                width:  950px;
+                height:  80px;
+                border: 2px solid white;
+                border-radius:  20px;
+                justify-content:  space-between;
+                align-items:  center;
+                margin:  5px;
+                transition:  transform  0.3s ease,  box-shadow 0.3s ease;
+            }
+
+            .cardHover {
+                box-shadow:  0 0 15px rgba(255, 255, 255, 0.8); 
+                transform:  scale(1.05); 
+            }
+
+                .header3{
+                    font-size:  20px;
+                    font-family:  "Sora", sans-serif;
+                    font-weight:  900;
+                    color:   white;
+                    margin:  10px;
+                }
+
+                .smallcard {
+                    height:  auto;
+                    width:  50px;
+                    background-color:  #462E38;
+                    padding:  1px;
+                    border-radius:  10px;
+                    font-family:  "Sora", sans-serif;
+                    font-weight:  500;
+                    font-size:  12px;
+                    text-align:   center;
+                    justify-content:  center;
+                }
+
+                .coinPlaceHolder{
+                    color:   yellow;
+                    padding:  5px;
+                    width:  50px;
+                    height:  50px;
+                }
+
+                .priceGroup {
                     display:  flex;
                     flex-direction:  column;
-                    border: 2px solid white;
-                    border-radius:  20px;
                     justify-content:  center;
-                    align-items:  flex-start;
-                    padding:  10px;
-                }
-
-                    .header1{
-                        font-size:  12px;
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  700;
-                        color:   #4A4A5A;
-                    }
-
-                    .header2{
-                        font-size:  18px;
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  900;
-                        color:   white;
-                        margin:  5px;
-                    }
-
-                .buttonGroup{
-                    display:  flex;
-                    flex-direction:  row;
-                    justify-content:  center;
-                    padding:  10px;
-                }
-
-                    .button1{
-                        font-size:  12px;
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  700;
-                        color: white;
-                        width:  135px;
-                        height:  40px;
-                        border: 2px solid white;
-                        border-radius:  30px;
-                        margin:  5px;
-                        transition:  transform 0.3s ease, box-shadow 0.3s ease; 
-                    }
-
-                    .button1Hover {
-                        box-shadow:  0 0 15px 5px rgba(255, 255, 255, 0.8); 
-                        background-color:  white;
-                        color:   #0B162B;
-                        transform:  scale(1.05);
-                    }
-
-            .cardContainer{
-                display:  flex;
-                flex-direction:  column;
-                /* width: 100px; */
-            }
-
-                .card{
-                    display:  flex;
-                    flex-direction:  row;
-                    width:  950px;
-                    height:  80px;
-                    border: 2px solid white;
-                    border-radius:  20px;
-                    justify-content:  space-between;
                     align-items:  center;
+                }
+
+                .smallcard2 {
+                    display:  flex;
+                    flex-direction:  row;
+                    height:  auto;
+                    width:  50px;
+                    background-color:  #462E38;
+                    color:   #CD5C5C;
+                    padding:  1px;
+                    border-radius:  10px;
+                    font-family:  "Sora", sans-serif;
+                    font-weight:  500;
+                    font-size:  12px;
+                    text-align:   center;
+                    justify-content:  center;
                     margin:  5px;
-                    transition:  transform  0.3s ease,  box-shadow 0.3s ease;
                 }
 
-                .cardHover {
-                    box-shadow:  0 0 15px rgba(255, 255, 255, 0.8); 
-                    transform:  scale(1.05); 
+                .trendingDown{
+                    color:   red;
+                    margin:  3px;
+                    font-weight:  bold;
                 }
 
-                    .header3{
-                        font-size:  20px;
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  900;
-                        color:   white;
-                        margin:  10px;
-                    }
+                .trendingUp{
+                    color:   green;
+                    margin:  3px;
+                    font-weight:  bold;
+                }
 
-                    .smallcard {
-                        height:  auto;
-                        width:  50px;
-                        background-color:  #462E38;
-                        padding:  1px;
-                        border-radius:  10px;
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  500;
-                        font-size:  12px;
-                        text-align:   center;
-                        justify-content:  center;
-                    }
-
-                    .coinPlaceHolder{
-                        color:   yellow;
-                        padding:  5px;
-                        width:  50px;
-                        height:  50px;
-                    }
-
-                    .priceGroup {
-                        display:  flex;
-                        flex-direction:  column;
-                        justify-content:  center;
-                        align-items:  center;
-                    }
-
-                    .smallcard2 {
-                        display:  flex;
-                        flex-direction:  row;
-                        height:  auto;
-                        width:  50px;
-                        background-color:  #462E38;
-                        color:   #CD5C5C;
-                        padding:  1px;
-                        border-radius:  10px;
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  500;
-                        font-size:  12px;
-                        text-align:   center;
-                        justify-content:  center;
-                        margin:  5px;
-                    }
-
-                    .trendingDown{
-                        color:   red;
-                        margin:  3px;
-                        font-weight:  bold;
-                    }
-
-                    .trendingUp{
-                        color:   green;
-                        margin:  3px;
-                        font-weight:  bold;
-                    }
-
-        .rightCard{
-        margin:  1rem;
-        display: flex;
-        flex-direction: column;
-        height:  675px;
-        max-width:  400px;
-        border:  1px solid white;
-        border-radius:  20px;
-        }
-
-            .upperGroup{
-                display: flex;
-                flex-direction: row;
-                justify-content:  space-between;
-                padding:  2rem;
-                height: auto;
-                width: auto;
-            }
-
-                .leftUpper{
+                .rightCard {
+                    margin: 1rem;
                     display: flex;
                     flex-direction: column;
-                    justify-content:  center;
-                    align-items: left;
+                    min-height: 775px; 
+                    max-width: 400px;
+                    border: 1px solid white;
+                    border-radius: 20px;
+                    padding: 1rem;
+                    box-sizing: border-box;
                 }
 
-                    .header4{
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  900;
-                        font-size:  25px;
-                    }
-
-                    .header5{
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  500;
-                        font-size:  18px;
-                    }
-
-                .smallRightcard{
-                    display:  flex;
-                        flex-direction:  row;
-                        height:  35px;
-                        width:  100px;
-                        background-color:  #462E38;
-                        color:   #CD5C5C;
-                        padding:  1px;
-                        border-radius:  10px;
-                        font-family:  "Sora", sans-serif;
-                        font-weight:  500;
-                        font-size:  20px;
-                        text-align:   center;
-                        justify-content:  center;
-                        margin:  5px;
-                }
-
-            .middleGroup{
+            .upperGroup {
                 display: flex;
-                flex-direction: column;
-                justify-content:  left;
-                padding-left:  2rem;
-                height: auto;
-                width: auto;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 2rem;
+                width: 100%;  /* Ensures the container takes up full width */
+                align-items: center; /* Vertically center the items in the row */
             }
-
-            .flexContainer{
-                display:  flex;
-                flex-direction:  column;
-                justify-content:  left; 
-                align-items:  left; 
-                background-color:  whitesmoke;
-                margin-right:  1rem;
-                margin-bottom:   2rem;
-                border-radius:  1rem;
-                padding:  1rem;
-              }
-
-              .dataGroup{
-                width:  18rem;
-                display:  flex;
-                flex-direction:  row;
-                justify-content:  space-between;
-                align-items:  flex-start;
-                
-              }
-
-              .header7{
-                font-size:  12px;
-                font-family:  "Sora", sans-serif;
-                font-weight:  500;
-                color:   #0B162B;
-            }
-
-            .header8{
-                font-size:  16px;
-                font-family:  "Sora", sans-serif;
-                font-weight:  800;
-                color:   #0B162B;
-            }
-
-            .qtyGroup{
-                display:  flex;
-                flex-direction:  row;
-                align-items:  left;
-                justify-content:  space-between;
-                margin-right:  1rem;
-                align-items: center;
-            }
-
-            .inputField{
-                border-radius:  1rem;
-                color:   black;
-                font-size:  14px;
-                text-align:   center;
-                height: 35px;
-            }
-                 
-                .cardButtonGroup{
-                    display:  flex;
-                    flex-direction:  row;
-                    margin-top:  1rem;
-                    padding:  5rem;
-                    align-content: center;
-                    align-items: center;
-                }
-    
-                    .Button2 {
-                        display:  flex;
-                        align-items:  center;
-                        background-color:  #42B8A4;
-                        border-radius:  15px;
-                        width:  150px;
-                        height:  40px;
-                        justify-content:  center; 
-                        padding:  20px;
-                        font-family:  "Sora", sans-serif;
-                        font-size:  16px;
-                        font-weight:  600;
-                        color:   white;
-                        transition:  transform 0.3s ease, box-shadow 0.3s ease;
-                        margin-right: 1rem; 
-                    }
-
-                    .Button2Hover {
-                        box-shadow:  0 0 15px 5px rgba(255, 255, 255, 0.8); 
-                        transform:  scale(1.05);
-                    }
-
-                    .Button3 {
-                        display:  flex;
-                        align-items:  center;
-                        background-color:  #F4594E;
-                        border-radius:  15px;
-                        width:  150px;
-                        height:  40px;
-                        justify-content:  center; 
-                        padding:  20px;
-                        font-family:  "Sora", sans-serif;
-                        font-size:  16px;
-                        font-weight:  600;
-                        color:   white;
-                        transition:  transform  0.3s ease, box-shadow 0.3s ease;
-                    }
-
-                    .Button3Hover {
-                        box-shadow:  0 0 15px 5px rgba(255, 255, 255, 0.8); 
-                        transform:  scale(1.05);
-                    }
             
-            .coinCardContainer{
+            .leftUpper {
                 display: flex;
                 flex-direction: column;
-                justify-content:  center;
-                margin-top:  1rem;
+                justify-content: center;
+                align-items: flex-start; /* Align text to the left */
+                max-width: calc(100% - 120px); /* Ensures enough space for the right card */
+                word-wrap: break-word;
+            }
+            
+            .header4 {
+                font-family: "Sora", sans-serif;
+                font-weight: 900;
+                font-size: 25px;
+                margin-right: 10px; /* Space between price and percent change */
+            }
+            
+            .header5 {
+                font-family: "Sora", sans-serif;
+                font-weight: 500;
+                font-size: 18px;
+            }
+            
+            .smallRightcard {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center; /* Vertically center the content */
+                height: 35px;
+                background-color: #462E38;
+                color: #CD5C5C;
+                padding: 1px;
+                border-radius: 10px;
+                font-family: "Sora", sans-serif;
+                font-weight: 500;
+                font-size: 20px;
+                text-align: center;
+                margin-left: 10px; /* Space between the card and price */
+                width: auto; /* Let it adapt to content width */
+            }
+            
+            .smallRightcard span {
+                font-size: 16px;  /* Adjust font size of the percentage */
+                font-weight: 600;  /* Optional for emphasis */
             }
 
-                .CoinCard{
-                    display: flex;
-                    flex-direction:  row;
-                    justify-content:  space-between;
-                    height:  80px;
-                    width:  350px;
-                    border: 2px solid white;
-                    border-radius:  20px;
-                    margin-bottom:   1rem;
-                    transition:  transform  0.3s ease, box-shadow 0.3s ease;
-                }
+        .middleGroup{
+            display: flex;
+            flex-direction: column;
+            justify-content:  left;
+            padding-left:  2rem;
+            height: auto;
+            width: auto;
+        }
 
-                .CoinCardHover {
-                    box-shadow:  0 0 15px rgba(255, 255, 255, 0.8); 
-                    transform:  scale(1.05); 
-                }
+        .flexContainer{
+            display:  flex;
+            flex-direction:  column;
+            justify-content:  left; 
+            align-items:  left; 
+            background-color:  whitesmoke;
+            margin-right:  1rem;
+            margin-bottom:   2rem;
+            border-radius:  1rem;
+            padding:  1rem;
+          }
 
-                .innerCoinCard{
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: center;
-                    padding: 10px;
-                    align-items: center;
-                    margin:  5px;
-                }
+          .dataGroup{
+            width:  18rem;
+            display:  flex;
+            flex-direction:  row;
+            justify-content:  space-between;
+            align-items:  flex-start;
+            
+          }
 
-    .bottomContainer{
-        display:  flex;
+          .header7{
+            font-size:  12px;
+            font-family:  "Sora", sans-serif;
+            font-weight:  500;
+            color:   #0B162B;
+        }
+
+        .header8{
+            font-size:  16px;
+            font-family:  "Sora", sans-serif;
+            font-weight:  800;
+            color:   #0B162B;
+        }
+
+        .qtyGroup{
+            display:  flex;
+            flex-direction:  row;
+            align-items:  left;
+            justify-content:  space-between;
+            margin-right:  1rem;
+            align-items: center;
+        }
+
+        .inputField{
+            border-radius:  1rem;
+            color:   black;
+            font-size:  14px;
+            text-align:   center;
+            height: 35px;
+        }
+             
+        .cardButtonGroup {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between; /* Space buttons apart */
+            align-items: center; /* Align items vertically */
+            margin-top: auto; 
+            padding: 3rem; /* Space between cost display and buttons */
+        }
+        
+        .Button2, .Button3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            width: 140px;
+            height: 40px;
+            font-family: "Sora", sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .Button2 {
+            background-color: #42B8A4;
+            margin-right: 0.5rem; /* Spacing between buttons */
+        }
+        
+        .Button3 {
+            background-color: #F4594E;
+        }
+        
+        .Button2:hover, .Button3:hover {
+            box-shadow: 0 0 5px 2px rgba(12, 66, 245, 0.8);
+            transform: scale(1.05);
+        }
+        
+        
+        .coinCardContainer{
+            display: flex;
+            flex-direction: column;
+            justify-content:  center;
+            margin-top:  1rem;
+        }
+
+            .CoinCard{
+                display: flex;
+                flex-direction:  row;
+                justify-content:  space-between;
+                height:  80px;
+                width:  350px;
+                border: 2px solid white;
+                border-radius:  20px;
+                margin-bottom:   1rem;
+                transition:  transform  0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .CoinCardHover {
+                box-shadow:  0 0 15px rgba(255, 255, 255, 0.8); 
+                transform:  scale(1.05); 
+            }
+
+            .innerCoinCard{
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                padding: 10px;
+                align-items: center;
+                margin:  5px;
+            }
+
+.bottomContainer{
+    display:  flex;
+    flex-direction:  row;
+    margin:  10px;
+    height:  100px;
+    width:  1400px;
+    border: 1px solid white;
+    border-radius:  20px;
+    justify-content:  space-between;
+    align-items:  center;
+    padding:  20px;
+}
+
+    .totalRightPanel{
+        display: flex;
         flex-direction:  row;
-        margin:  10px;
-        height:  100px;
-        width:  1400px;
-        border: 1px solid white;
-        border-radius:  20px;
         justify-content:  space-between;
+        align-items: center;
+        padding:  5px;
+    }
+
+    .totalPriceGroup {
+        display:  flex;
+        flex-direction:  column;
+        justify-content:  center;
         align-items:  center;
         padding:  20px;
     }
 
-        .totalRightPanel{
-            display: flex;
-            flex-direction:  row;
-            justify-content:  space-between;
-            align-items: center;
-            padding:  5px;
-        }
+    .header6{
+        font-size:  14px;
+        font-family:  "Sora", sans-serif;
+        font-weight:  700;
+        color:   #4A4A5A;
+        padding:  1px;
+        margin:  1px;
+    }
 
-        .totalPriceGroup {
-            display:  flex;
-            flex-direction:  column;
-            justify-content:  center;
-            align-items:  center;
-            padding:  20px;
-        }
+    .profitGroup2{
+        padding:  20px;
+        display:  flex;
+        flex-direction:  column;
+        justify-content:  center;
+        align-items:  center;
+    }
 
-        .header6{
-            font-size:  14px;
-            font-family:  "Sora", sans-serif;
-            font-weight:  700;
-            color:   #4A4A5A;
-            padding:  1px;
-            margin:  1px;
-        }
-
-        .profitGroup2{
-            padding:  20px;
-            display:  flex;
-            flex-direction:  column;
-            justify-content:  center;
-            align-items:  center;
-        }
-
-        .gradient1 {
-            position: absolute;
-            top: 30%;
-            left: -35%;
-            width: 70%;
-            height: 125%;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: left;
-            z-index: -1;
-        }
-        
-        .tableContainer {
-            margin-top:  1px;
-            width:  960px;
-            overflow-x: auto; 
-            border-radius:  25px;
-        }
-
-        .table {
-            width:  100%;
-            border-collapse: collapse;
-            border: 1px solid white;
-        }
-
-        .table .tableCell:first-child,
-        .table .tableHeader:first-child {
-            position: sticky;
-            left: 0;
-            z-index: 2; /* Ensure the first column is above the rest */
-        }
-
-        .table .tableCell:last-child,
-        .table .tableHeader:last-child {
-            position: sticky;
-            right: 0;
-            z-index: 2; /* Ensure the last column is above the rest */
-        }
-
-        .tableHeader {
-            background-color:  #E9ECEF;
-            font-size:  0.8em;
-            text-align:   center;
-            padding:  10px;
-            border-bottom: 1px solid #ddd;
-            font-family:  "Sora", sans-serif;
-            font-weight:  900;
-            padding:  10px;
-            color:   #0B162B;
-           
-        }
-
-        .tableCell {
-            padding:  5px;
-            height:  6rem;
-            border-bottom: 1px solid #ddd;
-            font-family:  "Sora", sans-serif;
-            font-weight:  700;
-            font-size:  0.8em;
-            align-items:  center;
-            justify-content:  center;
-            text-align:   center;
-            background-color:  #F8F9FA;
-            color:   black;
-        }
-
-        .changePositive {
-            width:  1rem;
-            color:   green;
-            background-color:  #E9ECEF;
-            padding:  10px;
-            font-weight:  500;
-            border-radius:  1rem;
-            border: 0.5px solid white;
-        }
-
-        .changeNegative {
-            width:  1rem;
-            color:   red;
-            background-color:  #E9ECEF;
-            padding:  10px;
-            font-weight:  500;
-            border-radius:  1rem;
-            border: 0.5px solid white;
-        }
-
-        .pagination {
-            display:  flex;
-            justify-content:  center;
-            align-items:  center;
-            margin:  20px 0;
-            font-family: "Sora", sans-serif;
-        }
-          
-        .paginationButton {
-            margin:  0 5px;
-            padding:  10px;
-            cursor: pointer;
-        }
-
-        .noInvestmentsMessage {
-            text-align:   center;
-            font-size:  1.2rem;
-            color:   white; 
-            margin-top:  20px;
-        }
-
-        .logo{
-            width:  35px;
-            height:  35px;
-            align-self:  center;
-            justify-self:  center;
-            margin:  auto
-        }
-
-        .logoLarge {
-            width:  80px;
-            height:  80px;
-            align-self:  center;
-            justify-self:  center;
-            padding:  1rem;
-        }
-
-        .logoLarge2 {
-            font-size:  10rem;
-            align-self:  center;
-            justify-self:  center;
-            padding:  1rem;
-        }
-
-        .widgetContainer{
-            height:  10rem;
-            margin:  0 1rem 2rem 1rem;
-        }
-
-        .widget1{
-            position: relative;
-            width:  100%; 
-            height:  100%; 
-            padding:  2%;
-        }
-
-        .tvButton{
-            height:  50px;
-            width:  300px;
-            align-self:  center;
-            margin-bottom:   1rem;
-            font-family:  "Sora", sans-serif;
-            font-size:  11px;
-            font-weight:  700;
-            color: white;
-            border: 1px solid white;
-            border-radius:  30px;
-        }
-
-        .button4{
-            font-size:  14px;
-            font-family:  "Sora", sans-serif;
-            font-weight:  700;
-            color: white;
-            width:  100px;
-            height:  35px;
-            border: 2px solid white;
-            border-radius:  30px;
-            background-color:  #0B162B;
-            margin:  5px;
-        }
-
-        .howToPlay {
-            display: flex;
-            font-size: 12px;
-            font-family: "Sora", sans-serif;
-            font-weight: 700;
-            color: white;
-            width: 130px;
-            height: 40px;
-            border: 2px solid white;
-            border-radius: 30px;
-            background-color: #0B162B;
-            margin: 5px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; 
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .howToPlay:hover {
-            transform: scale(1.05); /* Apply scale effect on hover */
-            background-color: white; /* Change background color on hover */
-            color: #1D2A43; /* Keep text color white */
-            box-shadow: 0 0 20px 7px rgba(255, 255, 255, 0.9); /* Enhance shadow on hover */
-        }
-        
-
-        .tutorialIcon{
-            font-size:  30px;
-            margin-left:  5px;
-        }
+    .gradient1 {
+        position: absolute;
+        top: 30%;
+        left: -35%;
+        width: 70%;
+        height: 125%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: left;
+        z-index: -1;
+    }
     
+    .tableContainer {
+        margin-top:  1px;
+        width:  960px;
+        overflow-x: auto; 
+        border-radius:  25px;
+    }
 
+    .table {
+        width:  100%;
+        border-collapse: collapse;
+        border: 1px solid white;
+    }
+
+    .table .tableCell:first-child,
+    .table .tableHeader:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2; /* Ensure the first column is above the rest */
+    }
+
+    .table .tableCell:last-child,
+    .table .tableHeader:last-child {
+        position: sticky;
+        right: 0;
+        z-index: 2; /* Ensure the last column is above the rest */
+    }
+
+    .tableHeader {
+        background-color:  #E9ECEF;
+        font-size:  0.8em;
+        text-align:   center;
+        padding:  10px;
+        border-bottom: 1px solid #ddd;
+        font-family:  "Sora", sans-serif;
+        font-weight:  900;
+        padding:  10px;
+        color:   #0B162B;
+       
+    }
+
+    .tableCell {
+        padding:  5px;
+        height:  6rem;
+        border-bottom: 1px solid #ddd;
+        font-family:  "Sora", sans-serif;
+        font-weight:  700;
+        font-size:  0.8em;
+        align-items:  center;
+        justify-content:  center;
+        text-align:   center;
+        background-color:  #F8F9FA;
+        color:   black;
+    }
+
+    .changePositive {
+        width:  1rem;
+        color:   green;
+        background-color:  #E9ECEF;
+        padding:  10px;
+        font-weight:  500;
+        border-radius:  1rem;
+        border: 0.5px solid white;
+    }
+
+    .changeNegative {
+        width:  1rem;
+        color:   red;
+        background-color:  #E9ECEF;
+        padding:  10px;
+        font-weight:  500;
+        border-radius:  1rem;
+        border: 0.5px solid white;
+    }
+
+    .pagination {
+        display:  flex;
+        justify-content:  center;
+        align-items:  center;
+        margin:  20px 0;
+        font-family: "Sora", sans-serif;
+    }
+      
+    .paginationButton {
+        margin:  0 5px;
+        padding:  10px;
+        cursor: pointer;
+    }
+
+    .noInvestmentsMessage {
+        text-align:   center;
+        font-size:  1.2rem;
+        color:   white; 
+        margin-top:  20px;
+    }
+
+    .logo{
+        width:  35px;
+        height:  35px;
+        align-self:  center;
+        justify-self:  center;
+        margin:  auto
+    }
+
+    .logoLarge {
+        width:  80px;
+        height:  80px;
+        align-self:  center;
+        justify-self:  center;
+        padding:  1rem;
+    }
+
+    .logoLarge2 {
+        font-size:  10rem;
+        align-self:  center;
+        justify-self:  center;
+        padding:  1rem;
+    }
+
+    .widgetContainer{
+        height:  10rem;
+        margin:  0 1rem 2rem 1rem;
+    }
+
+    .widget1{
+        position: relative;
+        width:  100%; 
+        height:  100%; 
+        padding:  2%;
+    }
+
+    .tvButton{
+        height:  50px;
+        width:  300px;
+        align-self:  center;
+        margin-bottom:   1rem;
+        font-family:  "Sora", sans-serif;
+        font-size:  11px;
+        font-weight:  700;
+        color: white;
+        border: 1px solid white;
+        border-radius:  30px;
+    }
+
+    .button4{
+        font-size:  14px;
+        font-family:  "Sora", sans-serif;
+        font-weight:  700;
+        color: white;
+        width:  100px;
+        height:  35px;
+        border: 2px solid white;
+        border-radius:  30px;
+        background-color:  #0B162B;
+        margin:  5px;
+    }
+
+    .howToPlay {
+        display: flex;
+        font-size: 12px;
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        color: white;
+        width: 130px;
+        height: 40px;
+        border: 2px solid white;
+        border-radius: 30px;
+        background-color: #0B162B;
+        margin: 5px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; 
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tutorialIcon{
+        font-size:  30px;
+        margin-left:  5px;
+    }
+
+    .howToPlay:hover {
+        transform: scale(1.05); 
+        background-color: white; 
+        color: #1D2A43;
+        box-shadow: 0 0 20px 7px rgba(255, 255, 255, 0.9);
+    }
 
 
 @media (max-width: 1514px) {
 
-    .pageContainer {
-        align-items: left;
-        margin-top: 1.5rem;
-        margin-right: 2rem;
-    }
+.pageContainer {
+    align-items: left;
+    margin-top: 1.5rem;
+    margin-right: 2rem;
+}
 
-    .topContainer{
-        max-width: 80%;
-        margin-left: 3rem;
-        margin-right: 0;
-    }
+.topContainer{
+    max-width: 80%;
+    margin-left: 3rem;
+    margin-right: 0;
+}
 
-    .leftPanel{ 
-        align-items: center;
-        margin-left: 5rem;
-        max-width: 90%;
-        
-    }
+.leftPanel{ 
+    align-items: center;
+    margin-left: 5rem;
+    max-width: 90%;
+    
+}
 
-    .titleHeader{
-        align-self: center;
-    }
+.titleHeader{
+    align-self: center;
+}
 
-    .topGroup{
-        flex-direction: column;
-        width: 100%;
-        margin-bottom: 5rem;
-    }
+.topGroup{
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 5rem;
+}
 
-    .buttonGroup{
-        width: 100%;
-        align-items: center;
-    }
-    .topContainer {
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-    }
+.buttonGroup{
+    width: 100%;
+    align-items: center;
+}
+.topContainer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
 
-    .coinPanel{
-        max-width: 100%;
-    }
+.coinPanel{
+    max-width: 80%;
+}
 
-    .tableContainer{
-        width: 100%;
-    }
+.tableContainer{
+    width: 100%;
+}
 
-    .tableHeader, .tableCell {
-        font-size: 0.9em; /* Adjust font size slightly for large screens */
-    }
+.tableHeader, .tableCell {
+    font-size: 0.9em; /* Adjust font size slightly for large screens */
+}
 
-    .topGroup {
-        width: 80%;
-        align-items: center;
-    }
-    .cardContainer {
-        width: 90%;
-    }
-    .rightCard {
-        max-width: 40%;
-        margin-left: 0;
-    }
+.topGroup {
+    width: 80%;
+    align-items: center;
+}
+.cardContainer {
+    width: 90%;
+}
 
-    .header4, .header5{
-        font-size: 20px;
-    }
+.header4, .header5{
+    font-size: 20px;
+}
 
-    .smallRightcard{
-        font-size: 14px ;
-        width: fit-content;
-        height: fit-content;
-        align-self: center;
-    }
+.smallRightcard{
+    font-size: 14px ;
+    width: fit-content;
+    height: fit-content;
+    align-self: center;
+}
 
-    .bottomContainer {
-        max-width: 95%;
-        align-self: center;
-    }
+.bottomContainer {
+    max-width: 95%;
+    align-self: center;
+}
 
-    .card{
-        max-width: 115%;
-    }
+.card{
+    max-width: 115%;
+}
 }
 @media (max-width: 1200px) {
-    .pageContainer {
-        align-items: left;
-        margin-top: 1.5rem;
-    }
+.pageContainer {
+    align-items: left;
+    margin-top: 1.5rem;
+}
 
-    .topContainer{
-        max-width: 75%;
-        margin-left: 3rem;
-        margin-right: 0;
-    }
+.topContainer{
+    max-width: 75%;
+    margin-left: 3rem;
+    margin-right: 0;
+}
 
-    .leftPanel{ 
-        align-items: center;
-        margin-left: 5rem;
-        max-width: 90%;
-        
-    }
+.leftPanel{ 
+    align-items: center;
+    margin-left: 5rem;
+    max-width: 90%;
+    
+}
 
-    .titleHeader{
-        align-self: center;
-    }
+.titleHeader{
+    align-self: center;
+}
 
-    .topGroup{
-        flex-direction: column;
-        width: 100%;
-        margin-bottom: 5rem;
-    }
+.topGroup{
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 5rem;
+}
 
-    .buttonGroup{
-        width: 100%;
-        align-items: center;
-    }
-    .topContainer {
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-    }
+.buttonGroup{
+    width: 100%;
+    align-items: center;
+}
+.topContainer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
 
-    .coinPanel{
-        max-width: 100%;
-    }
+.coinPanel{
+    max-width: 80%;
+}
 
-    .tableContainer{
-        width: 100%;
-    }
+.tableContainer{
+    width: 100%;
+}
 
-    .table{
-        width: 50%;
-    }
+.table{
+    width: 50%;
+}
 
-    .topGroup {
-        width: 80%;
-        align-items: center;
-    }
-    .cardContainer {
-        width: 90%;
-    }
-    .rightCard {
-        max-width: 50%;
-        margin-left: 0;
-    }
-    .bottomContainer {
-        max-width: 95%
-    }
+.topGroup {
+    width: 80%;
+    align-items: center;
+}
+.cardContainer {
+    width: 90%;
+}
+.bottomContainer {
+    max-width: 95%
+}
 }
 
 /* For 1024px screens */
 @media (max-width: 1024px) {
-    .pageContainer {
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 1.2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%; /* Ensure the page container spans the entire width */
-    }
+.pageContainer {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* Ensure the page container spans the entire width */
+}
 
-    .titleHeader {
-        margin-bottom: 5rem;
-    }
+.titleHeader {
+    margin-bottom: 5rem;
+}
 
-    .topContainer {
-        flex-direction: column;
-        width: 100%;
-        display: flex;
-        align-items: center; /* Center the top container contents */
-    }
+.topContainer {
+    flex-direction: column;
+    width: 100%;
+    display: flex;
+    align-items: center; /* Center the top container contents */
+}
 
-    .leftPanel { 
-        max-width: 100%; /* Ensure the left panel doesn't overflow */
-        width: 100%;
-        display: flex;
-        justify-content: center; /* Center the left panel contents */
-        margin-left: 0;
-    }
+.leftPanel { 
+    max-width: 100%; /* Ensure the left panel doesn't overflow */
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center the left panel contents */
+    margin-left: 0;
+}
 
-    .tableContainer {
-        width: 100%;
-        display: flex;
-        justify-content: center; /* Center the table container */
-    }
+.tableContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center the table container */
+}
 
-    .topGroup {
-        width: 80%;
-        display: flex;
-        justify-content: center; /* Center the group inside */
-    }
+.topGroup {
+    width: 80%;
+    display: flex;
+    justify-content: center; /* Center the group inside */
+}
 
-    .cardContainer {
-        width: 100%;
-        display: flex;
-        justify-content: center; /* Center the card container */
-        align-items: center; /* Ensure vertical centering */
-    }
+.cardContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center the card container */
+    align-items: center; /* Ensure vertical centering */
+}
 
-    .rightCard {
-        max-width: 750px;
-        flex-direction: row; /* Stack items in the right card vertically */
-        height: 50%;
-        width: fit-content;
-        padding: 1rem;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center; /* Center content inside the card */
-    }
 
-    .upperGroup{
-        width: 30%;
-    }
 
-    .widgetContainer{
-        width: 50%;
-        margin-left: auto;
-        justify-content: center;
-        align-content: center;
-    }
+.upperGroup{
+    width: 30%;
+}
 
-    .upperGroup{
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
+.widgetContainer{
+    width: 50%;
+    margin-left: auto;
+    justify-content: center;
+    align-content: center;
+}
 
-    .middleGroup{
-        width: 100%;
-        flex-wrap: wrap;
-    }
+.upperGroup{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
 
-    .dataGroup{
-        align-self: center;
-    }
+.middleGroup{
+    width: 100%;
+    flex-wrap: wrap;
+}
 
-    .bottomContainer {
-        width: 80%;
-    }
+.dataGroup{
+    align-self: center;
+}
 
-    .coinCardContainer {
-        width: 100%;
-        display: flex;
-        justify-content: center; /* Center the coin card container */
-        align-items: center; /* Ensure vertical centering */
-    }
+.bottomContainer {
+    width: 80%;
+}
+
+.coinCardContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center the coin card container */
+    align-items: center; /* Ensure vertical centering */
+}
 }
 
 
 /* For 768px screens */
 @media (max-width: 767.5px) {
-    .pageContainer {
-        margin-top: 0;
-    }
-    .topContainer {
-        flex-direction: column;
-    }
-    .topGroup {
-        width: 100%;
-    }
-    .cardContainer {
-        width: 100%;
-    }
+.pageContainer {
+    margin-top: 0;
+}
+.topContainer {
+    flex-direction: column;
+}
+.topGroup {
+    width: 100%;
+}
+.cardContainer {
+    width: 100%;
+}
 
-    .rightCard {
-        max-width: 500px;
-    }
-    .bottomContainer {
-        max-width: 100%;
-        align-self: center;
-    }
-    .coinCardContainer {
-        width: 100%;
-    }
+.bottomContainer {
+    max-width: 100%;
+    align-self: center;
+}
+.coinCardContainer {
+    width: 100%;
+}
 
-    .header2, .header3, .header6{
-        font-size: 10px;
-    }
+.header2, .header3, .header6{
+    font-size: 10px;
+}
 }
 
 /* For 480px screens */
 @media (max-width: 480px) {
 
-    .header2{
-        font-size: 15px;
-        text-align: center;
-    }
+.header2{
+    font-size: 15px;
+    text-align: center;
+}
 
-    .topContainer {
-        flex-direction: column;
-    }
-    .topGroup {
-        width: 100%;
-    }
+.topContainer {
+    flex-direction: column;
+}
+.topGroup {
+    width: 100%;
+}
 
-    .dummyCashContainer{
-        align-items: center;
-        font-size: large;
-    }
+.dummyCashContainer{
+    align-items: center;
+    font-size: large;
+}
 
-    .titleHeader{
-        margin-bottom: 8rem;
-    }
+.titleHeader{
+    margin-bottom: 8rem;
+}
 
-    .buttonGroup{
-        flex-direction: column;
-        margin-bottom: 1rem;
-    }
-    
-    .cardContainer {
-        width: 100%;
-        margin-top: 5rem;
-    }
-    .rightCard {
-        flex-direction: column;
-        align-items: center;
-        
-    }
+.buttonGroup{
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
 
-    .widgetContainer{
-        width: 100%;
-        margin-left: auto;
-        justify-content: center;
-        align-content: center;
-    }
+.cardContainer {
+    width: 100%;
+    margin-top: 5rem;
+}
 
-    .upperGroup{
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
 
-    .middleGroup{
-        width: 100%;
-    }
-    .bottomContainer {
-        flex-direction: column;
-        width: 80%;
-        height: fit-content;
-        align-self: center;
-    }
+.widgetContainer{
+    width: 100%;
+    margin-left: auto;
+    justify-content: center;
+    align-content: center;
+}
 
-    .totalRightPanel{
-        flex-direction: column;
-    }
-    .coinCardContainer {
-        width: 100%;
-    }
-    .button1 {
-        width: 100%;
-    }
-    .Button2, .Button3 {
-        width: 100%;
-        font-size: 14px;
-    }
+.upperGroup{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
 
-    .table .tableCell:last-child,
-    .table .tableHeader:last-child {
-        position: relative;
-    }
+.middleGroup{
+    width: 100%;
+}
+.bottomContainer {
+    flex-direction: column;
+    width: 80%;
+    height: fit-content;
+    align-self: center;
+}
 
-    .tableContainer{
-        margin-top: 5rem;
-    }
+.totalRightPanel{
+    flex-direction: column;
+}
+.coinCardContainer {
+    width: 100%;
+}
+.button1 {
+    width: 100%;
+}
+.Button2, .Button3 {
+    width: 100%;
+    font-size: 14px;
+}
 
-    .emptyPanel{
-        margin-top: 5rem;
-    }
+.table .tableCell:last-child,
+.table .tableHeader:last-child {
+    position: relative;
+}
+
+.tableContainer{
+    margin-top: 5rem;
+}
+
+.emptyPanel{
+    margin-top: 5rem;
+}
 
 
 }
-  
 
+.searchContainer {
+margin-bottom: 15px; /* Adds spacing below the search bar */
+display: flex;
+justify-content: flex-start; /* Aligns the search bar to the left */
+align-items: center; /* Keeps the input vertically centered */
+}
+
+.searchBar {
+width: 50%; /* Ensures the search bar is 50% of the parent width */
+padding: 10px 15px;
+border: 2px solid #ccc; 
+border-radius: 25px; 
+outline: none; 
+font-size: 16px; 
+transition: border-color 0.3s, box-shadow 0.3s; 
+}
+
+
+.searchBar:focus {
+border-color: #007bff; 
+box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.searchBarBlackText {
+color: #000; 
+background-color: #f9f9f9; 
+}
+
+
+.costDisplay {
+    text-align: left; 
+    margin-left: 1rem; 
+    font-family: "Sora", sans-serif;
+    font-size: 16px;
+    color: #ffffff; 
+    max-width: 100%; 
+    white-space: nowrap; 
+    overflow: hidden; /* Hide overflowed content */
+    text-overflow: ellipsis; /* Add ellipses when content overflows */
+    display: block;
+}
+
+.errorMessage {
+    text-align: center; /* Center-align text for the error message */
+    font-family: "Sora", sans-serif;
+    font-size: 16px;
+    color: #ff4d4d; /* Error color */
+    margin-top: 1rem;
+    
+}
+
+.active {
+background-color: rgba(245, 245, 245, 0.993); 
+color: black; 
+font-weight: bold; 
+}
+
+.gasFeeAmount {
+    text-align: center; /* Centers the entire paragraph */
+    font-family: "Sora", sans-serif;
+    font-size: 16px;
+    margin: 20px 0; /* Adds margin for spacing */
+}
+
+.tooltipIcon {
+    font-size: 18px;
+    color: #007bff; /* Blue color for the question mark */
+    cursor: pointer;
+    margin-left: 5px;
+    position: relative; /* Make the question mark the reference point for the tooltip */
+}
+
+.tooltipIcon:hover::after {
+    content: "Gas Fees are small fees that are charged when making transactions on a blockchain network.";
+    display: block;
+    background-color: #333;
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px;
+    position: absolute;
+    top: 40px; /* Position the tooltip above the icon */
+    left: 50%;
+    transform: translateX(-50%); /* Center the tooltip above the icon */
+    z-index: 10;
+    width: 200px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.sellButton {
+    background-color: #e74c3c;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.sellButton:hover {
+    background-color: #c0392b;
+}
