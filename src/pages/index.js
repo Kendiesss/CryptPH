@@ -5,7 +5,7 @@ import Footer from './Footer';
 import Header from './Header';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-
+import FeedbackForm from './feedback';
 
 export default function HomePage() {
   return (
@@ -15,6 +15,7 @@ export default function HomePage() {
       <Analytics />
       <SpeedInsights />
       <Footer />
+      <FeedbackForm />
 
 
     </div>
