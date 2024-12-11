@@ -655,46 +655,56 @@ export default function DummyPage({ title }) {
                                 </h1>
                                
                          </div>
-                            <div className={styles.buttonGroup}>
-                            
-                            <button className={styles.howToPlay} onClick={openTutorModal}>
-                                How to Play <IoMdHelpCircleOutline className={styles.tutorialIcon} />
-                            </button>
+                         <div className={styles.buttonGroup}>
+        <button
+          className={`${styles.howToPlay} ${activePanel === 'tutor' ? styles.active : ''}`}
+          onClick={() => {
+            handlePanelSwitch('tutor');
+            openTutorModal();
+          }}
+        >
+          How to Play <IoMdHelpCircleOutline className={styles.tutorialIcon} />
+        </button>
 
-                            <TutorialModal isOpen={isTutorModalOpen} onClose={closeTutorModal} />
-                            
-                                <button
-                                 className={`${styles.button1} ${isHovered2 ? styles.button1Hover : ''}`}
-                                onMouseEnter={() => setIsHovered2(true)}
-                                onMouseLeave={() => setIsHovered2(false)}
-                                onClick={() =>handlePanelSwitch('panel2')}
-                                
-                                >Coin List</button>
+        <TutorialModal isOpen={activePanel === 'tutor'} onClose={() => setActivePanel(null)} />
 
+        <button
+          className={`${styles.button1} ${isHovered2 ? styles.button1Hover : ''} ${activePanel === 'panel2' ? styles.active : ''}`}
+          onMouseEnter={() => setIsHovered2(true)}
+          onMouseLeave={() => setIsHovered2(false)}
+          onClick={() => handlePanelSwitch('panel2')}
+        >
+          Coin List
+        </button>
 
-                                <button
-                                className={`${styles.button1} ${isHovered1 ? styles.button1Hover : ''}`}
-                                onMouseEnter={() => setIsHovered1(true)}
-                                onMouseLeave={() => setIsHovered1(false)}
-                                onClick={() =>handlePanelSwitch('panel1')}
-                                
-                                >Ongoing Investments</button>
+        <button
+          className={`${styles.button1} ${isHovered1 ? styles.button1Hover : ''} ${activePanel === 'panel1' ? styles.active : ''}`}
+          onMouseEnter={() => setIsHovered1(true)}
+          onMouseLeave={() => setIsHovered1(false)}
+          onClick={() => handlePanelSwitch('panel1')}
+        >
+          Ongoing Investments
+        </button>
 
-                                <button
-                                 className={`${styles.button1} ${isHovered3 ? styles.button1Hover : ''}`}
-                                onMouseEnter={() => setIsHovered3(true)}
-                                onMouseLeave={() => setIsHovered3(false)}
-                                onClick={() =>handlePanelSwitch('panel3')}
-                                
-                                >Trade Log</button>
-                            
-                            <button className={styles.howToPlay} onClick={openRestartModal}>Restart</button>
+        <button
+          className={`${styles.button1} ${isHovered3 ? styles.button1Hover : ''} ${activePanel === 'panel3' ? styles.active : ''}`}
+          onMouseEnter={() => setIsHovered3(true)}
+          onMouseLeave={() => setIsHovered3(false)}
+          onClick={() => handlePanelSwitch('panel3')}
+        >
+          Trade Log
+        </button>
 
-                          
-
-                            </div>
-
-
+        <button
+          className={`${styles.howToPlay} ${activePanel === 'restart' ? styles.active : ''}`}
+          onClick={() => {
+            handlePanelSwitch('restart');
+            openRestartModal();
+          }}
+        >
+          Restart
+        </button>
+      </div>
                         </div>
 
                         <div className={styles.coinPanel}>
@@ -1079,4 +1089,3 @@ export default function DummyPage({ title }) {
         </Layout>
     )
 }
-
