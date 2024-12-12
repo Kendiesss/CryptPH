@@ -1,0 +1,248 @@
+/* General container styling */
+.container {
+    margin-left: 5rem;
+    padding: 20px;
+    font-family: "Sora", sans-serif;
+}
+
+/* Title styling */
+.title {
+    font-size: 50px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Search input styling */
+.search {
+    margin-bottom: 20px;
+    margin-right: 20px;
+    padding: 10px;
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #0B162B;
+    background-color: #f8f9fa;
+}
+
+/* Add button styling */
+.addButton {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 100%;
+    max-width: 100%;
+    background-color: #F8F9FA;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #0B162B;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+}
+
+/* Table container styling */
+.tableContainer {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Table styling */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #F8F9FA;
+    color: #0B162B;
+}
+
+.table th,
+.table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+}
+
+.table td {
+    background-color: #ffffff;
+}
+
+/* Actions buttons container */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Individual button styles */
+.editBtn,
+.delBtn,
+.hideBtn {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.editBtn {
+    background-color: #90a955; /* Green */
+}
+
+.delBtn {
+    background-color: #f44336; /* Red */
+}
+
+.hideBtn {
+    background-color: #0B162B; /* Dark */
+}
+
+.editBtn:hover {
+    background-color: #7a8d47;
+}
+
+.delBtn:hover {
+    background-color: #d32f2f;
+}
+
+.hideBtn:hover {
+    background-color: #1e2635;
+}
+
+/* Pagination styling */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #0B162B;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #ddd;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    background-color: #e0e0e0;
+}
+
+/* Modal styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: #F8F9FA;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+
+}
+
+.modal h2 {
+    margin-bottom: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #F8F9FA;
+    background-color: #0B162B;
+    text-align: center;
+    border-radius: 10px;
+    padding: 10px;
+
+}
+
+.inputField,
+.textareaField,
+.selectField {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    color: black;
+}
+
+.textareaField{
+    min-height: 300px;
+}
+
+.inputField:focus,
+.textareaField:focus,
+.selectField:focus {
+    outline-color: #0b162b;
+}
+
+.submitButton,
+.cancelButton {
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 5px;
+    margin-top: 10px;
+}
+
+.submitButton {
+    background-color: #0b162b;
+    width: 100px;
+    border-radius: 15px;
+    color: white;
+    border: none;
+}
+
+.cancelButton {
+    background-color: #f44336;
+    border-radius: 15px;
+    color: white;
+    border: none;
+    width: 100px;
+}
+
+.submitButton:hover {
+    background-color: #1e2635;
+}
+
+.cancelButton:hover {
+    background-color: #d32f2f;
+}
+
+@media (max-width: 767.5px) {
+    .container{
+        margin-left: 0;
+    }
+}

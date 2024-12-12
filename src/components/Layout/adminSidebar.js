@@ -10,6 +10,7 @@ import { FiLogOut } from "react-icons/fi";
 import { FaExchangeAlt } from "react-icons/fa";
 import { FaUsersCog } from "react-icons/fa";
 import { AiOutlineDashboard } from "react-icons/ai";
+import { RiQuestionnaireFill } from "react-icons/ri";
 import logo from '@/img/logo.png'
 import jwt from 'jsonwebtoken';// Correct import
 
@@ -84,6 +85,7 @@ export default function Sidebar() {
                     <MenuItem name="Dashboard" route="/admin-dashboard" icon={<AiOutlineDashboard />} />
                     <MenuItem name="Manage Contents" route="/manageContents" icon={<FiDatabase />} />
                     <MenuItem name="Manage Users" route="/manageUsers" icon={<FaUsersCog />} />
+                    <MenuItem name="Manage FAQs" route="/manageFAQs" icon={<RiQuestionnaireFill />} />
                     <MenuItem name="Charts" route="/charts" icon={<FiBarChart />} />
                     <MenuItem name="News" route="/news" icon={<MdOutlineNewspaper />} />
                     <MenuItem name="Learn" route="/learn" icon={<FiBook />} />

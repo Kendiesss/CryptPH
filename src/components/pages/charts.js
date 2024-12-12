@@ -24,26 +24,29 @@ const ids = [ //Dont Modify or Delete, Important!!!
     '7725', '24911', '3408', '27009', '32984', '7083', '22059', '2634', '52', '21259', 
     '10688', '28683'
 ].join(','); 
-const faqs = [
-    {
-        question: "What is CryptPH?",
-        answer: "CryptPH is an innovative platform designed to make cryptocurrency trading more accessible in the Philippines. It provides users with cryptocurrency data visualizations, basic trading tools, and educational contents."
-    },
-    {
-        question: "Who are CryptPH's Developers?",
-        answer: "CryptPH was developed by a dedicated team of students, including John Ken B. Angeles, Giemmel Adryeane A. Magno, Job Matthew J. Milo, and Tom Cyrus P. Vilar. "
-    },
-    {
-        question: "What is CryptPH's Virtual Trading Game and How to Access It?",
-        answer: "CryptPH's Virtual Trading Game allows users to practice trading without risking real money. To start, sign up for an account, and you'll be given a set amount of virtual currency to trade. You can then explore the different trading pairs and try your hand at buying and selling cryptocurrencies based on market data. The game helps users build their skills and confidence before engaging in real-world trading."
-    },
-    {
-        question: "How to Register for an Account?",
-        answer: "At the home page, click the register button. You will be redirected to the register page. Users can register and login using their Google Accounts."
-    }
-];
+// const faqs = [
+//     {
+//         question: "What is CryptPH?",
+//         answer: "CryptPH is an innovative platform designed to make cryptocurrency trading more accessible in the Philippines. It provides users with cryptocurrency data visualizations, basic trading tools, and educational contents."
+//     },
+//     {
+//         question: "Who are CryptPH's Developers?",
+//         answer: "CryptPH was developed by a dedicated team of students, including John Ken B. Angeles, Giemmel Adryeane A. Magno, Job Matthew J. Milo, and Tom Cyrus P. Vilar. "
+//     },
+//     {
+//         question: "What is CryptPH's Virtual Trading Game and How to Access It?",
+//         answer: "CryptPH's Virtual Trading Game allows users to practice trading without risking real money. To start, sign up for an account, and you'll be given a set amount of virtual currency to trade. You can then explore the different trading pairs and try your hand at buying and selling cryptocurrencies based on market data. The game helps users build their skills and confidence before engaging in real-world trading."
+//     },
+//     {
+//         question: "How to Register for an Account?",
+//         answer: "At the home page, click the register button. You will be redirected to the register page. Users can register and login using their Google Accounts."
+//     }
+// ];
+
+
 
 export default function DummyPage({ title }) {
+    const [faqs, setFaqs] = useState([]);
     const [openFaq, setOpenFaq] = useState(null);
     const [cryptoData, setCryptoData] = useState([]);
     const [selectedCoinId, setSelectedCoinId] = useState("1"); // Default to BTCUSD (ID: 1)
@@ -278,6 +281,24 @@ export default function DummyPage({ title }) {
         }
     }, [selectedCoinId, indicators]);  // Reapply indicators when updated
 
+
+    useEffect(() => {
+        const fetchFaqs = async () => {
+            try {
+                const res = await fetch('/api/faqs/fetch');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch FAQs');
+                }
+                const data = await res.json();
+                setFaqs(data);
+            } catch (error) {
+                setError(error.message);
+            } 
+        };
+        
+        fetchFaqs();
+    }, []); 
+
     const toggleFaq = (index) => {
         setOpenFaq(openFaq === index ? null : index);
     };
@@ -455,7 +476,7 @@ export default function DummyPage({ title }) {
                         </h1>
                         {faqs.map((faq, index) => (
                             <div key={index} className={styles.faqCard}>
-                               <h1 
+                                <h1 
                                     className={styles.faqHeader} 
                                     onClick={() => toggleFaq(index)}
                                 >

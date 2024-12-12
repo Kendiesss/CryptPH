@@ -79,9 +79,11 @@ export default function MenuBarMobile({ setter }) {
                     <Link href="/admin-dashboard" className="text-white text-lg font-sora">Dashboard</Link>
                     <Link href="/manageContents" className="text-white text-lg font-sora">Manage Contents</Link>
                     <Link href="/manageUsers" className="text-white text-lg font-sora">Manage Users</Link>
+                    <Link href="/manageFAQs" className="text-white text-lg font-sora">Manage FAQs</Link>
                     <Link href="/charts" className="text-white text-lg font-sora">Charts</Link>
                     <Link href="/news" className="text-white text-lg font-sora">News</Link>
                     <Link href="/learn" className="text-white text-lg font-sora">Learn</Link>
+                   
 
                     {session || user?.role ? (
                         <>

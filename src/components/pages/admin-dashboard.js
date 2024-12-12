@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { FiBarChart, FiBook, FiDatabase } from "react-icons/fi";
 import { MdOutlineNewspaper } from "react-icons/md";
 import { FaExchangeAlt, FaUsersCog } from "react-icons/fa";
+import { RiQuestionnaireFill } from "react-icons/ri";
 import withAdminAuth from '@/pages/api/auth/withAdminAuth';
 
 
@@ -99,6 +100,11 @@ function HeroPage() {
                     </Link>
                 </button>
                 <button className={styles.adminButton}>
+                    <Link href="/learn" passHref>
+                        <FiBook className={styles.icon} /> Learn
+                    </Link>
+                </button>
+                <button className={styles.adminButton}>
                     <Link href="/news" passHref>
                         <MdOutlineNewspaper className={styles.icon} /> News
                     </Link>
@@ -109,13 +115,13 @@ function HeroPage() {
                     </Link>
                 </button>
                 <button className={styles.adminButton}>
-                    <Link href="/learn" passHref>
-                        <FiBook className={styles.icon} /> Learn
+                    <Link href="/manageContents" passHref>
+                        <FiDatabase className={styles.icon} /> Manage Contents
                     </Link>
                 </button>
                 <button className={styles.adminButton}>
-                    <Link href="/manageContents" passHref>
-                        <FiDatabase className={styles.icon} /> Manage Contents
+                    <Link href="/manageFAQs" passHref>
+                        <RiQuestionnaireFill className={styles.icon} /> Manage FAQs
                     </Link>
                 </button>
               </div>
