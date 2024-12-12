@@ -15,14 +15,15 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
             const body = req.body;
+            console.log('Request Body: ',req.body);
 
             // Create a new FAQ item
             const faqItem = new FAQ({
                 question: body.question,
                 answer: body.answer,
                 category: body.category, // Optional: categorize FAQs if needed
+                visibility: body.visibility || 'visible',
                 createdAt: new Date(),
-                isVisible: body.isVisible !== undefined ? body.isVisible : true, // Default to visible
             });
 
             await faqItem.save();

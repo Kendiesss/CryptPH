@@ -13,9 +13,9 @@ const faqSchema = new mongoose.Schema({
         type: String, 
         required: false,
     },
-    isVisible: {
-        type: Boolean,
-        default: true, // Default to visible
+    visibility: {
+        type: String,
+        default: 'visible',  // Default to 'visible' if not set
     },
     createdAt: {
         type: Date,
