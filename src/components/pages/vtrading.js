@@ -12,7 +12,7 @@ import React, {useState, useEffect} from 'react';
 import modalStyles from '@/styles/modal.module.css';
 import TradingViewWidget from './TradingViewWidget'; // Adjust the path accordingly
 import widgetData from '@/data/widgetData'; 
-import TutorialModal from '@/components/Layout/TutorialModal.js';
+import TutorialGuide from '@/components/Layout/TutorialGuide.js';
 import styles from '@/styles/vtrading.module.css';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -750,146 +750,148 @@ export default function DummyPage({ title }) {
         />
 
       
-            <div className={styles.pageContainer} id='modal-root'>
-                <img  src={gradient1.src} className={styles.gradient1}></img>
-                <div className={styles.topContainer}>
-                    <div className={styles.leftPanel}>
-                            <h1 className={styles.titleHeader}>Virtual Trading</h1> 
-                            
-                        <div className={styles.topGroup}>
-                        <div className={styles.dummyCashContainer}>
-                            <h1 className={styles.header1}>Available Dummy Cash</h1>
-                            
-                                <h1 className={styles.header2}>
-                                    ${new Intl.NumberFormat('en-US', { className: 'currency', currency: 'USD' }).format(dummyCash)}
-                                </h1>
-                               
-                         </div>
-                         <div className={styles.buttonGroup}>
-                        <button
+<div className={styles.pageContainer} id="modal-root">
+    <img src={gradient1.src} className={styles.gradient1}></img>
+    <div className={styles.topContainer}>
+        <div className={styles.leftPanel}>
+            <h1 className={styles.titleHeader}>Virtual Trading</h1>
+
+            <div className={styles.topGroup}>
+                <div className={styles.dummyCashContainer}>
+                    <h1 className={styles.header1}>Available Dummy Cash</h1>
+                    <h1 className={styles.header2}>
+                        ${new Intl.NumberFormat('en-US', { className: 'currency', currency: 'USD' }).format(dummyCash)}
+                    </h1>
+                </div>
+
+                <div className={styles.buttonGroup}>
+                    {/* Tutorial Button */}
+                    <button
                         className={`${styles.howToPlay} ${activePanel === 'tutor' ? styles.active : ''}`}
-                        onClick={() => {
-                            handlePanelSwitch('tutor');
-                            openTutorModal();
-                        }}
-                        >
+                        onClick={() => handlePanelSwitch('tutor')}
+                    >
                         How to Play <IoMdHelpCircleOutline className={styles.tutorialIcon} />
-                        </button>
+                    </button>
 
-                        <TutorialModal isOpen={activePanel === 'tutor'} onClose={() => setActivePanel(null)} />
+                    {/* Guided Tutorial */}
+                    <TutorialGuide isOpen={activePanel === 'tutor'} onClose={() => setActivePanel(null)} />
 
-                        <button
-                        className={`${styles.button1} ${isHovered2 ? styles.button1Hover : ''} ${activePanel === 'panel2' ? styles.active : ''}`}
+                    {/* Coin List Button */}
+                    <button
+                        className={`${styles.button1} ${isHovered2 ? styles.button1Hover : ''} ${activePanel === 'panel2' ? styles.active : ''} coin-list-button`}
                         onMouseEnter={() => setIsHovered2(true)}
                         onMouseLeave={() => setIsHovered2(false)}
                         onClick={() => handlePanelSwitch('panel2')}
-                        >
+                    >
                         Coin List
-                        </button>
+                    </button>
 
-                        <button
-                        className={`${styles.button1} ${isHovered1 ? styles.button1Hover : ''} ${activePanel === 'panel1' ? styles.active : ''}`}
+                    {/* Ongoing Investments Button */}
+                    <button
+                        className={`${styles.button1} ${isHovered1 ? styles.button1Hover : ''} ${activePanel === 'panel1' ? styles.active : ''} ongoing-investments-button`}
                         onMouseEnter={() => setIsHovered1(true)}
                         onMouseLeave={() => setIsHovered1(false)}
                         onClick={() => handlePanelSwitch('panel1')}
-                        >
+                    >
                         Ongoing Investments
-                        </button>
+                    </button>
 
-                        <button
-                        className={`${styles.button1} ${isHovered3 ? styles.button1Hover : ''} ${activePanel === 'panel3' ? styles.active : ''}`}
+                    {/* Trade Log Button */}
+                    <button
+                        className={`${styles.button1} ${isHovered3 ? styles.button1Hover : ''} ${activePanel === 'panel3' ? styles.active : ''} trade-log-button`}
                         onMouseEnter={() => setIsHovered3(true)}
                         onMouseLeave={() => setIsHovered3(false)}
                         onClick={() => handlePanelSwitch('panel3')}
-                        >
+                    >
                         Trade Log
-                        </button>
+                    </button>
 
-                        <button
-                        className={`${styles.howToPlay} ${activePanel === 'restart' ? styles.active : ''}`}
-                        onClick={() => {
-                            handlePanelSwitch('restart');
-                            openRestartModal();
-                        }}
-                        >
-                        Restart
-                        </button>
-                    </div>
+                    {/* Restart Button */}
+                    <button
+                    className={`${styles.howToPlay} ${activePanel === 'restart' ? styles.active : ''} restart-button`}
+                    onClick={() => {
+                        handlePanelSwitch('restart');
+                        openRestartModal();
+                    }}
+                    >
+                    Restart
+                    </button>
+                </div>
                         </div>
                         <div className={styles.coinPanel}>
                         {activePanel === 'panel1' && (
-    <div className={styles.cardContainer}>
-        {investments.length === 0 ? (
-            <p className={styles.header2}>
-                You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!
-            </p>
-        ) : (
-            <div className={styles.tableContainer}>
-                <table className={styles.table}>
-                    <thead>
-                        <tr>
-                            <th className={styles.tableHeader}>Coin Name</th>
-                            <th className={styles.tableHeader}>Symbol</th>
-                            <th className={styles.tableHeader}>Quantity</th>
-                            <th className={styles.tableHeader}>Total Cost</th>
-                            <th className={styles.tableHeader}>Investment Time</th>
-                            <th className={styles.tableHeader}>% Profit</th>
-                            <th className={styles.tableHeader}>Action</th> {/* New column for sell button */}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {investments.map((investment, index) => {
-                            const investmentDate = new Date(investment.timeInvested).toLocaleString();
-                            const latestCoinData = cryptoData[investment.id];
-                            const latestPrice = latestCoinData ? latestCoinData.quote.USD.price : investment.pricePHP;
+                            <div className={styles.cardContainer}>
+                                {investments.length === 0 ? (
+                                    <p className={styles.header2}>
+                                        You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!
+                                    </p>
+                                ) : (
+                                    <div className={styles.tableContainer}>
+                                        <table className={styles.table}>
+                                            <thead>
+                                                <tr>
+                                                    <th className={styles.tableHeader}>Coin Name</th>
+                                                    <th className={styles.tableHeader}>Symbol</th>
+                                                    <th className={styles.tableHeader}>Quantity</th>
+                                                    <th className={styles.tableHeader}>Total Cost</th>
+                                                    <th className={styles.tableHeader}>Investment Time</th>
+                                                    <th className={styles.tableHeader}>% Profit</th>
+                                                    <th className={styles.tableHeader}>Action</th> {/* New column for sell button */}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {investments.map((investment, index) => {
+                                                    const investmentDate = new Date(investment.timeInvested).toLocaleString();
+                                                    const latestCoinData = cryptoData[investment.id];
+                                                    const latestPrice = latestCoinData ? latestCoinData.quote.USD.price : investment.pricePHP;
 
-                            // Calculate profit for each investment
-                            const currentInvestmentValue = latestPrice * investment.quantity; // Current value of the investment
-                            const totalInvestmentCost = investment.averagePrice * investment.quantity; // Total cost of the investment
-                            const profit = ((currentInvestmentValue - totalInvestmentCost) / totalInvestmentCost) * 100; // Calculate profit percentage
+                                                    // Calculate profit for each investment
+                                                    const currentInvestmentValue = latestPrice * investment.quantity; // Current value of the investment
+                                                    const totalInvestmentCost = investment.averagePrice * investment.quantity; // Total cost of the investment
+                                                    const profit = ((currentInvestmentValue - totalInvestmentCost) / totalInvestmentCost) * 100; // Calculate profit percentage
 
-                            return (
-                                <tr key={investment.id || index}>
-                                    <td className={styles.tableCell}>
-                                        {investment.name}
-                                        <img 
-                                            src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
-                                            alt={`${investment.name} logo`} 
-                                            className={styles.logo}
-                                        />
-                                    </td>
-                                    <td className={styles.tableCell}>{investment.symbol}</td>
-                                    <td className={styles.tableCell}>{investment.quantity}</td>
-                                    <td className={styles.tableCell}>${totalInvestmentCost.toFixed(2)}</td>
-                                    <td className={styles.tableCell}>{investmentDate}</td>
-                                    <td className={styles.tableCell}>
-                                        <span
-                                            className={
-                                                profit >= 0
-                                                    ? styles.changePositive
-                                                    : styles.changeNegative
-                                            }
-                                        >
-                                            {profit.toFixed(1)}%
-                                        </span>
-                                    </td>
-                                    <td className={styles.tableCell}>
-                                        <button
-                                            className={styles.sellButton}
-                                            onClick={() => handleExit(investment)} // Call handleExit directly
-                                        >
-                                            Exit
-                                        </button>
-                                    </td> {/* Sell button in each row */}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-        )}
-    </div>
-)}
+                                                    return (
+                                                        <tr key={investment.id || index}>
+                                                            <td className={styles.tableCell}>
+                                                                {investment.name}
+                                                                <img 
+                                                                    src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
+                                                                    alt={`${investment.name} logo`} 
+                                                                    className={styles.logo}
+                                                                />
+                                                            </td>
+                                                            <td className={styles.tableCell}>{investment.symbol}</td>
+                                                            <td className={styles.tableCell}>{investment.quantity}</td>
+                                                            <td className={styles.tableCell}>${totalInvestmentCost.toFixed(2)}</td>
+                                                            <td className={styles.tableCell}>{investmentDate}</td>
+                                                            <td className={styles.tableCell}>
+                                                                <span
+                                                                    className={
+                                                                        profit >= 0
+                                                                            ? styles.changePositive
+                                                                            : styles.changeNegative
+                                                                    }
+                                                                >
+                                                                    {profit.toFixed(1)}%
+                                                                </span>
+                                                            </td>
+                                                            <td className={styles.tableCell}>
+                                                                <button
+                                                                    className={styles.sellButton}
+                                                                    onClick={() => handleExit(investment)} // Call handleExit directly
+                                                                >
+                                                                    Exit
+                                                                </button>
+                                                            </td> {/* Sell button in each row */}
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </div>
+                        )}
 
                             {activePanel === 'panel2' && (
                             <div>
@@ -1148,45 +1150,45 @@ export default function DummyPage({ title }) {
                                     </span>
                                 </div>
                                 <div className={styles.qtyGroup}>
-    <label className={styles.header2} htmlFor="quantity">Coin Quantity: </label><br />
-    <input 
-        type="number" 
-        id="quantity" 
-        name="quantity" 
-        className={styles.inputField} 
-        placeholder="Enter Quantity" 
-        min="0"
-        value={quantity} 
-        onChange={handleQuantityChange} 
-    />
-</div>
+                                <label className={styles.header2} htmlFor="quantity">Coin Quantity: </label><br />
+                                <input 
+                                    type="number" 
+                                    id="quantity" 
+                                    name="quantity" 
+                                    className={styles.inputField} 
+                                    placeholder="Enter Quantity" 
+                                    min="0"
+                                    value={quantity} 
+                                    onChange={handleQuantityChange} 
+                                />
+                            </div>
 
-<p className={styles.gasFeeAmount}>
-    Current Gas Fee: 0.1% <span className={styles.tooltipIcon}>?</span>
-</p>
+                            <p className={styles.gasFeeAmount}>
+                                Current Gas Fee: 0.1% <span className={styles.tooltipIcon}>?</span>
+                            </p>
 
-{quantity && (
-    <div className={styles.costDisplay}>
-        <b>Cost:</b> ${totalCost} <br />
-        <b>Gas Fee (0.1%)</b>: ${gasFee.toFixed(2)} <br />
-        <b>Total Cost with Gas Fee</b>: ${totalCostWithGas.toFixed(2)}
-    </div>
-)}
+                            {quantity && (
+                                <div className={styles.costDisplay}>
+                                    <b>Cost:</b> ${totalCost} <br />
+                                    <b>Gas Fee (0.1%)</b>: ${gasFee.toFixed(2)} <br />
+                                    <b>Total Cost with Gas Fee</b>: ${totalCostWithGas.toFixed(2)}
+                                </div>
+                            )}
 
-{totalCostWithGas > dummyCash && (
-    <div className={styles.errorMessage}>
-        You need ${Math.abs(totalCostWithGas - dummyCash).toFixed(2)} more to invest in {quantity} {selectedCoin?.symbol}.
-    </div>
-)}
+                            {totalCostWithGas > dummyCash && (
+                                <div className={styles.errorMessage}>
+                                    You need ${Math.abs(totalCostWithGas - dummyCash).toFixed(2)} more to invest in {quantity} {selectedCoin?.symbol}.
+                                </div>
+                            )}
 
-<div className={styles.cardButtonGroup}>
-    <button className={styles.Button2} onClick={handleEntry}>
-        Enter
-    </button>
-    <button className={styles.Button3} onClick={handleExit}>
-        Exit
-    </button>
-</div>
+                            <div className={styles.cardButtonGroup}>
+                                <button className={styles.Button2} onClick={handleEntry}>
+                                    Enter
+                                </button>
+                                <button className={styles.Button3} onClick={handleExit}>
+                                    Exit
+                                </button>
+                            </div>
 
                             </div>
 

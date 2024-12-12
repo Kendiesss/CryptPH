@@ -1,0 +1,85 @@
+.tutorialOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  z-index: 1001;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 300px; /* Optional, to prevent it from stretching too wide */
+  left: 50%;
+  transform: translateX(-50%); /* Ensure it's centered */
+}
+
+.tooltip h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #333;
+}
+
+.tooltip p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+.tooltip .buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navButton {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.navButton:hover {
+  background-color: #0056b3;
+}
+
+.arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #ffffff;
+  top: -8px; /* Adjust the vertical position of the arrow */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.centeredTooltip {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  z-index: 1001;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure the text color for congratulations step */
+.blackText {
+  color: black;
+}
