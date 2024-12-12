@@ -143,7 +143,9 @@ export default function NewsDetailPage() {
                     <div className={styles.innerCard}>
                         <h1 className={styles.title}>Learn More</h1>
                         {newsItems
-                            .filter(news => news.category === "Education")
+                            .filter(news => news.category === "Education") // Filter by category
+                            .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, latest first
+                            .slice(0, 5) // Get only the top 5 latest items
                             .map(news => (
                                 <div 
                                     className={styles.newsCardSmall} 

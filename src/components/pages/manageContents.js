@@ -20,11 +20,22 @@ import withAdminAuth from '@/pages/api/auth/withAdminAuth';
 
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 
-
-
 const ReactQuill = dynamic(() => import('react-quill'), {
     ssr: false
 });
+
+const modules = {
+    toolbar: [
+        [{ 'header': '1'}, { 'header': '2'}, { 'font': [] }],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['bold', 'italic', 'underline'],
+        [{ 'align': [] }],
+        ['link', 'image'], // Image button added here
+        [{ 'indent': '-1'}, { 'indent': '+1' }], // Indentation buttons
+        ['blockquote'], // Blockquote button for paragraph emphasis
+        ['code-block'], // Code block button for inserting code snippets
+      ],
+  };
 
 
 const Card = ({ children }) => {
@@ -187,6 +198,14 @@ const AddModal = ({ show, onClose, onSave }) => {
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
     
+     // Set the current date in YYYY-MM-DD format
+     const currentDate = new Date();
+     const formattedDate = currentDate.toLocaleDateString('en-CA');
+     
+    //today's date
+    useEffect(() => {
+        setDate(formattedDate);
+    }, [formattedDate]);
 
     if (!show) {
         return null;
@@ -302,6 +321,8 @@ const AddModal = ({ show, onClose, onSave }) => {
                             onChange={(e) => setDate(e.target.value)}
                             className={styles.textInput}
                             required
+                            min={formattedDate} // Prevent selecting past dates
+                            max={formattedDate} // Prevent selecting future dates
                         />
                     </div>
                     <ReactQuill
@@ -309,6 +330,7 @@ const AddModal = ({ show, onClose, onSave }) => {
                         onChange={setDescription}
                         className={styles.quillEditor}
                         theme="snow"
+                        modules={modules}
                     />
                     <div className={styles.bottomFormContainer}>
                         <h2 className={styles.modalHeaderMain}>New Content</h2>
@@ -349,7 +371,7 @@ const HeroPage = () => {
     const [filteredNewsData, setFilteredNewsData] = useState([]); // For filtering and searching
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 12; 
+    const itemsPerPage = 8; 
 
     
 

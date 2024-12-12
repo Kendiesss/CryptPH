@@ -58,7 +58,9 @@ export default function HeroPage() {
             try {
                 const response = await fetch('/api/news/fetch?category=Education');
                 const data = await response.json();
-                setNewsItems(data);
+                // Sort news items by 'publishedAt' in descending order (latest first)
+                const sortedNewsItems = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+                setNewsItems(sortedNewsItems);
             } catch (error) {
                 console.error("Error fetching news items:", error);
             }
