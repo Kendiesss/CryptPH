@@ -242,6 +242,14 @@ export default function DummyPage({ title }) {
     
         // Modify handleExit to open error modal on invalid exit attempt
         const handleExit = () => {
+            // Check if the quantity input is empty or invalid
+            if (!quantity || parseFloat(quantity) <= 0) {
+                console.log('Invalid quantity entered:', quantity);
+                setErrorMessage('Please enter a valid quantity greater than zero.');
+                setIsSellErrorModalOpen(true); // Open the error modal
+                return;
+            }
+        
             if (investedCoin && investedCoin.quantity > 0) {
                 const quantityToExit = parseFloat(quantity); // The quantity input by the user
                 console.log('Attempting to exit. Quantity to exit:', quantityToExit);
@@ -315,7 +323,7 @@ export default function DummyPage({ title }) {
                             };
                         }
                     }
-                    return inv; 
+                    return inv;
                 }).filter((inv) => inv !== null); 
         
                 if (updatedInvestments.length === 0) {
@@ -344,6 +352,7 @@ export default function DummyPage({ title }) {
                 closeModal();
             }
         };
+        
         
     useEffect(() => {
 
@@ -393,11 +402,12 @@ export default function DummyPage({ title }) {
 
       const handleQuantityChange = (e) => {
         const newValue = e.target.value;
-
-        if (newValue === '' || /^[0-9]*$/.test(newValue)) {
+    
+        if (newValue === '' || (/^[0-9]*$/.test(newValue) && parseInt(newValue, 10) >= 0)) {
             setQuantity(newValue);
         }
     };
+    
   
     const closeModal = () => {
         setOpenModal(null);
@@ -417,7 +427,13 @@ export default function DummyPage({ title }) {
 
     const handleViewClick = (coin) => {
         setSelectedCoin(coin); // Update the selected coin state
-        
+    
+        // Check if the required data exists before proceeding
+        if (!coin?.quote?.USD) {
+            console.error("Invalid coin data:", coin);
+            return; // Exit the function if data is missing
+        }
+    
         // Store the selected coin in localStorage to persist the selection
         localStorage.setItem(
             'selectedCoin',
@@ -434,12 +450,13 @@ export default function DummyPage({ title }) {
             })
         );
     
-        const existingInvestment = investments.find(inv => inv.id === coin.id);
-        setInvestedCoin(existingInvestment || null); 
+        const existingInvestment = investments.find((inv) => inv.id === coin.id);
+        setInvestedCoin(existingInvestment || null);
     
-        const match = widgetData.find(item => item.id === coin.id);
+        const match = widgetData.find((item) => item.id === coin.id);
         setSymbol(match ? match.symbol : null);
     };
+    
     
 
     const formatNumberWithCommas = (number) => {
@@ -828,66 +845,76 @@ export default function DummyPage({ title }) {
                                 ) : (
                                     <div className={styles.tableContainer}>
                                         <table className={styles.table}>
-                                            <thead>
-                                                <tr>
-                                                    <th className={styles.tableHeader}>Coin Name</th>
-                                                    <th className={styles.tableHeader}>Symbol</th>
-                                                    <th className={styles.tableHeader}>Quantity</th>
-                                                    <th className={styles.tableHeader}>Total Cost</th>
-                                                    <th className={styles.tableHeader}>Investment Time</th>
-                                                    <th className={styles.tableHeader}>% Profit</th>
-                                                    <th className={styles.tableHeader}>Action</th> {/* New column for sell button */}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {investments.map((investment, index) => {
-                                                    const investmentDate = new Date(investment.timeInvested).toLocaleString();
-                                                    const latestCoinData = cryptoData[investment.id];
-                                                    const latestPrice = latestCoinData ? latestCoinData.quote.USD.price : investment.pricePHP;
+    <thead>
+        <tr>
+            <th className={styles.tableHeader}>Coin Name</th>
+            <th className={styles.tableHeader}>Symbol</th>
+            <th className={styles.tableHeader}>Quantity</th>
+            <th className={styles.tableHeader}>Total Cost</th>
+            <th className={styles.tableHeader}>Investment Time</th>
+            <th className={styles.tableHeader}>% Profit</th>
+            <th className={styles.tableHeader}>Select</th> {/* New column for select button */}
+            <th className={styles.tableHeader}>Action</th> {/* Existing column for sell button */}
+        </tr>
+    </thead>
+    <tbody>
+        {investments.map((investment, index) => {
+            const investmentDate = new Date(investment.timeInvested).toLocaleString();
+            const latestCoinData = cryptoData[investment.id];
+            const latestPrice = latestCoinData ? latestCoinData.quote.USD.price : investment.pricePHP;
 
-                                                    // Calculate profit for each investment
-                                                    const currentInvestmentValue = latestPrice * investment.quantity; // Current value of the investment
-                                                    const totalInvestmentCost = investment.averagePrice * investment.quantity; // Total cost of the investment
-                                                    const profit = ((currentInvestmentValue - totalInvestmentCost) / totalInvestmentCost) * 100; // Calculate profit percentage
+            // Calculate profit for each investment
+            const currentInvestmentValue = latestPrice * investment.quantity; // Current value of the investment
+            const totalInvestmentCost = investment.averagePrice * investment.quantity; // Total cost of the investment
+            const profit = ((currentInvestmentValue - totalInvestmentCost) / totalInvestmentCost) * 100; // Calculate profit percentage
 
-                                                    return (
-                                                        <tr key={investment.id || index}>
-                                                            <td className={styles.tableCell}>
-                                                                {investment.name}
-                                                                <img 
-                                                                    src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
-                                                                    alt={`${investment.name} logo`} 
-                                                                    className={styles.logo}
-                                                                />
-                                                            </td>
-                                                            <td className={styles.tableCell}>{investment.symbol}</td>
-                                                            <td className={styles.tableCell}>{investment.quantity}</td>
-                                                            <td className={styles.tableCell}>${totalInvestmentCost.toFixed(2)}</td>
-                                                            <td className={styles.tableCell}>{investmentDate}</td>
-                                                            <td className={styles.tableCell}>
-                                                                <span
-                                                                    className={
-                                                                        profit >= 0
-                                                                            ? styles.changePositive
-                                                                            : styles.changeNegative
-                                                                    }
-                                                                >
-                                                                    {profit.toFixed(1)}%
-                                                                </span>
-                                                            </td>
-                                                            <td className={styles.tableCell}>
-                                                                <button
-                                                                    className={styles.sellButton}
-                                                                    onClick={() => handleExit(investment)} // Call handleExit directly
-                                                                >
-                                                                    Exit
-                                                                </button>
-                                                            </td> {/* Sell button in each row */}
-                                                        </tr>
-                                                    );
-                                                })}
-                                            </tbody>
-                                        </table>
+            return (
+                <tr key={investment.id || index}>
+                    <td className={styles.tableCell}>
+                        {investment.name}
+                        <img 
+                            src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
+                            alt={`${investment.name} logo`} 
+                            className={styles.logo}
+                        />
+                    </td>
+                    <td className={styles.tableCell}>{investment.symbol}</td>
+                    <td className={styles.tableCell}>{investment.quantity}</td>
+                    <td className={styles.tableCell}>${totalInvestmentCost.toFixed(2)}</td>
+                    <td className={styles.tableCell}>{investmentDate}</td>
+                    <td className={styles.tableCell}>
+                        <span
+                            className={
+                                profit >= 0
+                                    ? styles.changePositive
+                                    : styles.changeNegative
+                            }
+                        >
+                            {profit.toFixed(1)}%
+                        </span>
+                    </td>
+                    <td className={styles.tableCell}>
+                        <button
+                            className={styles.selectButton}
+                            onClick={() => handleViewClick(investment)} // Call handleViewClick directly
+                        >
+                            Select
+                        </button>
+                    </td> {/* Select button in each row */}
+                    <td className={styles.tableCell}>
+                        <button
+                            className={styles.sellButton}
+                            onClick={() => handleExit(investment)} // Call handleExit directly
+                        >
+                            Sell
+                        </button>
+                    </td> {/* Sell button in each row */}
+                </tr>
+            );
+        })}
+    </tbody>
+</table>
+
                                     </div>
                                 )}
                             </div>
@@ -1160,6 +1187,7 @@ export default function DummyPage({ title }) {
                                     min="0"
                                     value={quantity} 
                                     onChange={handleQuantityChange} 
+                                    required 
                                 />
                             </div>
 
@@ -1183,10 +1211,10 @@ export default function DummyPage({ title }) {
 
                             <div className={styles.cardButtonGroup}>
                                 <button className={styles.Button2} onClick={handleEntry}>
-                                    Enter
+                                    Buy
                                 </button>
                                 <button className={styles.Button3} onClick={handleExit}>
-                                    Exit
+                                    Sell
                                 </button>
                             </div>
 

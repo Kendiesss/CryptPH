@@ -1070,3 +1070,16 @@ font-weight: bold;
 .sellButton:hover {
     background-color: #c0392b;
 }
+
+.selectButton {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    padding: 5px 10px; /* Same padding as the Sell button */
+    border: none; /* No border */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded edges */
+}
+
+.selectButton:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
