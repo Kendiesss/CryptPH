@@ -1,13 +1,10 @@
-import Head from 'next/head';
-import pholder from '@/img/placeholder-learn.png';
-import { FaShare } from "react-icons/fa";
 import React, { useEffect, useState } from 'react';
-import Layout from '@/components/Layout';
-import { FaClock, FaCalendarDay } from "react-icons/fa";
-import { useRouter } from 'next/router'; 
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Link from 'next/link';
-import Footer from '@/pages/Footer';
-import Header from '@/pages/Header2';
+import { FaShare, FaCalendarDay } from "react-icons/fa";
+import Layout from '@/components/Layout';
+import pholder from '@/img/placeholder-learn.png';
 import styles from '@/styles/learnID.module.css';
 
 function stripHtmlTags(str) {
@@ -15,23 +12,33 @@ function stripHtmlTags(str) {
     return str.replace(/<\/?[^>]+(>|$)/g, "");
 }
 
+function Loader() {
+    return (
+        <div className={styles.loaderContainer}>
+            <div className={styles.loader}></div>
+        </div>
+    );
+}
+
 export default function NewsDetailPage() {
     const router = useRouter();
-    const { id } = router.query; 
-    const [newsItem, setNewsItem] = useState(null); 
-    const [newsItems, setNewsItems] = useState([]); 
-    const [loading, setLoading] = useState(true); 
-    const [error, setError] = useState(null); 
+    const { id } = router.query;
+
+    const [newsItem, setNewsItem] = useState(null);
+    const [newsItems, setNewsItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
 
     useEffect(() => {
         const fetchNewsItem = async () => {
             if (id) {
+                setLoading(true);
                 try {
-                    const response = await fetch(`/api/news/${id}`); 
+                    const response = await fetch(`/api/news/${id}`);
                     if (!response.ok) throw new Error('Failed to fetch news item');
                     const data = await response.json();
-                    setNewsItem(data); 
+                    setNewsItem(data);
                 } catch (error) {
                     console.error("Error fetching news item:", error);
                     setError(error.message);
@@ -42,44 +49,39 @@ export default function NewsDetailPage() {
         };
 
         fetchNewsItem();
-    }, [id]); 
+    }, [id]);
 
     useEffect(() => {
         const fetchNews = async () => {
             try {
                 const response = await fetch('/api/news/fetch?category=Education');
                 const data = await response.json();
-                
-                // Filter out the current news item from the fetched news items
-                const filteredNewsItems = data.filter(news => news._id !== id); // Ensure you're comparing _id
-                setNewsItems(filteredNewsItems); 
+                const filteredNewsItems = data.filter(news => news._id !== id);
+                setNewsItems(filteredNewsItems);
             } catch (error) {
                 console.error("Error fetching news:", error);
             }
         };
-    
+
         fetchNews();
-    }, [id]); // Include id in the dependency array
+    }, [id]);
 
     const handleShareClick = () => {
-        // Copy the current URL to the clipboard
         navigator.clipboard.writeText(window.location.href)
             .then(() => {
-                // Show the success message
                 setShowPopup(true);
-                
-                // Hide the popup after 3 seconds
-                setTimeout(() => {
-                    setShowPopup(false);
-                }, 3000);
+                setTimeout(() => setShowPopup(false), 3000);
             })
-            .catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
+            .catch(err => console.error('Failed to copy text: ', err));
+    };
+
+    const handleLinkClick = (newId) => {
+        setLoading(true); // Start loader when switching articles
+        router.push(`/educational/${newId}`);
     };
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Loader />;
     }
 
     if (error) {
@@ -97,8 +99,8 @@ export default function NewsDetailPage() {
                     <div className={styles.upperPanel}>
                         <div className={styles.newsCard}>
                             <div className={styles.detailsGrp}>
-                                <div 
-                                    className={styles.imageBackground} 
+                                <div
+                                    className={styles.imageBackground}
                                     style={{ backgroundImage: `url(${newsItem.image || pholder.src})` }}
                                 ></div>
                                 <h1 className={styles.headlineLarge}>{newsItem.title}</h1>
@@ -116,10 +118,9 @@ export default function NewsDetailPage() {
                         <div className={styles.midUpperGrp}>
                             <h1 className={styles.authors}>By: {newsItem.author || 'Unknown Author'}</h1>
                         </div>
-
-                        <div 
-                            className={styles.newsBody} 
-                            dangerouslySetInnerHTML={{ __html: newsItem.description || 'Lorem ipsum...' }} 
+                        <div
+                            className={styles.newsBody}
+                            dangerouslySetInnerHTML={{ __html: newsItem.description || 'Lorem ipsum...' }}
                         />
                     </div>
 
@@ -130,12 +131,7 @@ export default function NewsDetailPage() {
                                 <FaShare className={styles.icon} />
                             </span>
                         </button>
-                        
-                        {showPopup && (
-                            <div className={styles.popup}>
-                                Copied Link Successfully!
-                            </div>
-                        )}
+                        {showPopup && <div className={styles.popup}>Copied Link Successfully!</div>}
                     </div>
                 </div>
 
@@ -143,32 +139,28 @@ export default function NewsDetailPage() {
                     <div className={styles.innerCard}>
                         <h1 className={styles.title}>Learn More</h1>
                         {newsItems
-                            .filter(news => news.category === "Education") // Filter by category
-                            .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort by date, latest first
-                            .slice(0, 5) // Get only the top 5 latest items
+                            .filter(news => news.category === "Education")
+                            .sort((a, b) => new Date(b.date) - new Date(a.date))
+                            .slice(0, 5)
                             .map(news => (
-                                <div 
-                                    className={styles.newsCardSmall} 
+                                <div
+                                    className={styles.newsCardSmall}
                                     key={news._id}
                                     style={{ backgroundImage: `url(${news.image || pholder.src})` }}
+                                    onClick={() => handleLinkClick(news._id)} // Handle link click
                                 >
-                                    <Link href={`/educational/${news._id}`} passHref>
-                                        <div className={styles.overlay}></div>
-                                    </Link>
+                                    <div className={styles.overlay}></div>
                                     <div className={styles.content}>
                                         <h1 className={styles.title2}>{news.title}</h1>
                                     </div>
                                 </div>
-                            ))
-                        }
+                            ))}
                         <div className={styles.viewAllButton}>
-                            <Link href="/learn">
-                                View All
-                            </Link>
+                            <Link href="/learn">View All</Link>
                         </div>
                     </div>
                 </div>
             </div>
         </Layout>
     );
-};
+}
