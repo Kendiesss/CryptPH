@@ -20,6 +20,42 @@ import withAdminAuth from '@/pages/api/auth/withAdminAuth';
 
 import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 
+function Loader() {
+    return (
+        <div className={styles.loaderContainer}>
+            <div className={styles.loader}></div>
+        </div>
+    );
+}
+
+function AddLoader(){
+    return (
+        <div className={styles.loaderContainer}>
+            <h1 className={styles.loaderHeader}>Submitting your content. Please wait.</h1>
+            <div className={styles.loader}></div>
+        </div>
+    );
+}
+
+function EditLoader(){
+    return (
+        <div className={styles.loaderContainer}>
+            <h1 className={styles.loaderHeader}>Saving your changes. Please wait.</h1>
+            <div className={styles.loader}></div>
+        </div>
+    );
+}
+
+function DeleteLoader(){
+    return (
+        <div className={styles.loaderContainer}>
+            <h1 className={styles.loaderHeader}>Removing your content. Please wait.</h1>
+            <div className={styles.loader}></div>
+        </div>
+    );
+}
+
+
 const ReactQuill = dynamic(() => import('react-quill'), {
     ssr: false
 });
@@ -59,6 +95,7 @@ const EditModal = ({ show, onClose, newsItem, onSave }) => {
     const [author, setAuthor] = useState(newsItem?.author || '');
     const [date, setDate] = useState(newsItem?.date ? newsItem.date.split('T')[0] : '');
     const [description, setDescription] = useState(newsItem?.description || '');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (newsItem) {
@@ -96,6 +133,8 @@ const EditModal = ({ show, onClose, newsItem, onSave }) => {
             description,
             image: imageFile,
         };
+
+        setLoading(true);
     
         try {
             const response = await fetch(`/api/news/edit?id=${newsItem._id}`, {
@@ -108,15 +147,20 @@ const EditModal = ({ show, onClose, newsItem, onSave }) => {
                 const data = await response.json();
                 onSave(data); // Pass updated data to parent
                 onClose(); // Close modal
+                window.location.reload();
             } else {
                 console.error('Error updating news item:', response.statusText);
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
     
-
+    if (loading) {
+        return <EditLoader/>;
+    }
 
     return (
         <div className={styles.modalOverlay}>
@@ -197,6 +241,7 @@ const AddModal = ({ show, onClose, onSave }) => {
     const [author, setAuthor] = useState('');
     const [date, setDate] = useState('');
     const [description, setDescription] = useState('');
+    const [loading, setLoading] = useState(false);
     
      // Set the current date in YYYY-MM-DD format
      const currentDate = new Date();
@@ -222,7 +267,6 @@ const AddModal = ({ show, onClose, onSave }) => {
             reader.readAsDataURL(file);
         }
     };
-
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -243,6 +287,8 @@ const AddModal = ({ show, onClose, onSave }) => {
             image: imageFile, // Send the base64 string
         };
 
+        setLoading(true);
+
         try {
             const response = await fetch('/api/news/add', {
                 method: 'POST',
@@ -256,14 +302,22 @@ const AddModal = ({ show, onClose, onSave }) => {
                 const data = await response.json();
                 console.log("News added successfully:", data);
                 onClose();
+                window.location.reload();
+
             } else {
                 const errorData = await response.json();
                 console.error("Failed to add news:", errorData);
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return <AddLoader/>;
+    }
 
     return (
         <div className={styles.modalOverlay}>
@@ -381,13 +435,20 @@ const HeroPage = () => {
 
     const [intervalId, setIntervalId] = useState(null); 
 
+
+    //loading
+     const [loading, setLoading] = useState(true);
+     const [deleteLoading, setDeleteLoading] = useState(false);
+
     //fetch news from db
 
     //fetch 
     useEffect(() => {
         const fetchNews = async () => {
+            setLoading(true);
             try {
                 const response = await fetch('/api/news/fetch');
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -404,17 +465,19 @@ const HeroPage = () => {
                 setFilteredNewsData(sortedData); // Initial set, sorted by date
             } catch (error) {
                 console.error('Error fetching news:', error);
+            }finally {
+                setLoading(false);
             }
         };
     
         fetchNews();
 
-        const intervalId = setInterval(() => {
-            fetchNews();
-        }, 1500); //
+        // const intervalId = setInterval(() => {
+        //     fetchNews();
+        // }, 1500); //
 
-        // Clear the interval on component unmount
-        return () => clearInterval(intervalId);
+        // // Clear the interval on component unmount
+        // return () => clearInterval(intervalId);
     }, []);
     
 
@@ -433,13 +496,13 @@ const HeroPage = () => {
         setFilteredNewsData(filteredData);
         setCurrentPage(1); // Reset to first page on new search
 
-        const id = setInterval(() => {
-            fetchNews();
-        }, 1500);
-        setIntervalId(id);
+        // const id = setInterval(() => {
+        //     fetchNews();
+        // }, 1500);
+        // setIntervalId(id);
 
-        // Cleanup function to clear the interval on search change
-        return () => clearInterval(id);
+        // // Cleanup function to clear the interval on search change
+        // return () => clearInterval(id);
 
     }, [searchQuery, newsData, intervalId]);
 
@@ -473,6 +536,7 @@ const HeroPage = () => {
 
     const handleDeleteClick = async (id) => {
         if (window.confirm("Are you sure you want to delete this item?")) {
+            setDeleteLoading(true);
             try {
                 const response = await fetch(`/api/news/delete?id=${id}`, {
                     method: 'DELETE',
@@ -486,6 +550,8 @@ const HeroPage = () => {
                 }
             } catch (error) {
                 console.error('Error deleting news item:', error);
+            } finally {
+                setDeleteLoading(false);
             }
         }
     };
@@ -616,6 +682,15 @@ const HeroPage = () => {
         window.location.href = '/learn';
       };
       const [isHovered, setIsHovered] = useState(false);
+
+
+    if (loading) {
+        return <Loader />;
+    }
+
+    if (deleteLoading) {
+        return <DeleteLoader />;
+    }
 
       return (
         <Layout pageTitle="Manage Contents - CryptPH Admin">
