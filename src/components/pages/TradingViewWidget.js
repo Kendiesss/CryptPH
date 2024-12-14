@@ -3,6 +3,7 @@ import React, { useEffect, useRef, memo } from 'react';
 
 function TradingViewWidget({ symbol }) {
   const container = useRef(null);
+  // "${symbol}|1D|USD"
 
   useEffect(() => {
     if (!container.current || !symbol) return;
@@ -19,7 +20,7 @@ function TradingViewWidget({ symbol }) {
       {
         "symbols": [
           [
-            "${symbol}|1M|USD"
+            "CRYPTO:${symbol}USD|1D"
           ]
         ],
         "chartOnly": true,
@@ -63,6 +64,7 @@ function TradingViewWidget({ symbol }) {
   }, [symbol]);
 
   return (
+    <div className="tradingview-widget-scrollable">
     <div className="tradingview-widget-container" ref={container}>
       <div className="tradingview-widget-container__widget"></div>
       <div className="tradingview-widget-copyright">
@@ -70,6 +72,7 @@ function TradingViewWidget({ symbol }) {
           <span className="blue-text">Track all markets on TradingView</span>
         </a>
       </div>
+    </div>
     </div>
   );
 }

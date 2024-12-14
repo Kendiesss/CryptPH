@@ -6,13 +6,19 @@ import Layout from '@/components/Layout';
 import { FaCalendarDay } from "react-icons/fa";
 import { useRouter } from 'next/router'; 
 import Link from 'next/link';
-import Footer from '@/pages/Footer';
-import Header from '@/pages/Header2';
 import styles from '@/styles/newsID.module.css'; // Import your CSS module
 
 function stripHtmlTags(str) {
     if (!str) return '';
     return str.replace(/<\/?[^>]+(>|$)/g, "");
+}
+
+function Loader() {
+    return (
+        <div className={styles.loaderContainer}>
+            <div className={styles.loader}></div>
+        </div>
+    );
 }
 
 export default function NewsDetailPage() {
@@ -27,6 +33,7 @@ export default function NewsDetailPage() {
     useEffect(() => {
         const fetchNewsItem = async () => {
             if (id) {
+                setLoading(true);
                 try {
                     const response = await fetch(`/api/news/${id}`); 
                     if (!response.ok) throw new Error('Failed to fetch news item');
@@ -78,7 +85,7 @@ export default function NewsDetailPage() {
     };
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <Loader />;
     }
 
     if (error) {
