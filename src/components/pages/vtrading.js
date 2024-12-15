@@ -13,6 +13,7 @@ import modalStyles from '@/styles/modal.module.css';
 import TradingViewWidget from './TradingViewWidget'; // Adjust the path accordingly
 import widgetData from '@/data/widgetData'; 
 import TutorialGuide from '@/components/Layout/TutorialGuide.js';
+import SellConfirmModal from '@/components/Layout/SellConfirmModal.js';
 import styles from '@/styles/vtrading.module.css';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -103,10 +104,83 @@ export default function DummyPage({ title }) {
     const openSellModal = () => setIsSellModalOpen(true);
     const closeSellModal = () => setIsSellModalOpen(false);
 
+    const [isSellConfirmModalOpen, setIsSellConfirmModalOpen] = useState(false); // State for the confirmation modal
+    const [sellDetails, setSellDetails] = useState(null);
+        
     const [isSellErrorModalOpen, setIsSellErrorModalOpen] = useState(false);
     const openErrorSellModal = () => setIsSellErrorModalOpen(true);
     const closeSellErrorModal = () => setIsSellErrorModalOpen(false);
-
+    const handleSellConfirm = () => {
+        console.log("Sale confirmed. Proceeding with sell logic.");
+        const quantityToExit = parseFloat(quantity);
+        const currentValue = quantityToExit * coinPrice;
+    
+        // Calculate profit/loss and other details
+        const costPerCoin = investedCoin.totalCost / investedCoin.quantity;
+        const profitOrLoss = currentValue - (costPerCoin * quantityToExit);
+        const profitPercent = (profitOrLoss / (costPerCoin * quantityToExit)) * 100;
+    
+        setProfitOrLoss(profitOrLoss);
+    
+        const exitedInvestment = {
+            coinName: investedCoin.coinName,
+            symbol: investedCoin.symbol,
+            quantity: quantityToExit,
+            priceAtEntry: costPerCoin,
+            priceAtExit: coinPrice,
+            profitPercent: profitPercent,
+            date: new Date(),
+            coinId: investedCoin.id,
+        };
+    
+        setOrderHistory((prevHistory) => {
+            const updatedHistory = [...prevHistory, exitedInvestment];
+            localStorage.setItem('orderHistory', JSON.stringify(updatedHistory)); // Save updated history
+            return updatedHistory;
+        });
+    
+        const newDummyCash = dummyCash + currentValue;
+        setDummyCash(newDummyCash);
+        localStorage.setItem('dummyCash', JSON.stringify(newDummyCash)); // Save updated balance
+    
+        // Update investments
+        const updatedInvestments = investments.map((inv) => {
+            if (inv.symbol === investedCoin.symbol) {
+                if (inv.id === investedCoin.id) {
+                    const newQuantity = inv.quantity - quantityToExit;
+                    const newTotalCost = inv.totalCost - (costPerCoin * quantityToExit);
+                    if (newQuantity <= 0) {
+                        return null; // Remove the investment if all coins are exited
+                    }
+                    return {
+                        ...inv,
+                        quantity: newQuantity,
+                        totalCost: newTotalCost,
+                    };
+                }
+            }
+            return inv;
+        }).filter((inv) => inv !== null); 
+    
+        if (updatedInvestments.length === 0) {
+            setInvestedCoin(null); // Remove the invested coin if no coins are left
+        }
+    
+        setInvestments(updatedInvestments);
+        localStorage.setItem('investments', JSON.stringify(updatedInvestments)); // Save updated investments
+    
+        if (investedCoin.quantity === quantityToExit) {
+            setInvestedCoin(null); // Remove invested coin
+        }
+    
+        setIsSellModalOpen(true); // Show the exit alert modal
+        setIsSellConfirmModalOpen(false); // Close the confirmation modal
+        closeModal(); // Close active modal
+    
+        if (newDummyCash <= 0) {
+            openLoseModal(); // Show lose modal if balance is 0 or negative
+        }
+    };
 
     //Sell Modal
     const [isInvestmentModalOpen, setIsInvestmentModalOpen] = useState(false);
@@ -164,7 +238,7 @@ export default function DummyPage({ title }) {
     const gasFee = investmentAmount * gasRate;
     const totalCostWithGas = investmentAmount + gasFee;
     const totalCost = investmentAmount.toFixed(2); // Cost without gas fee
-    
+
     const handleEntry = () => {
         const quantity = parseFloat(document.getElementById('quantity').value);
         const currentPrice = selectedCoin.quote.USD.price;
@@ -227,7 +301,7 @@ export default function DummyPage({ title }) {
                 localStorage.setItem('dummyCash', JSON.stringify(updatedDummyCash));
                 localStorage.setItem('investments', JSON.stringify(updatedInvestments));
             }
-    
+
             setIsBuyModalOpen(true); // Show the buy modal
         } else if (quantity <= 0) {
             alert('Please enter a valid quantity greater than 0.');
@@ -236,122 +310,56 @@ export default function DummyPage({ title }) {
             setIsErrorModalOpen(true);
         }
     };
-    
-    
+
 
     
         // Modify handleExit to open error modal on invalid exit attempt
-        const handleExit = () => {
-            // Check if the quantity input is empty or invalid
-            if (!quantity || parseFloat(quantity) <= 0) {
-                console.log('Invalid quantity entered:', quantity);
-                setErrorMessage('Please enter a valid quantity greater than zero.');
-                setIsSellErrorModalOpen(true); // Open the error modal
-                return;
-            }
+        const handleExit = (investment) => {
+            console.log("Investment data passed to handleExit:", investment);
         
-            if (investedCoin && investedCoin.quantity > 0) {
-                const quantityToExit = parseFloat(quantity); // The quantity input by the user
+            if (investment && investment.quantity > 0) {
+                const quantityToExit = parseFloat(quantity);
+                const currentPrice = coinPrice; // Use the existing coinPrice value here
+        
                 console.log('Attempting to exit. Quantity to exit:', quantityToExit);
+                console.log('Using coin price:', currentPrice);
         
-                if (quantityToExit <= 0 || quantityToExit > investedCoin.quantity) {
-                    console.log(`Invalid exit quantity. Available quantity: ${investedCoin.quantity}`);
-                    setErrorMessage(`Invalid quantity to exit. You only have ${investedCoin.quantity} ${investedCoin.symbol} coins available.`);
-                    setIsSellErrorModalOpen(true); // Open the error modal
-                    return;
-                }
-        
-                if (investedCoin.quantity === 0) {
-                    console.log('Cannot exit. Coin quantity is 0:', investedCoin.quantity);
-                    setErrorMessage(`You cannot exit this investment because you have no ${investedCoin.symbol} coins left.`);
-                    setIsSellErrorModalOpen(true); // Open the error modal
-                    return;
-                }
-        
-                if (investedCoin.totalCost <= 0 || investedCoin.quantity <= 0 || coinPrice <= 0) {
-                    console.log('Invalid data for calculation. Total cost:', investedCoin.totalCost, 'Quantity:', investedCoin.quantity, 'Coin price:', coinPrice);
-                    setErrorMessage("Invalid data for calculation.");
+                if (quantityToExit <= 0 || quantityToExit > investment.quantity) {
+                    console.log(`Invalid exit quantity. Available quantity: ${investment.quantity}`);
+                    setErrorMessage(`Invalid quantity to exit. You only have ${investment.quantity} ${investment.symbol} coins available.`);
                     setIsSellErrorModalOpen(true);
                     return;
                 }
         
-                const currentValue = quantityToExit * coinPrice;
+                const currentValue = quantityToExit * currentPrice;
                 console.log('Exiting. Current value:', currentValue);
         
-                const costPerCoin = investedCoin.totalCost / investedCoin.quantity;
+                const costPerCoin = investment.totalCost / investment.quantity;
                 const profitOrLoss = currentValue - (costPerCoin * quantityToExit);
                 const profitPercent = (profitOrLoss / (costPerCoin * quantityToExit)) * 100;
         
                 console.log('Profit or Loss:', profitOrLoss);
                 setProfitOrLoss(profitOrLoss);
         
-                const exitedInvestment = {
-                    coinName: investedCoin.coinName,
-                    symbol: investedCoin.symbol,
-                    quantity: quantityToExit,
-                    priceAtEntry: costPerCoin,
-                    priceAtExit: coinPrice,
-                    profitPercent: profitPercent,
-                    date: new Date(),
-                    coinId: investedCoin.id,
+                const details = {
+                    quantityToExit,
+                    coinName: investment.name, // Use the name directly from investment
+                    coinSymbol: investment.symbol,
+                    coinPrice: currentPrice // Pass the coinPrice directly
                 };
         
-                setOrderHistory((prevHistory) => {
-                    const updatedHistory = [...prevHistory, exitedInvestment];
-                    localStorage.setItem('orderHistory', JSON.stringify(updatedHistory)); // Save updated history
-                    return updatedHistory;
-                });
-        
-                const newDummyCash = dummyCash + currentValue;
-                setDummyCash(newDummyCash);
-                localStorage.setItem('dummyCash', JSON.stringify(newDummyCash)); // Save updated balance
-        
-                const updatedInvestments = investments.map((inv) => {
-                    if (inv.symbol === investedCoin.symbol) {
-                        if (inv.id === investedCoin.id) {
-                            const newQuantity = inv.quantity - quantityToExit;
-                            const newTotalCost = inv.totalCost - (costPerCoin * quantityToExit);
-                            if (newQuantity <= 0) {
-                                console.log('Removing investment, all coins exited.');
-                                return null; // Remove the investment if all coins are exited
-                            }
-                            console.log('Updated investment:', { ...inv, quantity: newQuantity, totalCost: newTotalCost });
-                            return {
-                                ...inv,
-                                quantity: newQuantity,
-                                totalCost: newTotalCost,
-                            };
-                        }
-                    }
-                    return inv;
-                }).filter((inv) => inv !== null); 
-        
-                if (updatedInvestments.length === 0) {
-                    console.log('No investments left after exit.');
-                    setInvestedCoin(null); // Remove the invested coin if no coins are left
-                }
-        
-                setInvestments(updatedInvestments);
-                localStorage.setItem('investments', JSON.stringify(updatedInvestments)); // Save updated investments
-        
-                if (investedCoin.quantity === quantityToExit) {
-                    console.log('All coins exited, resetting investedCoin.');
-                    setInvestedCoin(null); // Remove invested coin
-                }
-        
-                setIsSellModalOpen(true); // Show exit alert modal
-                closeModal(); // Close active modal
-        
-                if (newDummyCash <= 0) {
-                    console.log('User lost all money, opening lose modal.');
-                    openLoseModal(); // Show lose modal if balance is 0 or negative
-                }
+                console.log("Setting sellDetails:", details);
+                setSellDetails(details); // This will trigger a state update
+                console.log('Opening sell confirm modal.');
+                setIsSellConfirmModalOpen(true); // Open the modal to confirm
             } else {
                 console.log('No active investment to exit. Opening investment modal.');
                 setIsInvestmentModalOpen(true); // If no active investment
                 closeModal();
             }
         };
+        
+        
         
         
     useEffect(() => {
@@ -427,14 +435,12 @@ export default function DummyPage({ title }) {
 
     const handleViewClick = (coin) => {
         setSelectedCoin(coin); // Update the selected coin state
-    
-        // Check if the required data exists before proceeding
+
         if (!coin?.quote?.USD) {
             console.error("Invalid coin data:", coin);
             return; // Exit the function if data is missing
         }
     
-        // Store the selected coin in localStorage to persist the selection
         localStorage.setItem(
             'selectedCoin',
             JSON.stringify({
@@ -766,6 +772,12 @@ export default function DummyPage({ title }) {
             }
         />
 
+        <SellConfirmModal
+            isOpen={isSellConfirmModalOpen}
+            onClose={() => setIsSellConfirmModalOpen(false)}
+            details={sellDetails} // This should now be correctly passed
+            onConfirm={handleSellConfirm} // Function to handle sale confirmation
+        />
       
 <div className={styles.pageContainer} id="modal-root">
     <img src={gradient1.src} className={styles.gradient1}></img>
@@ -845,75 +857,77 @@ export default function DummyPage({ title }) {
                                 ) : (
                                     <div className={styles.tableContainer}>
                                         <table className={styles.table}>
-    <thead>
-        <tr>
-            <th className={styles.tableHeader}>Coin Name</th>
-            <th className={styles.tableHeader}>Symbol</th>
-            <th className={styles.tableHeader}>Quantity</th>
-            <th className={styles.tableHeader}>Total Cost</th>
-            <th className={styles.tableHeader}>Investment Time</th>
-            <th className={styles.tableHeader}>% Profit</th>
-            <th className={styles.tableHeader}>Select</th> {/* New column for select button */}
-            <th className={styles.tableHeader}>Action</th> {/* Existing column for sell button */}
-        </tr>
-    </thead>
-    <tbody>
-        {investments.map((investment, index) => {
-            const investmentDate = new Date(investment.timeInvested).toLocaleString();
-            const latestCoinData = cryptoData[investment.id];
-            const latestPrice = latestCoinData ? latestCoinData.quote.USD.price : investment.pricePHP;
+                                        <thead>
+                                            <tr>
+                                                <th className={styles.tableHeader}>Coin Name</th>
+                                                <th className={styles.tableHeader}>Symbol</th>
+                                                <th className={styles.tableHeader}>Quantity</th>
+                                                <th className={styles.tableHeader}>Total Cost</th>
+                                                <th className={styles.tableHeader}>Investment Time</th>
+                                                <th className={styles.tableHeader}>% Profit</th>
+                                                <th className={styles.tableHeader}>Select</th> {/* New column for select button */}
+                                                <th className={styles.tableHeader}>Action</th> {/* Existing column for sell button */}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {investments.map((investment, index,) => {
+                                                const investmentDate = new Date(investment.timeInvested).toLocaleString();
+                                                const latestCoinData = cryptoData[investment.id];
+                                                const latestPrice = latestCoinData ? latestCoinData.quote.USD.price : investment.pricePHP;
 
-            // Calculate profit for each investment
-            const currentInvestmentValue = latestPrice * investment.quantity; // Current value of the investment
-            const totalInvestmentCost = investment.averagePrice * investment.quantity; // Total cost of the investment
-            const profit = ((currentInvestmentValue - totalInvestmentCost) / totalInvestmentCost) * 100; // Calculate profit percentage
+                                                // Calculate profit for each investment
+                                                const currentInvestmentValue = latestPrice * investment.quantity; // Current value of the investment
+                                                const totalInvestmentCost = investment.averagePrice * investment.quantity; // Total cost of the investment
+                                                const profit = ((currentInvestmentValue - totalInvestmentCost) / totalInvestmentCost) * 100; // Calculate profit percentage
 
-            return (
-                <tr key={investment.id || index}>
-                    <td className={styles.tableCell}>
-                        {investment.name}
-                        <img 
-                            src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
-                            alt={`${investment.name} logo`} 
-                            className={styles.logo}
-                        />
-                    </td>
-                    <td className={styles.tableCell}>{investment.symbol}</td>
-                    <td className={styles.tableCell}>{investment.quantity}</td>
-                    <td className={styles.tableCell}>${totalInvestmentCost.toFixed(2)}</td>
-                    <td className={styles.tableCell}>{investmentDate}</td>
-                    <td className={styles.tableCell}>
-                        <span
-                            className={
-                                profit >= 0
-                                    ? styles.changePositive
-                                    : styles.changeNegative
-                            }
-                        >
-                            {profit.toFixed(1)}%
-                        </span>
-                    </td>
-                    <td className={styles.tableCell}>
-                        <button
-                            className={styles.selectButton}
-                            onClick={() => handleViewClick(investment)} // Call handleViewClick directly
-                        >
-                            Select
-                        </button>
-                    </td> {/* Select button in each row */}
-                    <td className={styles.tableCell}>
-                        <button
-                            className={styles.sellButton}
-                            onClick={() => handleExit(investment)} // Call handleExit directly
-                        >
-                            Sell
-                        </button>
-                    </td> {/* Sell button in each row */}
-                </tr>
-            );
-        })}
-    </tbody>
-</table>
+                                                return (
+                                                    <tr key={investment.id || index}>
+                                                        <td className={styles.tableCell}>
+                                                            {investment.name}
+                                                            <img 
+                                                                src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
+                                                                alt={`${investment.name} logo`} 
+                                                                className={styles.logo}
+                                                            />
+                                                        </td>
+                                                        <td className={styles.tableCell}>{investment.symbol}</td>
+                                                        <td className={styles.tableCell}>{investment.quantity}</td>
+                                                        <td className={styles.tableCell}>${totalInvestmentCost.toFixed(2)}</td>
+                                                        <td className={styles.tableCell}>{investmentDate}</td>
+                                                        <td className={styles.tableCell}>
+                                                            <span
+                                                                className={
+                                                                    profit >= 0
+                                                                        ? styles.changePositive
+                                                                        : styles.changeNegative
+                                                                }
+                                                            >
+                                                                {profit.toFixed(1)}%
+                                                            </span>
+                                                        </td>
+                                                        <td className={styles.tableCell}>
+                                                        <button
+                                                            className={styles.selectButton}
+                                                            onClick={() => handleViewClick(latestCoinData)} 
+                                                        >
+                                                            Select
+                                                        </button>
+
+                                                        </td>
+                                                        <td className={styles.tableCell}>
+                                                            <button
+                                                                className={styles.sellButton}
+                                                                onClick={() => handleExit(investment)} // Call handleExit directly
+                                                            >
+                                                                Sell
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
 
                                     </div>
                                 )}
@@ -1213,7 +1227,19 @@ export default function DummyPage({ title }) {
                                 <button className={styles.Button2} onClick={handleEntry}>
                                     Buy
                                 </button>
-                                <button className={styles.Button3} onClick={handleExit}>
+                                <button 
+                                    className={styles.Button3} 
+                                    onClick={() => {
+                                        const matchingInvestment = investments.find(inv => inv.symbol === selectedCoin.symbol);
+                                        if (matchingInvestment) {
+                                            console.log('Investment data:', matchingInvestment); // Log the matched investment object
+                                            handleExit(matchingInvestment); // Pass the matching investment to handleExit
+                                        } else {
+                                            console.log('No matching investment found for the selected coin.');
+                                            setErrorMessage(`No investment found for ${selectedCoin.symbol}.`);
+                                        }
+                                    }}
+                                >
                                     Sell
                                 </button>
                             </div>

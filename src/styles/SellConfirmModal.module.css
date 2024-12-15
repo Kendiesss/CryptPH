@@ -1,0 +1,98 @@
+/* Modal styles (styles.module.css) */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background: #1e2b44;
+    color:#ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    max-height: 700px;
+    width: 100%;
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .modalContent {
+    margin-top: 10px;
+  }
+  
+  .modalFooter {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .closeButton, .cancelButton, .confirmButton {
+    cursor: pointer;
+    background-color: #000000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .closeButton {
+    background-color: red;
+    color: white;
+  }
+  
+  .cancelButton {
+    background-color: #F4594E;
+  }
+  
+  .confirmButton {
+    background-color: #42B8A4;
+    color: white;
+  }
+  
+  .errorMessage {
+    color: red;
+    font-weight: bold;
+  }
+  .chartContainer {
+    margin-top: 20px;
+    width: 100%;
+    height: 200px; /* Adjust height as needed */
+}
+
+.logoLarge {
+    width: 64px;
+    height: 64px;
+    margin-right: 16px;
+}
+
+.upperGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.leftUpper {
+    margin-top: 10px;
+}
+
+.header4 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.header5 {
+    font-size: 1.2rem;
+    color: #dfdfdf;
+}
