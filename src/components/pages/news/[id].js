@@ -35,26 +35,30 @@ export default function NewsDetailPage() {
             if (id) {
                 setLoading(true);
                 try {
-                    const response = await fetch(`/api/news/${id}`); 
-                    if (!response.ok) throw new Error('Failed to fetch news item');
+                    const response = await fetch(`/api/contents/${id}`);
+                    console.log("API Response Status:", response.status); // Log the response status
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch news item: ${response.statusText}`);
+                    }
                     const data = await response.json();
-                    setNewsItem(data); 
+                    console.log("Fetched Data:", data); // Log the fetched data
+                    setNewsItem(data);
                 } catch (error) {
-                    console.error("Error fetching news item:", error);
+                    console.error("Error fetching news item:", error.message); // Log detailed error
                     setError(error.message);
                 } finally {
                     setLoading(false);
                 }
             }
         };
-
+    
         fetchNewsItem();
-    }, [id]); 
+    }, [id]);
 
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await fetch('/api/news/fetch?category=News');
+                const response = await fetch('/api/contents/fetch?category=News');
                 const data = await response.json();
                 
                 const filteredNewsItems = data.filter(news => news._id !== id); // Use _id for comparison

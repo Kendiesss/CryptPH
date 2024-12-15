@@ -35,7 +35,7 @@ export default function NewsDetailPage() {
             if (id) {
                 setLoading(true);
                 try {
-                    const response = await fetch(`/api/news/${id}`);
+                    const response = await fetch(`/api/contents/${id}`);
                     if (!response.ok) throw new Error('Failed to fetch news item');
                     const data = await response.json();
                     setNewsItem(data);
@@ -54,7 +54,7 @@ export default function NewsDetailPage() {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await fetch('/api/news/fetch?category=Education');
+                const response = await fetch('/api/contents/fetch?category=Education');
                 const data = await response.json();
                 const filteredNewsItems = data.filter(news => news._id !== id);
                 setNewsItems(filteredNewsItems);

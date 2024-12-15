@@ -40,7 +40,7 @@ export default function DummyPage({ title }) {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await fetch('/api/news/fetch?category=News'); 
+                const response = await fetch('/api/contents/fetch?category=News'); 
                 const data = await response.json();
                 setNewsItems(data); 
             } catch (error) {

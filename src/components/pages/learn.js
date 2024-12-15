@@ -56,7 +56,7 @@ export default function HeroPage() {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await fetch('/api/news/fetch?category=Education');
+                const response = await fetch('/api/contents/fetch?category=Education');
                 const data = await response.json();
                 // Sort news items by 'publishedAt' in descending order (latest first)
                 const sortedNewsItems = data.sort((a, b) => new Date(b.date) - new Date(a.date));

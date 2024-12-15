@@ -88,78 +88,118 @@ const Card = ({ children }) => {
     );
 };
 
-const EditModal = ({ show, onClose, newsItem, onSave }) => {
-    const [imageFile, setImageFile] = useState(newsItem?.image || null);
-    const [title, setTitle] = useState(newsItem?.title || '');
-    const [category, setCategory] = useState(newsItem?.category || '');
-    const [author, setAuthor] = useState(newsItem?.author || '');
-    const [date, setDate] = useState(newsItem?.date ? newsItem.date.split('T')[0] : '');
-    const [description, setDescription] = useState(newsItem?.description || '');
+const EditModal = ({ show, onClose, contentItem, onSave }) => {
+    const [title, setTitle] = useState(contentItem?.title || '');
+    const [category, setCategory] = useState(contentItem?.category || '');
+    const [imageFile, setImageFile] = useState(null);
+    const [author, setAuthor] = useState(contentItem?.author || '');
+    const [date, setDate] = useState(contentItem?.date ? contentItem.date.split('T')[0] : '');
+    const [description, setDescription] = useState(contentItem?.description || '');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (newsItem) {
-            setImageFile(newsItem.image || null);
-            setTitle(newsItem.title || '');
-            setCategory(newsItem.category || '');
-            setAuthor(newsItem.author || ''); // Check this value
-            setDate(newsItem.date ? newsItem.date.split('T')[0] : '');
-            setDescription(newsItem.description || '');
-            console.log("Authors in modal:", newsItem.author); // Debug line
+        if (contentItem) {
+            setTitle(contentItem.title || '');
+            setCategory(contentItem.category || '');
+            setAuthor(contentItem.author || '');
+            setDate(contentItem.date ? contentItem.date.split('T')[0] : '');
+            setDescription(contentItem.description || '');
         }
-    }, [newsItem]);
-    
-    const convertToBase64 = (e) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(e.target.files[0]);
-        reader.onload = () => setImageFile(reader.result);
-        reader.onerror = (error) => console.log("Error: ", error);
-    };
+    }, [contentItem]);
 
     if (!show) return null;
 
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result;
+                setImageFile(base64String);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const uploadToCloudinary = async (imageFile) => {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'cryptph_images'); // Your Cloudinary preset
+        formData.append('cloud_name', 'dukv38hdq'); // Your Cloudinary cloud name
+
+        try {
+            const response = await fetch('https://api.cloudinary.com/v1_1/dukv38hdq/image/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.error('Failed to upload image to Cloudinary');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error uploading to Cloudinary:', error);
+            return null;
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (!title || !category || !imageFile || !author || !description) {
+
+        if (!title || !category || !author || !description) {
             alert('Please fill in all required fields.');
             return;
         }
-    
-        const updatedData = {
-            title,
-            category,
-            author,
-            date: new Date(date).toISOString(),
-            description,
-            image: imageFile,
-        };
 
         setLoading(true);
-    
+
         try {
-            const response = await fetch(`/api/news/edit?id=${newsItem._id}`, {
+            let imageURL = contentItem.image;
+
+            if (imageFile) {
+                const cloudinaryResponse = await uploadToCloudinary(imageFile);
+                if (!cloudinaryResponse) {
+                    alert('Failed to upload image to Cloudinary.');
+                    setLoading(false);
+                    return;
+                }
+                imageURL = cloudinaryResponse.secure_url;
+            }
+
+            const updatedData = {
+                title,
+                category,
+                author,
+                date: new Date(date).toISOString(),
+                description,
+                image: imageURL,
+            };
+
+            const response = await fetch(`/api/contents/edit?id=${contentItem._id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedData),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
-                onSave(data); // Pass updated data to parent
-                onClose(); // Close modal
+                onSave(data);
+                onClose();
                 window.location.reload();
             } else {
-                console.error('Error updating news item:', response.statusText);
+                console.error('Failed to update content item:', response.statusText);
             }
         } catch (error) {
-            console.error("Error submitting form:", error);
+            console.error('Error updating content:', error);
         } finally {
             setLoading(false);
         }
     };
-    
+
     if (loading) {
-        return <EditLoader/>;
+        return <EditLoader />;
     }
 
     return (
@@ -195,7 +235,7 @@ const EditModal = ({ show, onClose, newsItem, onSave }) => {
                     <input
                         accept="image/*"
                         type="file"
-                        onChange={convertToBase64}
+                        onChange={handleImageChange}
                         className={styles.fileInput}
                     />
                     <h2 className={styles.modalHeaderSub}>Authors</h2>
@@ -220,6 +260,7 @@ const EditModal = ({ show, onClose, newsItem, onSave }) => {
                     onChange={setDescription}
                     className={styles.quillEditor}
                     theme="snow"
+                    modules={modules}
                 />
                 <div className={styles.bottomFormContainer}>
                     <h2 className={styles.modalHeaderMain}>Edit Content</h2>
@@ -278,19 +319,25 @@ const AddModal = ({ show, onClose, onSave }) => {
 
         const formattedDate = date ? new Date(date).toISOString() : '';
 
+        const cloudinaryResponse = await uploadToCloudinary(imageFile);
+        if (!cloudinaryResponse) {
+            alert('Failed to upload image to Cloudinary.');
+            return;
+        }
+
         const formData = {
             title,
             category,
             author,
             date: formattedDate,
             description,
-            image: imageFile, // Send the base64 string
+            image: cloudinaryResponse.secure_url, // Send the base64 string
         };
 
         setLoading(true);
 
         try {
-            const response = await fetch('/api/news/add', {
+            const response = await fetch('/api/contents/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -314,6 +361,31 @@ const AddModal = ({ show, onClose, onSave }) => {
             setLoading(false);
         }
     };
+
+    const uploadToCloudinary = async (imageFile) => {
+        const formData = new FormData();
+        formData.append('file', imageFile);
+        formData.append('upload_preset', 'cryptph_images'); // Use your Cloudinary upload preset here
+        formData.append('cloud_name', 'dukv38hdq'); // Your Cloudinary cloud name
+
+        try {
+            const response = await fetch('https://api.cloudinary.com/v1_1/dukv38hdq/image/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                return await response.json();
+            } else {
+                console.error('Failed to upload image');
+                return null;
+            }
+        } catch (error) {
+            console.error('Cloudinary upload error:', error);
+            return null;
+        }
+    };
+
 
     if (loading) {
         return <AddLoader/>;
@@ -418,11 +490,11 @@ const HeroPage = () => {
     // Other states
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [newsData, setNewsData] = useState([]);
-    const [newsItem, setNewsItem] = useState(null);
-    const [selectedNewsItem, setSelectedNewsItem] = useState(null);
+    const [contentData, setContentData] = useState([]);
+    const [contentItem, setContentItem] = useState(null);
+    const [selectedContentItem, setSelectedContentItem] = useState(null);
 
-    const [filteredNewsData, setFilteredNewsData] = useState([]); // For filtering and searching
+    const [filteredContentData, setFilteredContentData] = useState([]); // For filtering and searching
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8; 
@@ -444,10 +516,10 @@ const HeroPage = () => {
 
     //fetch 
     useEffect(() => {
-        const fetchNews = async () => {
+        const fetchContents = async () => {
             setLoading(true);
             try {
-                const response = await fetch('/api/news/fetch');
+                const response = await fetch('/api/contents/fetch');
 
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -461,8 +533,8 @@ const HeroPage = () => {
                 const sortedData = data.sort((a, b) => new Date(b.date) - new Date(a.date));
     
                 // Set the sorted data
-                setNewsData(sortedData); // Assuming you have useState for newsData
-                setFilteredNewsData(sortedData); // Initial set, sorted by date
+                setContentData(sortedData); // Assuming you have useState for newsData
+                setFilteredContentData(sortedData); // Initial set, sorted by date
             } catch (error) {
                 console.error('Error fetching news:', error);
             }finally {
@@ -470,7 +542,7 @@ const HeroPage = () => {
             }
         };
     
-        fetchNews();
+        fetchContents();
 
         // const intervalId = setInterval(() => {
         //     fetchNews();
@@ -489,11 +561,11 @@ const HeroPage = () => {
             clearInterval(intervalId);
         }
 
-        const filteredData = newsData.filter(item =>
+        const filteredData = contentData.filter(item =>
             item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             item.description.toLowerCase().includes(searchQuery.toLowerCase())
         );
-        setFilteredNewsData(filteredData);
+        setFilteredContentData(filteredData);
         setCurrentPage(1); // Reset to first page on new search
 
         // const id = setInterval(() => {
@@ -504,47 +576,50 @@ const HeroPage = () => {
         // // Cleanup function to clear the interval on search change
         // return () => clearInterval(id);
 
-    }, [searchQuery, newsData, intervalId]);
+    }, [searchQuery, contentData, intervalId]);
 
     // Handle pagination
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    const paginatedData = filteredNewsData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const paginatedData = filteredContentData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     // Handle sorting
     const toggleSort = (key) => {
-        const sortedData = [...filteredNewsData].sort((a, b) => {
+        const sortedData = [...filteredContentData].sort((a, b) => {
             if (sortState[key] === 'asc') {
                 return a[key] > b[key] ? -1 : 1;
             }
             return a[key] < b[key] ? -1 : 1;
         });
-        setFilteredNewsData(sortedData);
+        setFilteredContentData(sortedData);
         setSortState((prev) => ({ ...prev, [key]: prev[key] === 'asc' ? 'desc' : 'asc' }));
     };
     
     //modals
 
     const handleEditClick = (item) => {
-        setNewsItem(item); // Set the selected news item
+        setContentItem(item); // Set the selected news item
         console.log("Editing news item:", item); // Log the news item being edited
         setIsModalOpen(true); // Open the edit modal
     };
 
 
-    const handleDeleteClick = async (id) => {
+    const handleDeleteClick = async (id , imagePublicId) => {
         if (window.confirm("Are you sure you want to delete this item?")) {
             setDeleteLoading(true);
             try {
-                const response = await fetch(`/api/news/delete?id=${id}`, {
+
+                console.log('Deleting content with id:', id, 'and imagePublicId:', imagePublicId); // Log for debugging
+
+                const response = await fetch(`/api/contents/delete?id=${id}&imagePublicId=${imagePublicId}`, {
                     method: 'DELETE',
                 });
     
                 if (response.ok) {
                     // Update local state to remove deleted item
-                    setNewsData((prevData) => prevData.filter((item) => item._id !== id));
+                    setContentData((prevData) => prevData.filter((item) => item._id !== id));
                 } else {
                     console.error('Failed to delete news item');
                 }
@@ -574,7 +649,7 @@ const HeroPage = () => {
         };
     
         try {
-            const response = await fetch(`/api/news/edit/${newsItem._id}`, {
+            const response = await fetch(`/api/news/edit/${contentItem._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -585,7 +660,7 @@ const HeroPage = () => {
             if (response.ok) {
                 const updatedItem = await response.json();
                 // Update local state
-                setNewsData((prevData) =>
+                setContentData((prevData) =>
                     prevData.map((item) =>
                         item._id === updatedItem._id ? updatedItem : item
                     )
@@ -621,15 +696,15 @@ const HeroPage = () => {
     };
 
     useEffect(() => {
-        if (newsItem) {
-            setTitle(newsItem.title);
-            setCategory(newsItem.category);
-            setAuthor(newsItem.author);
-            setDate(newsItem.date);
-            setDescription(newsItem.description);
-            setImageFile(newsItem.image);
+        if (contentItem) {
+            setTitle(contentItem.title);
+            setCategory(contentItem.category);
+            setAuthor(contentItem.author);
+            setDate(contentItem.date);
+            setDescription(contentItem.description);
+            setImageFile(contentItem.image);
         }
-    }, [newsItem]);
+    }, [contentItem]);
     
 
     //POST
@@ -655,7 +730,7 @@ const HeroPage = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("News added successfully:", data);
-                console.log(newsItem.image);
+                console.log(contentItem.image);
 
                 // Close modal or reset form as needed
             } else {
@@ -723,34 +798,36 @@ const HeroPage = () => {
     
                 <div className={styles.cardsContainer}>
                 {paginatedData.length > 0 ? (
-                        paginatedData.map((newsItem) => (
-                        <Card key={newsItem._id}>
-                                <Link href={newsItem.category === "Education" ? `/educational/${newsItem._id}` : `/news/${newsItem._id}`} legacyBehavior>
+                        paginatedData.map((contentItem) => (
+                        <Card key={contentItem._id}>
+                                <Link href={contentItem.category === "Education" ? `/educational/${contentItem._id}` : `/news/${contentItem._id}`} legacyBehavior>
                                 <a>
-                                    <img src={newsItem.image} alt={newsItem.title} className={styles.cardImage} />
+                                    <img src={contentItem.image} alt={contentItem.title} className={styles.cardImage} />
                                 </a>
                             </Link>   
-                            <h1 className={styles.cardName}>{newsItem.title.length > 20 ? `${newsItem.title.substring(0, 20)}...` : newsItem.title}</h1>
+
+                            
+                            <h1 className={styles.cardName}>{contentItem.title.length > 20 ? `${contentItem.title.substring(0, 20)}...` : contentItem.title}</h1>
                             
                             <p className={styles.cardInfo}>
-                                {stripHtmlTags(newsItem.description).substring(0, 50)}...
+                                {stripHtmlTags(contentItem.description).substring(0, 50)}...
                             </p>
     
                             <div className={styles.categoryGroup}>
                                 <p className={styles.cardHeader}>Category</p>
-                                <p className={styles.cardInfo}>{newsItem.category}</p>
+                                <p className={styles.cardInfo}>{contentItem.category}</p>
                             </div>
                             <div className={styles.categoryGroup}>
                                 <p className={styles.cardHeader}>Date Created</p>
-                                <p className={styles.cardInfo}>{new Date(newsItem.date).toLocaleDateString()}</p>
+                                <p className={styles.cardInfo}>{new Date(contentItem.date).toLocaleDateString()}</p>
                             </div>
                             <div className={styles.categoryGroup}>
                                 <p className={styles.cardHeader}>Authors</p>
-                                <p className={styles.cardInfo}>{newsItem.author}</p>
+                                <p className={styles.cardInfo}>{contentItem.author}</p>
                             </div>
                             <div className={styles.iconGroup}>
-                                <button onClick={() => handleEditClick(newsItem)}><FaRegEdit className={styles.cardIcon} /></button>
-                                <button><FaRegTrashAlt className={styles.cardIcon} onClick={() => handleDeleteClick(newsItem._id)} /></button>
+                                <button onClick={() => handleEditClick(contentItem)}><FaRegEdit className={styles.cardIcon} /></button>
+                                <button><FaRegTrashAlt className={styles.cardIcon} onClick={() => handleDeleteClick(contentItem._id, contentItem.imagePublicId)} /></button>
                             </div>
                         </Card>
                         ))
@@ -762,7 +839,7 @@ const HeroPage = () => {
                 </div>
 
                 <div className={styles.pagination}>
-                    {Array.from({ length: Math.ceil(filteredNewsData.length / itemsPerPage) }, (_, index) => (
+                    {Array.from({ length: Math.ceil(filteredContentData.length / itemsPerPage) }, (_, index) => (
                         <button
                             key={index + 1}
                             onClick={() => handlePageChange(index + 1)}
@@ -776,7 +853,7 @@ const HeroPage = () => {
                 <EditModal 
                     show={isModalOpen}
                     onClose={handleCloseModal}
-                    newsItem={newsItem} // Pass the currently selected news item here
+                    contentItem={contentItem} // Pass the currently selected news item here
                     onSave={handleSave}
                 />
                 <AddModal show={isAddModalOpen} onClose={handleAddCloseModal} />

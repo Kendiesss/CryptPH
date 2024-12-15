@@ -26,7 +26,7 @@ function HeroPage() {
          useEffect(() => {
           const fetchCounts = async () => {
               try {
-                  const response = await fetch('/api/news/getCount');
+                  const response = await fetch('/api/contents/getCount');
                   const data = await response.json();
                   setNewsCount(data.newsCount);
                   setEducationalArticlesCount(data.educationalArticlesCount);
