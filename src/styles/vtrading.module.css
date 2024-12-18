@@ -296,6 +296,7 @@
 
         .inputField{
             border-radius:  1rem;
+            border: white;
             color:   black;
             font-size:  14px;
             text-align:   center;
@@ -1083,4 +1084,8 @@ font-weight: bold;
 
 .selectButton:hover {
     background-color: #0056b3; /* Darker blue on hover */
+}
+
+.tableCell.selected {
+    background-color: #97b9e6; /* Light blue for selected cell */
 }

@@ -217,6 +217,7 @@ export default function DummyPage({ title }) {
     const [searchQuery, setSearchQuery] = useState(''); // To track the search input
     const [investments, setInvestments] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [selectedInvestment, setSelectedInvestment] = useState(null); // To store the selected investment
 
     //Panel Switching for Porfolio, Records and Order History
     const [activePanel, setActivePanel] = useState('panel1');
@@ -256,9 +257,10 @@ export default function DummyPage({ title }) {
             // Check if this coin is already in the investments list
             const existingInvestmentIndex = investments.findIndex((inv) => inv.symbol === selectedCoin.symbol);
     
+            let updatedInvestments = [];
             if (existingInvestmentIndex !== -1) {
                 // If the coin is already invested in, update the existing investment
-                const updatedInvestments = [...investments];
+                updatedInvestments = [...investments];
                 const existingInvestment = updatedInvestments[existingInvestmentIndex];
                 const updatedInvestment = {
                     ...existingInvestment,
@@ -272,8 +274,9 @@ export default function DummyPage({ title }) {
                 setInvestments(updatedInvestments);
                 setInvestedCoin(updatedInvestment); // Track the current investment
     
-                // Save updated investments to localStorage
+                // Save updated investments and investedCoin to localStorage
                 localStorage.setItem('investments', JSON.stringify(updatedInvestments));
+                localStorage.setItem('investedCoin', JSON.stringify(updatedInvestment));  // Save investedCoin separately
             } else {
                 // If this is a new coin investment, create a new investment object
                 const newInvestment = {
@@ -293,15 +296,16 @@ export default function DummyPage({ title }) {
                 console.log('New Investment:', newInvestment); // Debug log
     
                 // Add the new investment to the list and track as the current investment
-                const updatedInvestments = [...investments, newInvestment];
+                updatedInvestments = [...investments, newInvestment];
                 setInvestments(updatedInvestments);
                 setInvestedCoin(newInvestment); // Track the current investment
     
-                // Save new investments to localStorage
+                // Save new investments and investedCoin to localStorage
                 localStorage.setItem('dummyCash', JSON.stringify(updatedDummyCash));
                 localStorage.setItem('investments', JSON.stringify(updatedInvestments));
+                localStorage.setItem('investedCoin', JSON.stringify(newInvestment)); // Save investedCoin separately
             }
-
+    
             setIsBuyModalOpen(true); // Show the buy modal
         } else if (quantity <= 0) {
             alert('Please enter a valid quantity greater than 0.');
@@ -310,6 +314,7 @@ export default function DummyPage({ title }) {
             setIsErrorModalOpen(true);
         }
     };
+    
 
 
     
@@ -362,22 +367,22 @@ export default function DummyPage({ title }) {
         
         
         
-    useEffect(() => {
-
-        const savedInvestments = localStorage.getItem('investments');
-        const savedDummyCash = localStorage.getItem('dummyCash');
-        const savedOrderHistory = localStorage.getItem('orderHistory');
-    
-        if (savedInvestments) {
-            setInvestments(JSON.parse(savedInvestments)); // Restore the investments
-        }
-        if (savedDummyCash) {
-            setDummyCash(JSON.parse(savedDummyCash)); // Restore dummyCash
-        }
-        if (savedOrderHistory) {
-            setOrderHistory(JSON.parse(savedOrderHistory)); // Restore the order history
-        }
-    }, []);
+        useEffect(() => {
+            // Load investments and investedCoin from localStorage on initial load
+            const savedInvestments = localStorage.getItem('investments');
+            const savedInvestedCoin = localStorage.getItem('investedCoin');
+            const savedDummyCash = localStorage.getItem('dummyCash');
+        
+            if (savedInvestments) {
+                setInvestments(JSON.parse(savedInvestments));
+            }
+            if (savedInvestedCoin) {
+                setInvestedCoin(JSON.parse(savedInvestedCoin)); // Restore investedCoin
+            }
+            if (savedDummyCash) {
+                setDummyCash(JSON.parse(savedDummyCash)); // Restore dummyCash
+            }
+        }, []); 
     
 
 
@@ -433,9 +438,9 @@ export default function DummyPage({ title }) {
         setOpenModal(null); // Close the first modal
     };
 
-    const handleViewClick = (coin) => {
+    const handleViewClick = (coin, investment) => {
         setSelectedCoin(coin); // Update the selected coin state
-
+    
         if (!coin?.quote?.USD) {
             console.error("Invalid coin data:", coin);
             return; // Exit the function if data is missing
@@ -461,7 +466,10 @@ export default function DummyPage({ title }) {
     
         const match = widgetData.find((item) => item.id === coin.id);
         setSymbol(match ? match.symbol : null);
+    
+        setSelectedInvestment(investment); // Track the selected investment for row highlighting
     };
+    
     
     
 
@@ -594,6 +602,58 @@ export default function DummyPage({ title }) {
             setSortConfig({ key, direction: 'ascending' });
         }
     };
+
+    const sortedAndFilteredInvestments = investments
+    .filter((investment) => {
+        const searchTarget = `${investment.name} ${investment.symbol}`.toLowerCase();
+        return searchTarget.includes(searchQuery); // Apply the search query filter
+    })
+    .sort((a, b) => {
+        if (!sortConfig.key) return 0; // No sorting
+
+        const aValue = a[sortConfig.key]; // Adjust for investment fields
+        const bValue = b[sortConfig.key];
+
+        if (aValue === undefined || bValue === undefined) return 0; // Skip invalid fields
+
+        // Sorting based on the direction
+        if (sortConfig.direction === 'ascending') {
+            return aValue - bValue;
+        } else {
+            return bValue - aValue;
+        }
+    });
+
+    const currentInvestmentPageData = sortedAndFilteredInvestments.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const sortedAndFilteredOrderHistory = orderHistory
+  .filter((order) => {
+    const searchTarget = `${order.coinName} ${order.symbol}`.toLowerCase();
+    return searchTarget.includes(searchQuery); // Apply the search query filter
+  })
+  .sort((a, b) => {
+    if (!sortConfig.key) return 0; // No sorting
+
+    const aValue = a[sortConfig.key]; // Adjust for order fields
+    const bValue = b[sortConfig.key];
+
+    if (aValue === undefined || bValue === undefined) return 0; // Skip invalid fields
+
+    // Sorting based on the direction
+    if (sortConfig.direction === 'ascending') {
+      return aValue - bValue;
+    } else {
+      return bValue - aValue;
+    }
+  });
+
+const currentOrderHistoryPageData = sortedAndFilteredOrderHistory.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
 
 
         const sortedData = Object.keys(cryptoData)
@@ -849,90 +909,153 @@ export default function DummyPage({ title }) {
                         </div>
                         <div className={styles.coinPanel}>
                         {activePanel === 'panel1' && (
-                            <div className={styles.cardContainer}>
-                                {investments.length === 0 ? (
-                                    <p className={styles.header2}>
-                                        You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!
-                                    </p>
-                                ) : (
-                                    <div className={styles.tableContainer}>
-                                        <table className={styles.table}>
-                                        <thead>
-                                            <tr>
-                                                <th className={styles.tableHeader}>Coin Name</th>
-                                                <th className={styles.tableHeader}>Symbol</th>
-                                                <th className={styles.tableHeader}>Quantity</th>
-                                                <th className={styles.tableHeader}>Total Cost</th>
-                                                <th className={styles.tableHeader}>Investment Time</th>
-                                                <th className={styles.tableHeader}>% Profit</th>
-                                                <th className={styles.tableHeader}>Select</th> {/* New column for select button */}
-                                                <th className={styles.tableHeader}>Action</th> {/* Existing column for sell button */}
+                        <div>
+                            {investments.length > 0 ? (
+                            <>
+                                {/* Search Bar */}
+                                <div className={styles.searchContainer}>
+                                <input
+                                    type="text"
+                                    className={`${styles.searchBar} ${styles.searchBarBlackText}`}
+                                    placeholder="Search for a coin..."
+                                    value={searchQuery}
+                                    onChange={(e) => {
+                                    setSearchQuery(e.target.value.toLowerCase());
+                                    setCurrentPage(1); // Reset to page 1 on new search
+                                    }}
+                                />
+                                </div>
+
+                                {/* Card Container */}
+                                <div className={styles.cardContainer}>
+                                <div className={styles.tableContainer}>
+                                    <table className={styles.table}>
+                                    <thead>
+                                        <tr>
+                                        <th className={styles.tableHeader}>Coin Name</th>
+                                        <th className={styles.tableHeader}>Symbol</th>
+                                        <th className={styles.tableHeader} onClick={() => handleSort('quantity')}>
+                                            Quantity {sortConfig.key === 'quantity' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+                                        </th>
+                                        <th className={styles.tableHeader} onClick={() => handleSort('totalCost')}>
+                                            Total Cost {sortConfig.key === 'totalCost' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+                                        </th>
+                                        <th className={styles.tableHeader}>Investment Time</th>
+                                        <th className={styles.tableHeader} onClick={() => handleSort('profit')}>
+                                            % Profit {sortConfig.key === 'profit' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+                                        </th>
+                                        <th className={styles.tableHeader}>Select</th>
+                                        <th className={styles.tableHeader}>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {currentInvestmentPageData.map((investment, index) => {
+                                        const investmentDate = new Date(investment.timeInvested).toLocaleString();
+                                        const latestCoinData = cryptoData[investment.id];
+                                        const latestPrice = latestCoinData ? latestCoinData.quote.USD.price : investment.pricePHP;
+
+                                        const currentInvestmentValue = latestPrice * investment.quantity;
+                                        const totalInvestmentCost = investment.averagePrice * investment.quantity;
+                                        const profit = ((currentInvestmentValue - totalInvestmentCost) / totalInvestmentCost) * 100;
+
+                                        // Check if the current row is the selected investment
+                                        const isSelected = selectedInvestment && selectedInvestment.id === investment.id;
+
+                                        return (
+                                            <tr
+                                                key={investment.id || index}
+                                                className={isSelected ? styles.selectedRow : ''}
+                                            >
+                                                <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                                                    {investment.name}
+                                                    <img
+                                                        src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`}
+                                                        alt={`${investment.name} logo`}
+                                                        className={styles.logo}
+                                                    />
+                                                </td>
+                                                <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                                                    {investment.symbol}
+                                                </td>
+                                                <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                                                    {investment.quantity}
+                                                </td>
+                                                <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                                                    ${totalInvestmentCost.toFixed(2)}
+                                                </td>
+                                                <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                                                    {investmentDate}
+                                                </td>
+                                                <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                                                    <span className={profit >= 0 ? styles.changePositive : styles.changeNegative}>
+                                                        {profit.toFixed(1)}%
+                                                    </span>
+                                                </td>
+                                                <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                                                    <button className={styles.selectButton} onClick={() => handleViewClick(latestCoinData, investment)}>
+                                                        Select
+                                                    </button>
+                                                </td>
+                                                <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                                                    <button
+                                                        className={styles.sellButton}
+                                                        onClick={() => {
+                                                            if (!quantity || quantity <= 0) {
+                                                                setErrorMessage('Please enter a valid quantity to sell.');
+                                                                return;
+                                                            }
+
+                                                            const matchingInvestment = investments.find((inv) => inv.symbol === selectedCoin.symbol);
+                                                            if (matchingInvestment) {
+                                                                handleExit(matchingInvestment);
+                                                            } else {
+                                                                setErrorMessage(`No investment found for ${selectedCoin.symbol}.`);
+                                                            }
+                                                        }}
+                                                    >
+                                                        Sell
+                                                    </button>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {investments.map((investment, index,) => {
-                                                const investmentDate = new Date(investment.timeInvested).toLocaleString();
-                                                const latestCoinData = cryptoData[investment.id];
-                                                const latestPrice = latestCoinData ? latestCoinData.quote.USD.price : investment.pricePHP;
-
-                                                // Calculate profit for each investment
-                                                const currentInvestmentValue = latestPrice * investment.quantity; // Current value of the investment
-                                                const totalInvestmentCost = investment.averagePrice * investment.quantity; // Total cost of the investment
-                                                const profit = ((currentInvestmentValue - totalInvestmentCost) / totalInvestmentCost) * 100; // Calculate profit percentage
-
-                                                return (
-                                                    <tr key={investment.id || index}>
-                                                        <td className={styles.tableCell}>
-                                                            {investment.name}
-                                                            <img 
-                                                                src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${investment.id}.png`} 
-                                                                alt={`${investment.name} logo`} 
-                                                                className={styles.logo}
-                                                            />
-                                                        </td>
-                                                        <td className={styles.tableCell}>{investment.symbol}</td>
-                                                        <td className={styles.tableCell}>{investment.quantity}</td>
-                                                        <td className={styles.tableCell}>${totalInvestmentCost.toFixed(2)}</td>
-                                                        <td className={styles.tableCell}>{investmentDate}</td>
-                                                        <td className={styles.tableCell}>
-                                                            <span
-                                                                className={
-                                                                    profit >= 0
-                                                                        ? styles.changePositive
-                                                                        : styles.changeNegative
-                                                                }
-                                                            >
-                                                                {profit.toFixed(1)}%
-                                                            </span>
-                                                        </td>
-                                                        <td className={styles.tableCell}>
-                                                        <button
-                                                            className={styles.selectButton}
-                                                            onClick={() => handleViewClick(latestCoinData)} 
-                                                        >
-                                                            Select
-                                                        </button>
-
-                                                        </td>
-                                                        <td className={styles.tableCell}>
-                                                            <button
-                                                                className={styles.sellButton}
-                                                                onClick={() => handleExit(investment)} // Call handleExit directly
-                                                            >
-                                                                Sell
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                
-                                                );
-                                            })}
-                                        </tbody>
+                                        );
+                                    })}
+                                    </tbody>
                                     </table>
+                                </div>
+                                </div>
 
-                                    </div>
-                                )}
+                                {/* Pagination */}
+                                <div className={styles.pagination}>
+                                <button
+                                    className={styles.button4}
+                                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                >
+                                    Previous
+                                </button>
+                                <span>
+                                    Page {currentPage} of {Math.ceil(sortedAndFilteredInvestments.length / itemsPerPage)}
+                                </span>
+                                <button
+                                    className={styles.button4}
+                                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(sortedAndFilteredInvestments.length / itemsPerPage)))}
+                                    disabled={currentPage === Math.ceil(sortedAndFilteredInvestments.length / itemsPerPage)}
+                                >
+                                    Next
+                                </button>
+                                </div>
+                            </>
+                            ) : (
+                            <div className={styles.emptyPanel}>
+                                <h1 className={styles.header2}>
+                                You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!
+                                </h1>
                             </div>
+                            )}
+                        </div>
                         )}
+
+
 
                             {activePanel === 'panel2' && (
                             <div>
@@ -952,99 +1075,90 @@ export default function DummyPage({ title }) {
 
                             {/* Table Container */}
                             <div className={styles.tableContainer}>
-                                <table className={styles.table}>
-                                    <thead>
-                                        <tr>
-                                            <th className={styles.tableHeader}>Coin Name</th>
-                                            <th className={styles.tableHeader}>Symbol</th>
-                                            <th className={styles.tableHeader} onClick={() => handleSort('price')}>
-                                                Price {sortConfig.key === 'price' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
-                                            </th>
-                                            <th className={styles.tableHeader} onClick={() => handleSort('percent_change_1h')}>
-                                                1h Change (%) {sortConfig.key === 'percent_change_1h' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
-                                            </th>
-                                            <th className={styles.tableHeader} onClick={() => handleSort('percent_change_24h')}>
-                                                24h Change (%) {sortConfig.key === 'percent_change_24h' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
-                                            </th>
-                                            <th className={styles.tableHeader} onClick={() => handleSort('percent_change_7d')}>
-                                                7d Change (%) {sortConfig.key === 'percent_change_7d' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
-                                            </th>
-                                            <th className={styles.tableHeader} onClick={() => handleSort('volume_24h')}>
-                                                Volume (24h) {sortConfig.key === 'volume_24h' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
-                                            </th>
-                                            <th className={styles.tableHeader} onClick={() => handleSort('market_cap')}>
-                                                Market Cap {sortConfig.key === 'market_cap' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
-                                            </th>
-                                            <th className={styles.tableHeader}>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                {currentPageData.map((id) => {
-                                    const coin = cryptoData[id];
-                                    const pricePHP = formatNumberWithCommas((coin.quote.USD.price).toFixed(2));
-                                    const marketCapT = formatNumberWithCommas((coin.quote.USD.market_cap / 1e12).toFixed(2));
-                                    const volume24hPHP = formatNumberWithCommas((coin.quote.USD.volume_24h).toFixed(2));
+                            <table className={styles.table}>
+    <thead>
+        <tr>
+            <th className={styles.tableHeader}>Coin Name</th>
+            <th className={styles.tableHeader}>Symbol</th>
+            <th className={styles.tableHeader} onClick={() => handleSort('price')}>
+                Price {sortConfig.key === 'price' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+            </th>
+            <th className={styles.tableHeader} onClick={() => handleSort('percent_change_1h')}>
+                1h Change (%) {sortConfig.key === 'percent_change_1h' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+            </th>
+            <th className={styles.tableHeader} onClick={() => handleSort('percent_change_24h')}>
+                24h Change (%) {sortConfig.key === 'percent_change_24h' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+            </th>
+            <th className={styles.tableHeader} onClick={() => handleSort('percent_change_7d')}>
+                7d Change (%) {sortConfig.key === 'percent_change_7d' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+            </th>
+            <th className={styles.tableHeader} onClick={() => handleSort('volume_24h')}>
+                Volume (24h) {sortConfig.key === 'volume_24h' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+            </th>
+            <th className={styles.tableHeader} onClick={() => handleSort('market_cap')}>
+                Market Cap {sortConfig.key === 'market_cap' && (sortConfig.direction === 'ascending' ? '▲' : '▼')}
+            </th>
+            <th className={styles.tableHeader}>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {currentPageData.map((id) => {
+            const coin = cryptoData[id];
+            const pricePHP = formatNumberWithCommas((coin.quote.USD.price).toFixed(2));
+            const marketCapT = formatNumberWithCommas((coin.quote.USD.market_cap / 1e12).toFixed(2));
+            const volume24hPHP = formatNumberWithCommas((coin.quote.USD.volume_24h).toFixed(2));
 
-                                    return (
-                                        <tr key={id}>
-                                            <td className={styles.tableCell}>
-                                                {coin.name}
-                                                <img
-                                                    src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${coin.id}.png`}
-                                                    alt={`${coin.name} logo`}
-                                                    className={styles.logo}
-                                                />
-                                            </td>
-                                            <td className={styles.tableCell}>{coin.symbol}</td>
-                                            <td className={styles.tableCell}>${pricePHP}</td>
-                                            <td className={styles.tableCell}>
-                                                <span
-                                                    className={
-                                                        coin.quote.USD.percent_change_1h < 0
-                                                            ? styles.changeNegative
-                                                            : styles.changePositive
-                                                    }
-                                                >
-                                                    {coin.quote.USD.percent_change_1h.toFixed(2)}%
-                                                </span>
-                                            </td>
-                                            <td className={styles.tableCell}>
-                                                <span
-                                                    className={
-                                                        coin.quote.USD.percent_change_24h < 0
-                                                            ? styles.changeNegative
-                                                            : styles.changePositive
-                                                    }
-                                                >
-                                                    {coin.quote.USD.percent_change_24h.toFixed(2)}%
-                                                </span>
-                                            </td>
-                                            <td className={styles.tableCell}>
-                                                <span
-                                                    className={
-                                                        coin.quote.USD.percent_change_7d < 0
-                                                            ? styles.changeNegative
-                                                            : styles.changePositive
-                                                    }
-                                                >
-                                                    {coin.quote.USD.percent_change_7d.toFixed(2)}%
-                                                </span>
-                                            </td>
-                                            <td className={styles.tableCell}>${volume24hPHP}</td>
-                                            <td className={styles.tableCell}>${marketCapT} T</td>
-                                            <td className={styles.tableCell}>
-                                                <button
-                                                    className={styles.button4}
-                                                    onClick={() => handleViewClick(coin)}
-                                                >
-                                                    SELECT
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                                </table>
+            // Check if the current row is the selected coin
+            const isSelected = selectedCoin && selectedCoin.id === coin.id;
+
+            return (
+                <tr key={id} className={isSelected ? styles.selectedRow : ''}>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        {coin.name}
+                        <img
+                            src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${coin.id}.png`}
+                            alt={`${coin.name} logo`}
+                            className={styles.logo}
+                        />
+                    </td>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        {coin.symbol}
+                    </td>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        ${pricePHP}
+                    </td>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        <span className={coin.quote.USD.percent_change_1h < 0 ? styles.changeNegative : styles.changePositive}>
+                            {coin.quote.USD.percent_change_1h.toFixed(2)}%
+                        </span>
+                    </td>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        <span className={coin.quote.USD.percent_change_24h < 0 ? styles.changeNegative : styles.changePositive}>
+                            {coin.quote.USD.percent_change_24h.toFixed(2)}%
+                        </span>
+                    </td>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        <span className={coin.quote.USD.percent_change_7d < 0 ? styles.changeNegative : styles.changePositive}>
+                            {coin.quote.USD.percent_change_7d.toFixed(2)}%
+                        </span>
+                    </td>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        ${volume24hPHP}
+                    </td>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        ${marketCapT} T
+                    </td>
+                    <td className={`${styles.tableCell} ${isSelected ? styles.selected : ''}`}>
+                        <button className={styles.button4} onClick={() => handleViewClick(coin)}>
+                            SELECT
+                        </button>
+                    </td>
+                </tr>
+            );
+        })}
+    </tbody>
+</table>
+
                             </div>
 
                             {/* Pagination */}
@@ -1072,56 +1186,95 @@ export default function DummyPage({ title }) {
                             )}
 
                             {activePanel === 'panel3' && (
+                            <div>
+                                {orderHistory.length > 0 ? (
                                 <>
-                                    {orderHistory.length > 0 ? (
-                                        <div className={styles.tableContainer}>
-                                            <table className={styles.table}>
-                                                <thead>
-                                                    <tr>
-                                                        <th className={styles.tableHeader}>Coin Name</th>
-                                                        <th className={styles.tableHeader}>Symbol</th>
-                                                        <th className={styles.tableHeader}>Quantity</th>
-                                                        <th className={styles.tableHeader}>Price at Entry (USD)</th>
-                                                        <th className={styles.tableHeader}>Price at Exit (USD)</th>
-                                                        <th className={styles.tableHeader}>% Profit</th>
-                                                        <th className={styles.tableHeader}>Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {orderHistory.map((order, index) => (
-                                                        <tr key={index}>
-                                                            <td className={styles.tableCell}>
-                                                                {order.coinName}
-                                                                <img 
-                                                                    src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${order.coinId}.png`} 
-                                                                    alt={`${order.coinName} logo`} 
-                                                                    className={styles.logo} 
-                                                                />
-                                                            </td>
-                                                            <td className={styles.tableCell}>{order.symbol}</td>
-                                                            <td className={styles.tableCell}>{order.quantity}</td>
-                                                            <td className={styles.tableCell}>${formatNumberWithCommas(order.priceAtEntry.toFixed(2))}</td>
-                                                            <td className={styles.tableCell}>${formatNumberWithCommas(order.priceAtExit.toFixed(2))}</td>
-                                                            <td className={styles.tableCell}>
-                                                                <span className={order.profitPercent >= 0 ? styles.changePositive : styles.changeNegative}>
-                                                                    {order.profitPercent.toFixed(2)}%
-                                                                </span>
-                                                            </td>
-                                                            <td className={styles.tableCell}>{new Date(order.date).toLocaleDateString()}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    ) : (
-                                        <div className={styles.emptyPanel}>
-                                            <h1 className={styles.header2}>
-                                                You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!
-                                            </h1>
-                                        </div>
-                                    )}
+                                    {/* Search Bar */}
+                                    <div className={styles.searchContainer}>
+                                    <input
+                                        type="text"
+                                        className={`${styles.searchBar} ${styles.searchBarBlackText}`}
+                                        placeholder="Search for a coin..."
+                                        value={searchQuery}
+                                        onChange={(e) => {
+                                        setSearchQuery(e.target.value.toLowerCase());
+                                        setCurrentPage(1); // Reset to page 1 on new search
+                                        }}
+                                    />
+                                    </div>
+                                    
+                                    {/* Order History Table */}
+                                    <div className={styles.tableContainer}>
+                                    <table className={styles.table}>
+                                        <thead>
+                                        <tr>
+                                            <th className={styles.tableHeader}>Coin Name</th>
+                                            <th className={styles.tableHeader}>Symbol</th>
+                                            <th className={styles.tableHeader}>Quantity</th>
+                                            <th className={styles.tableHeader}>Price at Entry (USD)</th>
+                                            <th className={styles.tableHeader}>Price at Exit (USD)</th>
+                                            <th className={styles.tableHeader}>% Profit</th>
+                                            <th className={styles.tableHeader}>Date</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {currentOrderHistoryPageData.map((order, index) => (
+                                            <tr key={index}>
+                                            <td className={styles.tableCell}>
+                                                {order.coinName}
+                                                <img 
+                                                src={`https://s2.coinmarketcap.com/static/img/coins/128x128/${order.coinId}.png`} 
+                                                alt={`${order.coinName} logo`} 
+                                                className={styles.logo} 
+                                                />
+                                            </td>
+                                            <td className={styles.tableCell}>{order.symbol}</td>
+                                            <td className={styles.tableCell}>{order.quantity}</td>
+                                            <td className={styles.tableCell}>${formatNumberWithCommas(order.priceAtEntry.toFixed(2))}</td>
+                                            <td className={styles.tableCell}>${formatNumberWithCommas(order.priceAtExit.toFixed(2))}</td>
+                                            <td className={styles.tableCell}>
+                                                <span className={order.profitPercent >= 0 ? styles.changePositive : styles.changeNegative}>
+                                                {order.profitPercent.toFixed(2)}%
+                                                </span>
+                                            </td>
+                                            <td className={styles.tableCell}>{new Date(order.date).toLocaleDateString()}</td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                    </div>
+
+                                    {/* Pagination */}
+                                    <div className={styles.pagination}>
+                                    <button
+                                        className={styles.button4}
+                                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                        disabled={currentPage === 1}
+                                    >
+                                        Previous
+                                    </button>
+                                    <span>
+                                        Page {currentPage} of {Math.ceil(sortedAndFilteredOrderHistory.length / itemsPerPage)}
+                                    </span>
+                                    <button
+                                        className={styles.button4}
+                                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(sortedAndFilteredOrderHistory.length / itemsPerPage)))}
+                                        disabled={currentPage === Math.ceil(sortedAndFilteredOrderHistory.length / itemsPerPage)}
+                                    >
+                                        Next
+                                    </button>
+                                    </div>
                                 </>
+                                ) : (
+                                <div className={styles.emptyPanel}>
+                                    <h1 className={styles.header2}>
+                                    You haven't invested in any coins yet. Start by selecting a coin and entering an amount to invest!
+                                    </h1>
+                                </div>
+                                )}
+                            </div>
                             )}
+
 
                         </div>
                     </div>
@@ -1191,19 +1344,19 @@ export default function DummyPage({ title }) {
                                     </span>
                                 </div>
                                 <div className={styles.qtyGroup}>
-                                <label className={styles.header2} htmlFor="quantity">Coin Quantity: </label><br />
-                                <input 
-                                    type="number" 
-                                    id="quantity" 
-                                    name="quantity" 
-                                    className={styles.inputField} 
-                                    placeholder="Enter Quantity" 
-                                    min="0"
-                                    value={quantity} 
-                                    onChange={handleQuantityChange} 
-                                    required 
-                                />
-                            </div>
+                                    <label className={styles.header2} htmlFor="quantity">Coin Quantity: </label><br />
+                                    <input 
+                                        type="number" 
+                                        id="quantity" 
+                                        name="quantity" 
+                                        className={styles.inputField} 
+                                        placeholder="Enter Quantity" 
+                                        min="0"
+                                        value={quantity} 
+                                        onChange={handleQuantityChange} 
+                                        required 
+                                    />
+                                </div>
 
                             <p className={styles.gasFeeAmount}>
                                 Current Gas Fee: 0.1% <span className={styles.tooltipIcon}>?</span>
@@ -1227,28 +1380,36 @@ export default function DummyPage({ title }) {
                                 <button className={styles.Button2} onClick={handleEntry}>
                                     Buy
                                 </button>
-                                <button 
-                                    className={styles.Button3} 
+                                <button
+                                    className={styles.Button3}
                                     onClick={() => {
+                                        // Check if quantity is empty or invalid before proceeding
+                                        if (!quantity || quantity <= 0) {
+                                            setErrorMessage('Please enter a valid quantity to sell.');
+                                            return; // Prevent further action if quantity is empty or invalid
+                                        }
+
+                                        // Proceed with the action if quantity is valid
                                         const matchingInvestment = investments.find(inv => inv.symbol === selectedCoin.symbol);
                                         if (matchingInvestment) {
-                                            console.log('Investment data:', matchingInvestment); // Log the matched investment object
-                                            handleExit(matchingInvestment); // Pass the matching investment to handleExit
+                                            handleExit(matchingInvestment);
                                         } else {
-                                            console.log('No matching investment found for the selected coin.');
                                             setErrorMessage(`No investment found for ${selectedCoin.symbol}.`);
                                         }
                                     }}
                                 >
                                     Sell
                                 </button>
+
                             </div>
 
                             </div>
 
                         </>
                     )}
+                    
                 </div>
+                
                 </div>
                 {/* <div className={styles.bottomContainer}>
                     <h1 className={styles.header3}>Total</h1>
