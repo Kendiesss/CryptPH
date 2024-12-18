@@ -290,14 +290,18 @@ export default function DummyPage({ title }) {
                     throw new Error('Failed to fetch FAQs');
                 }
                 const data = await res.json();
-                setFaqs(data);
+    
+                // Filter the FAQs where visibility is "visible"
+                const visibleFaqs = data.filter(faq => faq.visibility === "visible");
+    
+                setFaqs(visibleFaqs); // Only set the FAQs that are visible
             } catch (error) {
                 setError(error.message);
-            } 
+            }
         };
-        
+    
         fetchFaqs();
-    }, []); 
+    }, []);
 
     const toggleFaq = (index) => {
         setOpenFaq(openFaq === index ? null : index);

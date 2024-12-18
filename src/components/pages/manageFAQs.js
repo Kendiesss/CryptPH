@@ -62,7 +62,7 @@ const manageFAQs = () => {
   const [faqs, setFaqs] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState([]);
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
+  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
   const [selectedFAQ, setSelectedFAQ] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
@@ -152,19 +152,34 @@ const manageFAQs = () => {
   };
 
 
-  const handleHideFAQ = async (faqId) => {
+  const handleHideFAQ = async (faqId, currentVisibility) => {
     try {
-      await fetch(`/api/faqs/${faqId}/hide`, { method: 'PATCH' });
+      // Toggle visibility value
+      const newVisibility = currentVisibility === "hidden" ? "visible" : "hidden";
+  
+      // Send the updated visibility to the API
+      await fetch(`/api/faqs/visibility?id=${faqId}`, {
+        method: 'PATCH', // Use PATCH method for partial update
+        body: JSON.stringify({ visibility: newVisibility }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      // Update the local state with the new visibility
       setFaqs((prevFaqs) =>
         prevFaqs.map((faq) =>
-          faq._id === faqId ? { ...faq, hidden: !faq.hidden } : faq
+          faq._id === faqId ? { ...faq, visibility: newVisibility } : faq
         )
       );
+  
+      // Display success message
       openSuccessModal('FAQ visibility updated!');
     } catch (error) {
-      console.error('Error hiding FAQ:', error);
+      console.error('Error updating FAQ visibility:', error);
     }
   };
+
 
   const columns = useMemo(
     () => [
@@ -196,9 +211,12 @@ const manageFAQs = () => {
           <div className={styles.actions}>
             <button onClick={() => handleEditFAQ(row.original)} className={styles.editBtn}>Edit</button>
             <button onClick={() => handleDeleteFAQ(row.original._id)} className={styles.delBtn}>Delete</button>
-            <button onClick={() => handleHideFAQ(row.original._id)} className={styles.hideBtn}>
-              {row.original.hidden ? 'Unhide' : 'Hide'}
-            </button>
+            <button
+            onClick={() => handleHideFAQ(row.original._id, row.original.visibility)}
+            className={styles.hideBtn}
+            >
+            {row.original.visibility === "hidden" ? 'Unhide' : 'Hide'}
+          </button>
           </div>
         ),
       },
